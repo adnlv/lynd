@@ -1,10 +1,12 @@
 package com.adnlv.lynd.ui.navigation
 
 import androidx.activity.ComponentActivity
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -105,12 +107,10 @@ fun LyndNavHost(
         navController = navController,
         startDestination = Screen.Overview.route,
         modifier = modifier,
-        enterTransition = { EnterTransition.None },
-        exitTransition = { ExitTransition.None },
-        popEnterTransition = { EnterTransition.None },
-        popExitTransition = { ExitTransition.None },
-        predictivePopEnterTransition = { EnterTransition.None },
-        predictivePopExitTransition = { ExitTransition.None }
+        enterTransition = { fadeIn(tween(200)) + slideInHorizontally(tween(200)) { it / 4 } },
+        exitTransition = { fadeOut(tween(200)) + slideOutHorizontally(tween(200)) { -it / 4 } },
+        popEnterTransition = { fadeIn(tween(200)) + slideInHorizontally(tween(200)) { -it / 4 } },
+        popExitTransition = { fadeOut(tween(200)) + slideOutHorizontally(tween(200)) { it / 4 } }
     ) {
         val onNavigateToHoldings = {
             navController.navigate(Screen.Holdings.route) {
