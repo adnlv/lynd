@@ -1,6 +1,7 @@
 package com.adnlv.lynd.ui.navigation
 
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.CubicBezierEasing
@@ -12,7 +13,6 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -23,11 +23,8 @@ import androidx.navigation.compose.composable
 import com.adnlv.lynd.AppContainer
 import com.adnlv.lynd.ui.holdings.HoldingsScreen
 import com.adnlv.lynd.ui.holdings.HoldingsViewModel
-import com.adnlv.lynd.ui.overview.OverviewScreen
 import com.adnlv.lynd.ui.overview.OverviewViewModel
-import com.adnlv.lynd.ui.payouts.PayoutsScreen
 import com.adnlv.lynd.ui.payouts.PayoutsViewModel
-import com.adnlv.lynd.ui.planner.PlannerScreen
 import com.adnlv.lynd.ui.planner.PlannerViewModel
 import com.adnlv.lynd.ui.theme.LyndLayoutDefaults
 import kotlinx.coroutines.launch
@@ -118,11 +115,11 @@ fun LyndNavHost(
             }
         }
 
-        val renderTabs: @Composable (targetTab: Screen) -> Unit = { targetTab ->
-            val targetIndex = Screen.defaultBottomTabs.indexOf(targetTab).coerceAtLeast(0)
-            LaunchedEffect(targetIndex) {
-                if (tabPagerState.currentPage != targetIndex) {
-                    tabPagerState.scrollToPage(targetIndex)
+        composable(Screen.Overview.route) {
+            val coroutineScope = rememberCoroutineScope()
+            BackHandler(enabled = tabPagerState.currentPage != 0) {
+                coroutineScope.launch {
+                    tabPagerState.scrollToPage(0)
                 }
             }
             LyndTabPager(
@@ -136,16 +133,6 @@ fun LyndNavHost(
                 bottomBarActionState = bottomBarActionState,
                 onNavigateToHoldings = onNavigateToHoldings
             )
-        }
-
-        composable(Screen.Overview.route) {
-            renderTabs(Screen.Overview)
-        }
-        composable(Screen.Planner.route) {
-            renderTabs(Screen.Planner)
-        }
-        composable(Screen.Payouts.route) {
-            renderTabs(Screen.Payouts)
         }
         composable(Screen.Holdings.route) {
             HoldingsScreen(
