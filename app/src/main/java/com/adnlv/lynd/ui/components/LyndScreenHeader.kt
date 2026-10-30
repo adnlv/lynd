@@ -1,6 +1,7 @@
 package com.adnlv.lynd.ui.components
 
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -21,12 +22,12 @@ fun LyndScreenHeader(
     title: String,
     modifier: Modifier = Modifier.padding(start = 20.dp, end = 20.dp),
     navigationIcon: (@Composable () -> Unit)? = null,
+    actions: (@Composable RowScope.() -> Unit)? = null,
 ) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
-            .height(LyndLayoutDefaults.ScreenHeaderHeight)
-            .then(modifier),
+            .height(LyndLayoutDefaults.ScreenHeaderHeight),
         verticalAlignment = Alignment.CenterVertically
     ) {
         if (navigationIcon != null) {
@@ -41,5 +42,9 @@ fun LyndScreenHeader(
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
+        if (actions != null) {
+            Spacer(modifier = Modifier.weight(1f))
+            actions()
+        }
     }
 }
