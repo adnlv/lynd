@@ -8,8 +8,10 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -71,6 +73,34 @@ fun LyndNavHost(
         )
     )
 
+    val overviewListState = rememberLazyListState()
+    val plannerListState = rememberLazyListState()
+    val payoutsListState = rememberLazyListState()
+    val holdingsListState = rememberLazyListState()
+
+    RegisterScrollToTopHandler(
+        route = Screen.Overview.route,
+        bottomBarActionState = bottomBarActionState,
+        listState = overviewListState
+    )
+    RegisterScrollToTopHandler(
+        route = Screen.Planner.route,
+        bottomBarActionState = bottomBarActionState,
+        listState = plannerListState
+    )
+    RegisterScrollToTopHandler(
+        route = Screen.Payouts.route,
+        bottomBarActionState = bottomBarActionState,
+        listState = payoutsListState
+    )
+    RegisterScrollToTopHandler(
+        route = Screen.Holdings.route,
+        bottomBarActionState = bottomBarActionState,
+        listState = holdingsListState
+    )
+
+    val tabPagerState = rememberPagerState(pageCount = { Screen.defaultBottomTabs.size })
+
     NavHost(
         navController = navController,
         startDestination = Screen.Overview.route,
@@ -82,75 +112,50 @@ fun LyndNavHost(
         predictivePopEnterTransition = { EnterTransition.None },
         predictivePopExitTransition = { ExitTransition.None }
     ) {
-        composable(Screen.Overview.route) {
-            val listState = rememberLazyListState()
-            RegisterScrollToTopHandler(
-                route = Screen.Overview.route,
-                bottomBarActionState = bottomBarActionState,
-                listState = listState
-            )
-            OverviewScreen(
-                viewModel = overviewViewModel,
-                listState = listState,
-                onNavigateToHoldings = {
-                    navController.navigate(Screen.Holdings.route) {
-                        launchSingleTop = true
-                    }
+        val onNavigateToHoldings = {
+            navController.navigate(Screen.Holdings.route) {
+                launchSingleTop = true
+            }
+        }
+
+        val renderTabs: @Composable (targetTab: Screen) -> Unit = { targetTab ->
+            val targetIndex = Screen.defaultBottomTabs.indexOf(targetTab).coerceAtLeast(0)
+            LaunchedEffect(targetIndex) {
+                if (tabPagerState.currentPage != targetIndex) {
+                    tabPagerState.scrollToPage(targetIndex)
                 }
+            }
+            LyndTabPager(
+                pagerState = tabPagerState,
+                overviewViewModel = overviewViewModel,
+                plannerViewModel = plannerViewModel,
+                payoutsViewModel = payoutsViewModel,
+                overviewListState = overviewListState,
+                plannerListState = plannerListState,
+                payoutsListState = payoutsListState,
+                bottomBarActionState = bottomBarActionState,
+                onNavigateToHoldings = onNavigateToHoldings
             )
+        }
+
+        composable(Screen.Overview.route) {
+            renderTabs(Screen.Overview)
         }
         composable(Screen.Planner.route) {
-            val listState = rememberLazyListState()
-            RegisterScrollToTopHandler(
-                route = Screen.Planner.route,
-                bottomBarActionState = bottomBarActionState,
-                listState = listState
-            )
-            PlannerScreen(
-                viewModel = plannerViewModel,
-                listState = listState,
-                onNavigateToHoldings = {
-                    navController.navigate(Screen.Holdings.route) {
-                        launchSingleTop = true
-                    }
-                }
-            )
+            renderTabs(Screen.Planner)
+        }
+        composable(Screen.Payouts.route) {
+            renderTabs(Screen.Payouts)
         }
         composable(Screen.Holdings.route) {
-            val listState = rememberLazyListState()
-            RegisterScrollToTopHandler(
-                route = Screen.Holdings.route,
-                bottomBarActionState = bottomBarActionState,
-                listState = listState
-            )
             HoldingsScreen(
                 viewModel = holdingsViewModel,
-                listState = listState,
+                listState = holdingsListState,
                 onActionChange = { action ->
                     bottomBarActionState?.setAction(Screen.Holdings.route, action)
                 },
                 onNavigateBack = {
                     navController.popBackStack()
-                }
-            )
-        }
-        composable(Screen.Payouts.route) {
-            val listState = rememberLazyListState()
-            RegisterScrollToTopHandler(
-                route = Screen.Payouts.route,
-                bottomBarActionState = bottomBarActionState,
-                listState = listState
-            )
-            PayoutsScreen(
-                viewModel = payoutsViewModel,
-                listState = listState,
-                onActionChange = { action ->
-                    bottomBarActionState?.setAction(Screen.Payouts.route, action)
-                },
-                onNavigateToHoldings = {
-                    navController.navigate(Screen.Holdings.route) {
-                        launchSingleTop = true
-                    }
                 }
             )
         }
