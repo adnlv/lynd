@@ -1,4 +1,4 @@
-package com.adnlv.lynd.ui.components
+﻿package com.adnlv.lynd.ui.components
 
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState

@@ -17,7 +17,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -39,7 +39,13 @@ fun PayoutsScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    SideEffect {
+    LaunchedEffect(
+        uiState.selectedTab,
+        uiState.availableCurrencies,
+        uiState.selectedCurrencies,
+        uiState.availablePayoutTypes,
+        uiState.selectedPayoutTypes
+    ) {
         onActionChange?.invoke(
             BottomBarAction(
                 icon = MaterialSymbols.FilterList,

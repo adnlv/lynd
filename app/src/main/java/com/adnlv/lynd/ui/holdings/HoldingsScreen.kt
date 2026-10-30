@@ -24,7 +24,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -81,8 +80,8 @@ fun HoldingsScreen(
         mutableStateOf(sharedPrefs.getBoolean("has_seen_swipe_peek", false))
     }
 
-    SideEffect {
-        val isHoldingContextualActive = showAddDialog || editingHolding != null || revealedHoldingId != null
+    val isHoldingContextualActive = showAddDialog || editingHolding != null || revealedHoldingId != null
+    LaunchedEffect(isHoldingContextualActive) {
         onActionChange?.invoke(
             BottomBarAction(
                 icon = MaterialSymbols.Add,

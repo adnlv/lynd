@@ -1,4 +1,4 @@
-package com.adnlv.lynd
+﻿package com.adnlv.lynd
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

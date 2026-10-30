@@ -1,4 +1,4 @@
-package com.adnlv.lynd.ui.navigation
+﻿package com.adnlv.lynd.ui.navigation
 
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
