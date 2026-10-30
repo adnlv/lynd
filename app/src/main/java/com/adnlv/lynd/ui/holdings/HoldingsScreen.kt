@@ -160,21 +160,19 @@ fun HoldingsScreen(
                 onRetry = { viewModel.retrySync() }
             )
 
-            val navigationIcon: (@Composable () -> Unit)? = if (onNavigateBack != null) {
-                {
-                    IconButton(onClick = onNavigateBack) {
-                        Icon(
-                            imageVector = androidx.compose.material.icons.Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back to Payouts"
-                        )
-                    }
+            if (onNavigateBack != null) {
+                IconButton(
+                    onClick = onNavigateBack,
+                    modifier = Modifier.padding(start = 4.dp, top = 4.dp)
+                ) {
+                    Icon(
+                        imageVector = androidx.compose.material.icons.Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Navigate back"
+                    )
                 }
-            } else null
+            }
 
-            LyndScreenHeader(
-                title = "Holdings",
-                navigationIcon = navigationIcon
-            )
+            LyndScreenHeader(title = "Holdings")
 
             if (holdings.isEmpty()) {
                 LyndEmptyState(
