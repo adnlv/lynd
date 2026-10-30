@@ -61,6 +61,9 @@ fun LyndBottomBarPill(
             var pressedRoute by remember { mutableStateOf<String?>(null) }
             val activeTabRoute = Screen.resolveBottomTabRoute(currentRoute, bottomTabs)
             val displayedTabRoute = pressedRoute ?: activeTabRoute
+            if (currentRoute == pressedRoute) {
+                pressedRoute = null
+            }
             val tabCount = bottomTabs.size
             if (tabCount > 0) {
                 val tabWidth = maxWidth / tabCount
@@ -86,9 +89,9 @@ fun LyndBottomBarPill(
                             isIndicatorPressed = true
                         },
                         onRelease = {
-                            pressedRoute = null
                             isIndicatorPressed = false
                             if (currentRoute == screen.route) {
+                                pressedRoute = null
                                 onTabReselected(screen)
                             } else {
                                 onTabSelected(screen)
