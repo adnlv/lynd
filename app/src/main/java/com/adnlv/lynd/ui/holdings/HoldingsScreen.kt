@@ -14,9 +14,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
@@ -32,18 +34,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.adnlv.lynd.domain.HoldingItem
+import com.adnlv.lynd.ui.components.LyndEmptyState
+import com.adnlv.lynd.ui.components.LyndScreenHeader
 import com.adnlv.lynd.ui.icons.Add
 import com.adnlv.lynd.ui.icons.MaterialSymbols
 import com.adnlv.lynd.ui.navigation.BottomBarAction
@@ -156,28 +151,6 @@ fun HoldingsScreen(
                     }
                 }
         ) {
-            if (onNavigateBack != null) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp, vertical = 4.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    TextButton(onClick = onNavigateBack) {
-                        Icon(
-                            imageVector = androidx.compose.material.icons.Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back to Payouts"
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = "Payouts",
-                            style = MaterialTheme.typography.labelLarge,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                    }
-                }
-            }
-
             if (isSyncing) {
                 LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
             }
@@ -187,15 +160,24 @@ fun HoldingsScreen(
                 onRetry = { viewModel.retrySync() }
             )
 
+            val navigationIcon: (@Composable () -> Unit)? = if (onNavigateBack != null) {
+                {
+                    IconButton(onClick = onNavigateBack) {
+                        Icon(
+                            imageVector = androidx.compose.material.icons.Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back to Payouts"
+                        )
+                    }
+                }
+            } else null
+
+            LyndScreenHeader(
+                title = "Holdings",
+                navigationIcon = navigationIcon
+            )
+
             if (holdings.isEmpty()) {
-                Text(
-                    text = "Holdings",
-                    style = MaterialTheme.typography.headlineMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground,
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
-                )
-                com.adnlv.lynd.ui.components.LyndEmptyState(
+                LyndEmptyState(
                     title = "No holdings yet",
                     description = "Add your first bond holding to start tracking your investment portfolio.",
                     primaryActionLabel = "Add Holding",
@@ -217,7 +199,7 @@ fun HoldingsScreen(
                     modifier = Modifier.fillMaxSize(),
                     contentPadding = PaddingValues(
                         start = 16.dp,
-                        top = 16.dp,
+                        top = 8.dp,
                         end = 16.dp,
                         bottom = 100.dp
                     ),
