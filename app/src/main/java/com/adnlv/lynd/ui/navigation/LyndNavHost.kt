@@ -1,5 +1,6 @@
-﻿package com.adnlv.lynd.ui.navigation
+package com.adnlv.lynd.ui.navigation
 
+import androidx.activity.ComponentActivity
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.CubicBezierEasing
@@ -11,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -34,6 +36,41 @@ fun LyndNavHost(
     modifier: Modifier = Modifier,
     bottomBarActionState: BottomBarActionState? = null
 ) {
+    val activity = LocalContext.current as ComponentActivity
+
+    val overviewViewModel: OverviewViewModel = viewModel(
+        viewModelStoreOwner = activity,
+        factory = OverviewViewModel.provideFactory(
+            holdingDao = appContainer.database.holdingDao(),
+            bondDao = appContainer.database.bondDao(),
+            payoutDao = appContainer.database.payoutDao()
+        )
+    )
+    val plannerViewModel: PlannerViewModel = viewModel(
+        viewModelStoreOwner = activity,
+        factory = PlannerViewModel.provideFactory(
+            holdingDao = appContainer.database.holdingDao(),
+            bondDao = appContainer.database.bondDao(),
+            payoutDao = appContainer.database.payoutDao()
+        )
+    )
+    val payoutsViewModel: PayoutsViewModel = viewModel(
+        viewModelStoreOwner = activity,
+        factory = PayoutsViewModel.provideFactory(
+            payoutDao = appContainer.database.payoutDao(),
+            holdingDao = appContainer.database.holdingDao(),
+            bondDao = appContainer.database.bondDao()
+        )
+    )
+    val holdingsViewModel: HoldingsViewModel = viewModel(
+        viewModelStoreOwner = activity,
+        factory = HoldingsViewModel.provideFactory(
+            holdingDao = appContainer.database.holdingDao(),
+            nbuRepository = appContainer.nbuRepository,
+            bondDao = appContainer.database.bondDao()
+        )
+    )
+
     NavHost(
         navController = navController,
         startDestination = Screen.Overview.route,
@@ -52,13 +89,6 @@ fun LyndNavHost(
                 bottomBarActionState = bottomBarActionState,
                 listState = listState
             )
-            val overviewViewModel: OverviewViewModel = viewModel(
-                factory = OverviewViewModel.provideFactory(
-                    holdingDao = appContainer.database.holdingDao(),
-                    bondDao = appContainer.database.bondDao(),
-                    payoutDao = appContainer.database.payoutDao()
-                )
-            )
             OverviewScreen(
                 viewModel = overviewViewModel,
                 listState = listState,
@@ -75,13 +105,6 @@ fun LyndNavHost(
                 route = Screen.Planner.route,
                 bottomBarActionState = bottomBarActionState,
                 listState = listState
-            )
-            val plannerViewModel: PlannerViewModel = viewModel(
-                factory = PlannerViewModel.provideFactory(
-                    holdingDao = appContainer.database.holdingDao(),
-                    bondDao = appContainer.database.bondDao(),
-                    payoutDao = appContainer.database.payoutDao()
-                )
             )
             PlannerScreen(
                 viewModel = plannerViewModel,
@@ -100,13 +123,6 @@ fun LyndNavHost(
                 bottomBarActionState = bottomBarActionState,
                 listState = listState
             )
-            val holdingsViewModel: HoldingsViewModel = viewModel(
-                factory = HoldingsViewModel.provideFactory(
-                    holdingDao = appContainer.database.holdingDao(),
-                    nbuRepository = appContainer.nbuRepository,
-                    bondDao = appContainer.database.bondDao()
-                )
-            )
             HoldingsScreen(
                 viewModel = holdingsViewModel,
                 listState = listState,
@@ -124,13 +140,6 @@ fun LyndNavHost(
                 route = Screen.Payouts.route,
                 bottomBarActionState = bottomBarActionState,
                 listState = listState
-            )
-            val payoutsViewModel: PayoutsViewModel = viewModel(
-                factory = PayoutsViewModel.provideFactory(
-                    payoutDao = appContainer.database.payoutDao(),
-                    holdingDao = appContainer.database.holdingDao(),
-                    bondDao = appContainer.database.bondDao()
-                )
             )
             PayoutsScreen(
                 viewModel = payoutsViewModel,
