@@ -8,6 +8,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -36,7 +37,8 @@ fun LyndNavHost(
     navController: NavHostController,
     appContainer: AppContainer,
     modifier: Modifier = Modifier,
-    bottomBarActionState: BottomBarActionState? = null
+    bottomBarActionState: BottomBarActionState? = null,
+    tabPagerState: PagerState = rememberPagerState(pageCount = { Screen.defaultBottomTabs.size })
 ) {
     val activity = LocalContext.current as ComponentActivity
 
@@ -98,8 +100,6 @@ fun LyndNavHost(
         bottomBarActionState = bottomBarActionState,
         listState = holdingsListState
     )
-
-    val tabPagerState = rememberPagerState(pageCount = { Screen.defaultBottomTabs.size })
 
     NavHost(
         navController = navController,

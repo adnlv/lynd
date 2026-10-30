@@ -29,6 +29,7 @@ fun LyndBottomBar(
     modifier: Modifier = Modifier,
     bottomTabs: List<Screen> = Screen.defaultBottomTabs,
     action: BottomBarAction = BottomBarAction.defaultForRoute(currentRoute),
+    onTabSelected: ((Screen) -> Unit)? = null,
     onTabReselected: (Screen) -> Unit = {}
 ) {
     Row(
@@ -47,16 +48,20 @@ fun LyndBottomBar(
             bottomTabs = bottomTabs,
             currentRoute = currentRoute,
             onTabSelected = { screen ->
-                val activeTabRoute = Screen.resolveBottomTabRoute(currentRoute, bottomTabs)
-                if (activeTabRoute == screen.route && currentRoute != screen.route) {
-                    navController.popBackStack(screen.route, inclusive = false)
+                if (onTabSelected != null) {
+                    onTabSelected(screen)
                 } else {
-                    navController.navigate(screen.route) {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
+                    val activeTabRoute = Screen.resolveBottomTabRoute(currentRoute, bottomTabs)
+                    if (activeTabRoute == screen.route && currentRoute != screen.route) {
+                        navController.popBackStack(screen.route, inclusive = false)
+                    } else {
+                        navController.navigate(screen.route) {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
                         }
-                        launchSingleTop = true
-                        restoreState = true
                     }
                 }
             },
