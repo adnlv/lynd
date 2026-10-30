@@ -1,4 +1,4 @@
-﻿package com.adnlv.lynd.ui.components
+package com.adnlv.lynd.ui.components
 
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
@@ -77,9 +77,12 @@ fun <T> SnapBarChart(
             flingBehavior = flingBehavior,
             verticalAlignment = Alignment.Bottom
         ) {
-            item { Spacer(modifier = Modifier.width(sidePaddingDp)) }
+            item(key = "chart_start_spacer") { Spacer(modifier = Modifier.width(sidePaddingDp)) }
 
-            itemsIndexed(items) { index, item ->
+            itemsIndexed(
+                items = items,
+                key = { index, _ -> index }
+            ) { index, item ->
                 val isSelected = index == selectedIndex
                 val scale by animateFloatAsState(
                     targetValue = if (isSelected) 1.2f else 0.8f,
@@ -97,8 +100,8 @@ fun <T> SnapBarChart(
                         .width(barWidthDp)
                         .fillMaxHeight()
                         .graphicsLayer {
-                            this.scaleX = scale
-                            this.scaleY = scale
+                            scaleX = scale
+                            scaleY = scale
                             this.alpha = alpha
                         },
                     contentAlignment = Alignment.BottomCenter
@@ -107,7 +110,7 @@ fun <T> SnapBarChart(
                 }
             }
 
-            item { Spacer(modifier = Modifier.width(sidePaddingDp)) }
+            item(key = "chart_end_spacer") { Spacer(modifier = Modifier.width(sidePaddingDp)) }
         }
     }
 }
