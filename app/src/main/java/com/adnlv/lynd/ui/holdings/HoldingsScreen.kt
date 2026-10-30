@@ -160,20 +160,23 @@ fun HoldingsScreen(
                 onRetry = { viewModel.retrySync() }
             )
 
-            if (onNavigateBack != null) {
-                IconButton(
-                    onClick = onNavigateBack,
-                    modifier = Modifier.padding(start = 4.dp, top = 4.dp)
-                ) {
-                    Icon(
-                        imageVector = androidx.compose.material.icons.Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Navigate back"
-                    )
+            val navigationIcon: (@Composable () -> Unit)? = if (onNavigateBack != null) {
+                {
+                    IconButton(onClick = onNavigateBack) {
+                        Icon(
+                            imageVector = androidx.compose.material.icons.Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Navigate back"
+                        )
+                    }
                 }
-            }
+            } else null
 
             if (holdings.isEmpty()) {
-                LyndScreenHeader(title = "Holdings")
+                LyndScreenHeader(
+                    title = "Holdings",
+                    navigationIcon = navigationIcon,
+                    modifier = Modifier.padding(start = if (navigationIcon != null) 4.dp else 20.dp, end = 20.dp)
+                )
                 LyndEmptyState(
                     title = "No holdings yet",
                     description = "Add your first bond holding to start tracking your investment portfolio.",
@@ -205,7 +208,8 @@ fun HoldingsScreen(
                     item(key = "holdings_header") {
                         LyndScreenHeader(
                             title = "Holdings",
-                            modifier = Modifier.padding(start = 4.dp, bottom = 8.dp)
+                            navigationIcon = navigationIcon,
+                            modifier = Modifier.padding(start = if (navigationIcon != null) 0.dp else 4.dp)
                         )
                     }
 
