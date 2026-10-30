@@ -79,7 +79,10 @@ fun PayoutsScreen(
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
             if (uiState.dateGroups.isEmpty()) {
-                LyndScreenHeader(title = headingText)
+                LyndScreenHeader(
+                    title = headingText,
+                    modifier = Modifier.padding(top = 8.dp, start = 20.dp, end = 20.dp)
+                )
                 if (uiState.isPortfolioEmpty) {
                     LyndNoHoldingsPlate(
                         title = "No scheduled payouts",

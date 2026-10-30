@@ -35,7 +35,10 @@ fun OverviewScreen(
             .background(MaterialTheme.colorScheme.background)
     ) {
         if (uiState.summaries.isEmpty()) {
-            LyndScreenHeader(title = "Overview")
+            LyndScreenHeader(
+                title = "Overview",
+                modifier = Modifier.padding(top = 8.dp, start = 20.dp, end = 20.dp)
+            )
             LyndNoHoldingsPlate(
                 title = "No portfolio data",
                 description = "Add your bond holdings to see cash flows, balances, and maturity timelines.",

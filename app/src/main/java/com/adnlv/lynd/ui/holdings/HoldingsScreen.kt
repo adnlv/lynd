@@ -175,7 +175,7 @@ fun HoldingsScreen(
                 LyndScreenHeader(
                     title = "Holdings",
                     navigationIcon = navigationIcon,
-                    modifier = Modifier.padding(start = if (navigationIcon != null) 4.dp else 20.dp, end = 20.dp)
+                    modifier = Modifier.padding(top = 8.dp, start = if (navigationIcon != null) 4.dp else 20.dp, end = 20.dp)
                 )
                 LyndNoHoldingsPlate(
                     title = "No holdings yet",
