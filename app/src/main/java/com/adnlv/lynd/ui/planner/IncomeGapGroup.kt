@@ -1,4 +1,4 @@
-﻿package com.adnlv.lynd.ui.planner
+package com.adnlv.lynd.ui.planner
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -176,7 +176,10 @@ fun IncomeGapGroup(
             }
         }
 
-        items(uiState.actionableGaps) { actionableGap ->
+        items(
+            items = uiState.actionableGaps,
+            key = { "${it.gap.yearMonth}_${it.gap.currency}" }
+        ) { actionableGap ->
             ActionableGapCard(actionableGap = actionableGap)
         }
     }
