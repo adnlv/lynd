@@ -127,7 +127,7 @@ fun PayoutsScreen(
                     item(key = "payouts_header") {
                         LyndScreenHeader(
                             title = headingText,
-                            modifier = Modifier.padding(start = 4.dp, bottom = 8.dp)
+                            modifier = Modifier.padding(start = 4.dp)
                         )
                     }
 

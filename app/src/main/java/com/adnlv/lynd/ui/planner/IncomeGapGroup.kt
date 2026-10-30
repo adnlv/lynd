@@ -51,7 +51,7 @@ fun IncomeGapGroup(
         item(key = "planner_header") {
             LyndScreenHeader(
                 title = "Income Gap Detector",
-                modifier = Modifier.padding(bottom = 8.dp)
+                modifier = Modifier
             )
         }
 
