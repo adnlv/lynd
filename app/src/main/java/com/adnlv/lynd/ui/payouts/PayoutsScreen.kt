@@ -78,9 +78,8 @@ fun PayoutsScreen(
             .background(MaterialTheme.colorScheme.background)
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
-            LyndScreenHeader(title = headingText)
-
             if (uiState.dateGroups.isEmpty()) {
+                LyndScreenHeader(title = headingText)
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -126,6 +125,13 @@ fun PayoutsScreen(
                     contentPadding = PaddingValues(start = 16.dp, top = 8.dp, end = 16.dp, bottom = 100.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
+                    item(key = "payouts_header") {
+                        LyndScreenHeader(
+                            title = headingText,
+                            modifier = Modifier.padding(start = 4.dp, bottom = 8.dp)
+                        )
+                    }
+
                     item(key = "holdings_suggestion") {
                         HoldingsSuggestionCard(
                             onClick = onNavigateToHoldings,

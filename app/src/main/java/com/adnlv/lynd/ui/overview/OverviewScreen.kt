@@ -34,9 +34,8 @@ fun OverviewScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        LyndScreenHeader(title = "Overview")
-
         if (uiState.summaries.isEmpty()) {
+            LyndScreenHeader(title = "Overview")
             LyndEmptyState(
                 title = "No portfolio data",
                 description = "Add your bond holdings to see cash flows, balances, and maturity timelines.",
@@ -60,6 +59,10 @@ fun OverviewScreen(
                 contentPadding = PaddingValues(top = 8.dp, bottom = 100.dp),
                 verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
+                item(key = "overview_header") {
+                    LyndScreenHeader(title = "Overview")
+                }
+
                 item {
                     PortfolioSummaryCarousel(
                         summaries = uiState.summaries,

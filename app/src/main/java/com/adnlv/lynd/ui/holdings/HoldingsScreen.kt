@@ -172,9 +172,8 @@ fun HoldingsScreen(
                 }
             }
 
-            LyndScreenHeader(title = "Holdings")
-
             if (holdings.isEmpty()) {
+                LyndScreenHeader(title = "Holdings")
                 LyndEmptyState(
                     title = "No holdings yet",
                     description = "Add your first bond holding to start tracking your investment portfolio.",
@@ -203,6 +202,13 @@ fun HoldingsScreen(
                     ),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
+                    item(key = "holdings_header") {
+                        LyndScreenHeader(
+                            title = "Holdings",
+                            modifier = Modifier.padding(start = 4.dp, bottom = 8.dp)
+                        )
+                    }
+
                     items(items = groupedHoldings, key = { it.isin }) { group ->
                         HoldingGroupCard(
                             modifier = Modifier.animateItem(),

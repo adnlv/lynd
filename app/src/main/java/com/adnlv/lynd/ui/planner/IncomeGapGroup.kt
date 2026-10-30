@@ -29,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.adnlv.lynd.ui.components.LyndScreenHeader
 
 @Composable
 fun IncomeGapGroup(
@@ -47,6 +48,13 @@ fun IncomeGapGroup(
         contentPadding = PaddingValues(start = 20.dp, top = 8.dp, end = 20.dp, bottom = 100.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
+        item(key = "planner_header") {
+            LyndScreenHeader(
+                title = "Income Gap Detector",
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+        }
+
         item {
             Text(
                 text = "Track months with zero coupon or principal payments to prevent cash shortages.",

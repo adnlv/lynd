@@ -28,9 +28,8 @@ fun PlannerScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        LyndScreenHeader(title = "Income Gap Detector")
-
         if (uiState.summaries.isEmpty()) {
+            LyndScreenHeader(title = "Income Gap Detector")
             LyndEmptyState(
                 title = "No income to plan",
                 description = "Add bond holdings to identify months without coupon payments and plan cash flow.",
