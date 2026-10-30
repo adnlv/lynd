@@ -45,12 +45,7 @@ Lcom/adnlv/lynd/data/db/PayoutDao;
 
 # Compose & Third-Party Performance Nodes
 Landroidx/compose/runtime/**;
-HSPLandroidx/compose/runtime/**;->**
 Landroidx/compose/ui/**;
-HSPLandroidx/compose/ui/**;->**
 Landroidx/compose/foundation/**;
-HSPLandroidx/compose/foundation/**;->**
 Landroidx/compose/material3/**;
-HSPLandroidx/compose/material3/**;->**
 Ldev/chrisbanes/haze/**;
-HSPLdev/chrisbanes/haze/**;->**
