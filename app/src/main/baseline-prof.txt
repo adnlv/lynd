@@ -1,0 +1,56 @@
+# Baseline Profile Rules for Lynd
+
+# Application and Container
+Lcom/adnlv/lynd/LyndApplication;
+Lcom/adnlv/lynd/AppContainer;
+Lcom/adnlv/lynd/MainActivity;
+HSPLcom/adnlv/lynd/MainActivity;->onCreate(Landroid/os/Bundle;)V
+HSPLcom/adnlv/lynd/MainActivityKt;->MainApp(Lcom/adnlv/lynd/AppContainer;)V
+
+# Navigation Components
+Lcom/adnlv/lynd/ui/navigation/Screen;
+Lcom/adnlv/lynd/ui/navigation/BottomBarAction;
+Lcom/adnlv/lynd/ui/navigation/BottomBarActionState;
+HSPLcom/adnlv/lynd/ui/navigation/LyndNavHostKt;->LyndNavHost(Landroidx/navigation/NavHostController;Lcom/adnlv/lynd/AppContainer;Landroidx/compose/ui/Modifier;Lcom/adnlv/lynd/ui/navigation/BottomBarActionState;Landroidx/compose/foundation/pager/PagerState;)V
+HSPLcom/adnlv/lynd/ui/navigation/LyndTabPagerKt;->LyndTabPager(Landroidx/compose/foundation/pager/PagerState;Lcom/adnlv/lynd/ui/overview/OverviewViewModel;Lcom/adnlv/lynd/ui/planner/PlannerViewModel;Lcom/adnlv/lynd/ui/payouts/PayoutsViewModel;Landroidx/compose/foundation/lazy/LazyListState;Landroidx/compose/foundation/lazy/LazyListState;Landroidx/compose/foundation/lazy/LazyListState;Lcom/adnlv/lynd/ui/navigation/BottomBarActionState;Lkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;)V
+HSPLcom/adnlv/lynd/ui/navigation/LyndBottomBarKt;->LyndBottomBar(Landroidx/navigation/NavController;Ljava/lang/String;Landroidx/compose/ui/Modifier;Ljava/util/List;Lcom/adnlv/lynd/ui/navigation/BottomBarAction;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
+HSPLcom/adnlv/lynd/ui/navigation/LyndBottomBarPillKt;->LyndBottomBarPill(Ljava/util/List;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function1;)V
+HSPLcom/adnlv/lynd/ui/navigation/LyndBottomBarItemKt;->LyndBottomBarItem(Lcom/adnlv/lynd/ui/navigation/Screen;ZLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;)V
+
+# UI Screens & Components
+Lcom/adnlv/lynd/ui/overview/OverviewScreenKt;
+HSPLcom/adnlv/lynd/ui/overview/OverviewScreenKt;->OverviewScreen(Lcom/adnlv/lynd/ui/overview/OverviewViewModel;Landroidx/compose/ui/Modifier;Landroidx/compose/foundation/lazy/LazyListState;Lkotlin/jvm/functions/Function0;)V
+Lcom/adnlv/lynd/ui/overview/OverviewViewModel;
+Lcom/adnlv/lynd/ui/planner/PlannerScreenKt;
+HSPLcom/adnlv/lynd/ui/planner/PlannerScreenKt;->PlannerScreen(Lcom/adnlv/lynd/ui/planner/PlannerViewModel;Landroidx/compose/ui/Modifier;Landroidx/compose/foundation/lazy/LazyListState;Lkotlin/jvm/functions/Function0;)V
+Lcom/adnlv/lynd/ui/planner/PlannerViewModel;
+Lcom/adnlv/lynd/ui/payouts/PayoutsScreenKt;
+HSPLcom/adnlv/lynd/ui/payouts/PayoutsScreenKt;->PayoutsScreen(Lcom/adnlv/lynd/ui/payouts/PayoutsViewModel;Landroidx/compose/ui/Modifier;Landroidx/compose/foundation/lazy/LazyListState;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function0;)V
+Lcom/adnlv/lynd/ui/payouts/PayoutsViewModel;
+Lcom/adnlv/lynd/ui/holdings/HoldingsScreenKt;
+Lcom/adnlv/lynd/ui/holdings/HoldingsViewModel;
+Lcom/adnlv/lynd/ui/components/LyndGlassSurfaceKt;
+HSPLcom/adnlv/lynd/ui/components/LyndGlassSurfaceKt;->LyndGlassSurface(Landroidx/compose/ui/graphics/Shape;Landroidx/compose/ui/Modifier;Ldev/chrisbanes/haze/blur/HazeBlurStyle;Landroidx/compose/ui/Alignment;Lkotlin/jvm/functions/Function3;)V
+Lcom/adnlv/lynd/ui/theme/ThemeKt;
+Lcom/adnlv/lynd/ui/theme/GlassKt;
+
+# Domain & Database Calculations
+Lcom/adnlv/lynd/domain/PortfolioCalculator;
+Lcom/adnlv/lynd/domain/PortfolioSummary;
+Lcom/adnlv/lynd/domain/IncomeGapDetector;
+Lcom/adnlv/lynd/data/db/AppDatabase;
+Lcom/adnlv/lynd/data/db/HoldingDao;
+Lcom/adnlv/lynd/data/db/BondDao;
+Lcom/adnlv/lynd/data/db/PayoutDao;
+
+# Compose & Third-Party Performance Nodes
+Landroidx/compose/runtime/**;
+HSPLandroidx/compose/runtime/**;->**
+Landroidx/compose/ui/**;
+HSPLandroidx/compose/ui/**;->**
+Landroidx/compose/foundation/**;
+HSPLandroidx/compose/foundation/**;->**
+Landroidx/compose/material3/**;
+HSPLandroidx/compose/material3/**;->**
+Ldev/chrisbanes/haze/**;
+HSPLdev/chrisbanes/haze/**;->**
