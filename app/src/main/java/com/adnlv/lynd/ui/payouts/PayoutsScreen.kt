@@ -71,10 +71,6 @@ fun PayoutsScreen(
         PayoutTab.UPCOMING -> "Upcoming Payouts"
         PayoutTab.RECEIVED -> "Received Payouts"
     }
-    val descriptionText = when (uiState.selectedTab) {
-        PayoutTab.UPCOMING -> "Track scheduled coupon payments and bond redemptions."
-        PayoutTab.RECEIVED -> "Review completed coupon payments and bond redemptions."
-    }
 
     Box(
         modifier = modifier
@@ -90,12 +86,6 @@ fun PayoutsScreen(
                         .fillMaxSize()
                         .padding(horizontal = 16.dp, vertical = 8.dp)
                 ) {
-                    Text(
-                        text = descriptionText,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(bottom = 12.dp)
-                    )
                     if (uiState.isPortfolioEmpty) {
                         LyndEmptyState(
                             title = "No scheduled payouts",
@@ -136,15 +126,6 @@ fun PayoutsScreen(
                     contentPadding = PaddingValues(start = 16.dp, top = 8.dp, end = 16.dp, bottom = 100.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    item(key = "payouts_description") {
-                        Text(
-                            text = descriptionText,
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            modifier = Modifier.padding(bottom = 4.dp)
-                        )
-                    }
-
                     item(key = "holdings_suggestion") {
                         HoldingsSuggestionCard(
                             onClick = onNavigateToHoldings,
