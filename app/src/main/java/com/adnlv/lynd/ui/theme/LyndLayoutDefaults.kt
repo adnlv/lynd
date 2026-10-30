@@ -4,6 +4,7 @@ import androidx.compose.ui.unit.dp
 
 object LyndLayoutDefaults {
     val FloatingBarHeight = 64.dp
+    val ScreenHeaderHeight = 64.dp
     val ScreenBottomScrollPadding = 100.dp
 
     val CardCornerRadius = 16.dp
