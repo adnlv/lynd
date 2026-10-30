@@ -24,7 +24,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.adnlv.lynd.ui.icons.Add
-import com.adnlv.lynd.ui.icons.Experiment
 import com.adnlv.lynd.ui.icons.Lightbulb
 import com.adnlv.lynd.ui.icons.MaterialSymbols
 
@@ -39,13 +38,8 @@ fun LyndEmptyState(
     onPrimaryAction: (() -> Unit)? = null,
     secondaryActionLabel: String? = null,
     secondaryActionIcon: ImageVector? = null,
-    onSecondaryAction: (() -> Unit)? = null,
-    onLoadTestPortfolio: (() -> Unit)? = null
+    onSecondaryAction: (() -> Unit)? = null
 ) {
-    val effectiveSecondaryLabel = secondaryActionLabel ?: if (onLoadTestPortfolio != null) "Load test portfolio" else null
-    val effectiveSecondaryIcon = secondaryActionIcon ?: if (onLoadTestPortfolio != null) MaterialSymbols.Experiment else null
-    val effectiveSecondaryAction = onSecondaryAction ?: onLoadTestPortfolio
-
     Box(
         modifier = modifier,
         contentAlignment = Alignment.Center
@@ -91,7 +85,7 @@ fun LyndEmptyState(
                 )
             }
 
-            if ((primaryActionLabel != null && onPrimaryAction != null) || (effectiveSecondaryLabel != null && effectiveSecondaryAction != null)) {
+            if ((primaryActionLabel != null && onPrimaryAction != null) || (secondaryActionLabel != null && onSecondaryAction != null)) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -114,20 +108,20 @@ fun LyndEmptyState(
                         }
                     }
 
-                    if (effectiveSecondaryLabel != null && effectiveSecondaryAction != null) {
+                    if (secondaryActionLabel != null && onSecondaryAction != null) {
                         OutlinedButton(
-                            onClick = effectiveSecondaryAction,
+                            onClick = onSecondaryAction,
                             modifier = Modifier.fillMaxWidth(0.7f)
                         ) {
-                            if (effectiveSecondaryIcon != null) {
+                            if (secondaryActionIcon != null) {
                                 Icon(
-                                    imageVector = effectiveSecondaryIcon,
+                                    imageVector = secondaryActionIcon,
                                     contentDescription = null,
                                     modifier = Modifier.size(18.dp)
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
                             }
-                            Text(effectiveSecondaryLabel)
+                            Text(secondaryActionLabel)
                         }
                     }
                 }

@@ -37,7 +37,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.adnlv.lynd.domain.HoldingItem
-import com.adnlv.lynd.ui.components.LyndEmptyState
+import com.adnlv.lynd.ui.components.LyndNoHoldingsPlate
 import com.adnlv.lynd.ui.components.LyndScreenHeader
 import com.adnlv.lynd.ui.icons.Add
 import com.adnlv.lynd.ui.icons.MaterialSymbols
@@ -177,11 +177,10 @@ fun HoldingsScreen(
                     navigationIcon = navigationIcon,
                     modifier = Modifier.padding(start = if (navigationIcon != null) 4.dp else 20.dp, end = 20.dp)
                 )
-                LyndEmptyState(
+                LyndNoHoldingsPlate(
                     title = "No holdings yet",
                     description = "Add your first bond holding to start tracking your investment portfolio.",
-                    primaryActionLabel = "Add Holding",
-                    onPrimaryAction = {
+                    onAddHolding = {
                         if (onNavigateToAdd != null) {
                             onNavigateToAdd.invoke()
                         } else {

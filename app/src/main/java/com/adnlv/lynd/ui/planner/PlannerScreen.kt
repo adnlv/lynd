@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import com.adnlv.lynd.ui.components.LyndEmptyState
+import com.adnlv.lynd.ui.components.LyndNoHoldingsPlate
 import com.adnlv.lynd.ui.components.LyndScreenHeader
 
 @Composable
@@ -30,11 +30,10 @@ fun PlannerScreen(
     ) {
         if (uiState.summaries.isEmpty()) {
             LyndScreenHeader(title = "Income Gap Detector")
-            LyndEmptyState(
+            LyndNoHoldingsPlate(
                 title = "No income to plan",
                 description = "Add bond holdings to identify months without coupon payments and plan cash flow.",
-                primaryActionLabel = "Add Holding",
-                onPrimaryAction = onNavigateToHoldings,
+                onAddHolding = onNavigateToHoldings,
                 onLoadTestPortfolio = { viewModel.loadTestPortfolio() },
                 modifier = Modifier
                     .weight(1f)

@@ -17,7 +17,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.adnlv.lynd.ui.components.LyndEmptyState
+import com.adnlv.lynd.ui.components.LyndNoHoldingsPlate
 import com.adnlv.lynd.ui.components.LyndScreenHeader
 
 @Composable
@@ -36,11 +36,10 @@ fun OverviewScreen(
     ) {
         if (uiState.summaries.isEmpty()) {
             LyndScreenHeader(title = "Overview")
-            LyndEmptyState(
+            LyndNoHoldingsPlate(
                 title = "No portfolio data",
                 description = "Add your bond holdings to see cash flows, balances, and maturity timelines.",
-                primaryActionLabel = "Add Holding",
-                onPrimaryAction = onNavigateToHoldings,
+                onAddHolding = onNavigateToHoldings,
                 onLoadTestPortfolio = { viewModel.loadTestPortfolio() },
                 modifier = Modifier
                     .weight(1f)
