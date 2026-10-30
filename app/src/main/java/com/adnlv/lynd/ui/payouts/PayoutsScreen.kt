@@ -21,7 +21,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.adnlv.lynd.ui.components.LyndEmptyState
+import com.adnlv.lynd.ui.components.LyndNoHoldingsPlate
 import com.adnlv.lynd.ui.components.LyndScreenHeader
 import com.adnlv.lynd.ui.icons.FilterList
 import com.adnlv.lynd.ui.icons.MaterialSymbols
@@ -80,23 +80,22 @@ fun PayoutsScreen(
         Column(modifier = Modifier.fillMaxSize()) {
             if (uiState.dateGroups.isEmpty()) {
                 LyndScreenHeader(title = headingText)
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 16.dp, vertical = 8.dp)
-                ) {
-                    if (uiState.isPortfolioEmpty) {
-                        LyndEmptyState(
-                            title = "No scheduled payouts",
-                            description = "Add bond holdings to track upcoming coupon payments and bond redemptions.",
-                            primaryActionLabel = "Add Holding",
-                            onPrimaryAction = onNavigateToHoldings,
-                            onLoadTestPortfolio = { viewModel.loadTestPortfolio() },
-                            modifier = Modifier
-                                .weight(1f)
-                                .fillMaxWidth()
-                        )
-                    } else {
+                if (uiState.isPortfolioEmpty) {
+                    LyndNoHoldingsPlate(
+                        title = "No scheduled payouts",
+                        description = "Add bond holdings to track upcoming coupon payments and bond redemptions.",
+                        onAddHolding = onNavigateToHoldings,
+                        onLoadTestPortfolio = { viewModel.loadTestPortfolio() },
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxWidth()
+                    )
+                } else {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(horizontal = 16.dp, vertical = 8.dp)
+                    ) {
                         HoldingsSuggestionCard(
                             onClick = onNavigateToHoldings
                         )
