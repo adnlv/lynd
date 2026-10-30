@@ -27,7 +27,7 @@ fun LyndScreenHeader(
         modifier = modifier
             .fillMaxWidth()
             .height(LyndLayoutDefaults.ScreenHeaderHeight)
-            .padding(horizontal = 20.dp, bottom = 8.dp),
+            .padding(start = 20.dp, end = 20.dp, bottom = 8.dp),
         contentAlignment = Alignment.BottomStart
     ) {
         if (navigationIcon != null) {

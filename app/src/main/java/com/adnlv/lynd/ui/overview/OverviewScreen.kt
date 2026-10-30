@@ -12,14 +12,13 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.adnlv.lynd.ui.components.LyndEmptyState
+import com.adnlv.lynd.ui.components.LyndScreenHeader
 
 @Composable
 fun OverviewScreen(
@@ -35,14 +34,9 @@ fun OverviewScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
+        LyndScreenHeader(title = "Overview")
+
         if (uiState.summaries.isEmpty()) {
-            Text(
-                text = "Overview",
-                style = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onBackground,
-                modifier = Modifier.padding(horizontal = 20.dp, vertical = 20.dp)
-            )
             LyndEmptyState(
                 title = "No portfolio data",
                 description = "Add your bond holdings to see cash flows, balances, and maturity timelines.",
@@ -63,19 +57,9 @@ fun OverviewScreen(
             LazyColumn(
                 state = listState,
                 modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(top = 20.dp, bottom = 100.dp),
+                contentPadding = PaddingValues(top = 8.dp, bottom = 100.dp),
                 verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
-                item {
-                    Text(
-                        text = "Overview",
-                        style = MaterialTheme.typography.headlineMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onBackground,
-                        modifier = Modifier.padding(horizontal = 20.dp)
-                    )
-                }
-
                 item {
                     PortfolioSummaryCarousel(
                         summaries = uiState.summaries,
