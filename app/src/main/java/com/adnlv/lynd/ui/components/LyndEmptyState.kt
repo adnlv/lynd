@@ -37,8 +37,15 @@ fun LyndEmptyState(
     primaryActionLabel: String? = null,
     primaryActionIcon: ImageVector = MaterialSymbols.Add,
     onPrimaryAction: (() -> Unit)? = null,
+    secondaryActionLabel: String? = null,
+    secondaryActionIcon: ImageVector? = null,
+    onSecondaryAction: (() -> Unit)? = null,
     onLoadTestPortfolio: (() -> Unit)? = null
 ) {
+    val effectiveSecondaryLabel = secondaryActionLabel ?: if (onLoadTestPortfolio != null) "Load test portfolio" else null
+    val effectiveSecondaryIcon = secondaryActionIcon ?: if (onLoadTestPortfolio != null) MaterialSymbols.Experiment else null
+    val effectiveSecondaryAction = onSecondaryAction ?: onLoadTestPortfolio
+
     Box(
         modifier = modifier,
         contentAlignment = Alignment.Center
@@ -84,11 +91,13 @@ fun LyndEmptyState(
                 )
             }
 
-            if (primaryActionLabel != null && onPrimaryAction != null || onLoadTestPortfolio != null) {
+            if ((primaryActionLabel != null && onPrimaryAction != null) || (effectiveSecondaryLabel != null && effectiveSecondaryAction != null)) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(12.dp),
-                    modifier = Modifier.padding(top = 8.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp)
                 ) {
                     if (primaryActionLabel != null && onPrimaryAction != null) {
                         Button(
@@ -105,18 +114,20 @@ fun LyndEmptyState(
                         }
                     }
 
-                    if (onLoadTestPortfolio != null) {
+                    if (effectiveSecondaryLabel != null && effectiveSecondaryAction != null) {
                         OutlinedButton(
-                            onClick = onLoadTestPortfolio,
+                            onClick = effectiveSecondaryAction,
                             modifier = Modifier.fillMaxWidth(0.7f)
                         ) {
-                            Icon(
-                                imageVector = MaterialSymbols.Experiment,
-                                contentDescription = null,
-                                modifier = Modifier.size(18.dp)
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text("Load test portfolio")
+                            if (effectiveSecondaryIcon != null) {
+                                Icon(
+                                    imageVector = effectiveSecondaryIcon,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(18.dp)
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                            }
+                            Text(effectiveSecondaryLabel)
                         }
                     }
                 }
