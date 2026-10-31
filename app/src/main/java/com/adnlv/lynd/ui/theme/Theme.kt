@@ -8,10 +8,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 
 val LyndLightColorScheme = lightColorScheme(
-    primary = LyndBlueLight,
-    onPrimary = LyndOnBlueLight,
-    primaryContainer = LyndBlueContainerLight,
-    onPrimaryContainer = LyndOnBlueContainerLight,
+    primary = LyndGoldLight,
+    onPrimary = LyndOnGoldLight,
+    primaryContainer = LyndGoldContainerLight,
+    onPrimaryContainer = LyndOnGoldContainerLight,
     secondary = LyndSecondaryLight,
     onSecondary = LyndOnSecondaryLight,
     secondaryContainer = LyndSecondaryContainerLight,
@@ -38,10 +38,10 @@ val LyndLightColorScheme = lightColorScheme(
 )
 
 val LyndDarkColorScheme = darkColorScheme(
-    primary = LyndBlueDark,
-    onPrimary = LyndOnBlueDark,
-    primaryContainer = LyndBlueContainerDark,
-    onPrimaryContainer = LyndOnBlueContainerDark,
+    primary = LyndGoldDark,
+    onPrimary = LyndOnGoldDark,
+    primaryContainer = LyndGoldContainerDark,
+    onPrimaryContainer = LyndOnGoldContainerDark,
     secondary = LyndSecondaryDark,
     onSecondary = LyndOnSecondaryDark,
     secondaryContainer = LyndSecondaryContainerDark,
