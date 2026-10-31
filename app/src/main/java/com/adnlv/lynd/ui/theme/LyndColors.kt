@@ -33,70 +33,73 @@ data class LyndColors(
     val textMuted: Color,
     val borderSubtle: Color,
     val borderStrong: Color,
-    val isDark: Boolean
+    val isDark: Boolean,
 )
 
-val LyndLightColors = LyndColors(
-    profit = LyndProfitGreenLight,
-    onProfit = LyndOnProfitLight,
-    profitContainer = LyndProfitContainerLight,
-    onProfitContainer = LyndOnProfitContainerLight,
-    loss = LyndLossRedLight,
-    onLoss = LyndOnLossLight,
-    lossContainer = LyndLossContainerLight,
-    onLossContainer = LyndOnLossContainerLight,
-    coupon = LyndGoldLight,
-    onCoupon = LyndOnGoldLight,
-    couponContainer = LyndGoldContainerLight,
-    onCouponContainer = LyndOnGoldContainerLight,
-    principal = LyndPrincipalAmberLight,
-    onPrincipal = LyndOnPrincipalLight,
-    principalContainer = LyndPrincipalContainerLight,
-    onPrincipalContainer = LyndOnPrincipalContainerLight,
-    warning = LyndWarningYellowLight,
-    onWarning = LyndOnWarningLight,
-    warningContainer = LyndWarningContainerLight,
-    onWarningContainer = LyndOnWarningContainerLight,
-    textPrimary = LyndTextPrimaryLight,
-    textSecondary = LyndTextSecondaryLight,
-    textMuted = LyndTextMutedLight,
-    borderSubtle = LyndBorderSubtleLight,
-    borderStrong = LyndBorderStrongLight,
-    isDark = false
-)
+val LyndLightColors =
+    LyndColors(
+        profit = LyndProfitGreenLight,
+        onProfit = LyndOnProfitLight,
+        profitContainer = LyndProfitContainerLight,
+        onProfitContainer = LyndOnProfitContainerLight,
+        loss = LyndLossTerracottaLight,
+        onLoss = LyndOnLossLight,
+        lossContainer = LyndLossContainerLight,
+        onLossContainer = LyndOnLossContainerLight,
+        coupon = LyndMintGreenLight,
+        onCoupon = LyndOnMintLight,
+        couponContainer = LyndMintContainerLight,
+        onCouponContainer = LyndOnMintContainerLight,
+        principal = LyndPrincipalSlateLight,
+        onPrincipal = LyndOnPrincipalLight,
+        principalContainer = LyndPrincipalContainerLight,
+        onPrincipalContainer = LyndOnPrincipalContainerLight,
+        warning = LyndWarningYellowLight,
+        onWarning = LyndOnWarningLight,
+        warningContainer = LyndWarningContainerLight,
+        onWarningContainer = LyndOnWarningContainerLight,
+        textPrimary = LyndTextPrimaryLight,
+        textSecondary = LyndTextSecondaryLight,
+        textMuted = LyndTextMutedLight,
+        borderSubtle = LyndBorderSubtleLight,
+        borderStrong = LyndBorderStrongLight,
+        isDark = false,
+    )
 
-val LyndDarkColors = LyndColors(
-    profit = LyndProfitGreenDark,
-    onProfit = LyndOnProfitDark,
-    profitContainer = LyndProfitContainerDark,
-    onProfitContainer = LyndOnProfitContainerDark,
-    loss = LyndLossRedDark,
-    onLoss = LyndOnLossDark,
-    lossContainer = LyndLossContainerDark,
-    onLossContainer = LyndOnLossContainerDark,
-    coupon = LyndGoldDark,
-    onCoupon = LyndOnGoldDark,
-    couponContainer = LyndGoldContainerDark,
-    onCouponContainer = LyndOnGoldContainerDark,
-    principal = LyndPrincipalAmberDark,
-    onPrincipal = LyndOnPrincipalDark,
-    principalContainer = LyndPrincipalContainerDark,
-    onPrincipalContainer = LyndOnPrincipalContainerDark,
-    warning = LyndWarningYellowDark,
-    onWarning = LyndOnWarningDark,
-    warningContainer = LyndWarningContainerDark,
-    onWarningContainer = LyndOnWarningContainerDark,
-    textPrimary = LyndTextPrimaryDark,
-    textSecondary = LyndTextSecondaryDark,
-    textMuted = LyndTextMutedDark,
-    borderSubtle = LyndBorderSubtleDark,
-    borderStrong = LyndBorderStrongDark,
-    isDark = true
-)
+val LyndDarkColors =
+    LyndColors(
+        profit = LyndProfitGreenDark,
+        onProfit = LyndOnProfitDark,
+        profitContainer = LyndProfitContainerDark,
+        onProfitContainer = LyndOnProfitContainerDark,
+        loss = LyndLossTerracottaDark,
+        onLoss = LyndOnLossDark,
+        lossContainer = LyndLossContainerDark,
+        onLossContainer = LyndOnLossContainerDark,
+        coupon = LyndMintGreenDark,
+        onCoupon = LyndOnMintDark,
+        couponContainer = LyndMintContainerDark,
+        onCouponContainer = LyndOnMintContainerDark,
+        principal = LyndPrincipalSlateDark,
+        onPrincipal = LyndOnPrincipalDark,
+        principalContainer = LyndPrincipalContainerDark,
+        onPrincipalContainer = LyndOnPrincipalContainerDark,
+        warning = LyndWarningYellowDark,
+        onWarning = LyndOnWarningDark,
+        warningContainer = LyndWarningContainerDark,
+        onWarningContainer = LyndOnWarningContainerDark,
+        textPrimary = LyndTextPrimaryDark,
+        textSecondary = LyndTextSecondaryDark,
+        textMuted = LyndTextMutedDark,
+        borderSubtle = LyndBorderSubtleDark,
+        borderStrong = LyndBorderStrongDark,
+        isDark = true,
+    )
 
-val LocalLyndColors = staticCompositionLocalOf<LyndColors> {
-    error("No LyndColors provided")
-}
+val LocalLyndColors =
+    staticCompositionLocalOf<LyndColors> {
+        error("No LyndColors provided")
+    }
 
 object LyndTheme {
     val colors: LyndColors

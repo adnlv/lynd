@@ -2,108 +2,142 @@ package com.adnlv.lynd.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-// Brand Primaries (Gold)
-val LyndGoldLight = Color(0xFF855F08)
-val LyndGoldDark = Color(0xFFEFD395)
-val LyndOnGoldLight = Color(0xFFFFFFFF)
-val LyndOnGoldDark = Color(0xFF261D03)
-val LyndGoldContainerLight = Color(0xFFF7EDD2)
-val LyndGoldContainerDark = Color(0xFF3F3414)
-val LyndOnGoldContainerLight = Color(0xFF2D1E00)
-val LyndOnGoldContainerDark = Color(0xFFF2DCAB)
+// Primary UI (Slate Blue)
+val LyndPrimarySlateLight = Color(0xFF2563EB)
+val LyndPrimarySlateDark = Color(0xFF60A5FA)
+val LyndOnPrimaryLight = Color(0xFFFFFFFF)
+val LyndOnPrimaryDark = Color(0xFF0F172A)
+val LyndPrimaryContainerLight = Color(0xFFDBEAFE)
+val LyndPrimaryContainerDark = Color(0xFF1E3A8A)
+val LyndOnPrimaryContainerLight = Color(0xFF1E3A8A)
+val LyndOnPrimaryContainerDark = Color(0xFFDBEAFE)
 
 // Backwards compatibility aliases
-val LyndBlueLight = LyndGoldLight
-val LyndBlueDark = LyndGoldDark
-val LyndOnBlueLight = LyndOnGoldLight
-val LyndOnBlueDark = LyndOnGoldDark
-val LyndBlueContainerLight = LyndGoldContainerLight
-val LyndBlueContainerDark = LyndGoldContainerDark
-val LyndOnBlueContainerLight = LyndOnGoldContainerLight
-val LyndOnBlueContainerDark = LyndOnGoldContainerDark
+val LyndGoldLight = LyndPrimarySlateLight
+val LyndGoldDark = LyndPrimarySlateDark
+val LyndOnGoldLight = LyndOnPrimaryLight
+val LyndOnGoldDark = LyndOnPrimaryDark
+val LyndGoldContainerLight = LyndPrimaryContainerLight
+val LyndGoldContainerDark = LyndPrimaryContainerDark
+val LyndOnGoldContainerLight = LyndOnPrimaryContainerLight
+val LyndOnGoldContainerDark = LyndOnPrimaryContainerDark
 
-// Brand Secondaries (Warm Gray)
-val LyndSecondaryLight = Color(0xFF5C5B58)
-val LyndSecondaryDark = Color(0xFFA4A4A4)
+val LyndBlueLight = LyndPrimarySlateLight
+val LyndBlueDark = LyndPrimarySlateDark
+val LyndOnBlueLight = LyndOnPrimaryLight
+val LyndOnBlueDark = LyndOnPrimaryDark
+val LyndBlueContainerLight = LyndPrimaryContainerLight
+val LyndBlueContainerDark = LyndPrimaryContainerDark
+val LyndOnBlueContainerLight = LyndOnPrimaryContainerLight
+val LyndOnBlueContainerDark = LyndOnPrimaryContainerDark
+
+// Secondary UI (Cool Slate)
+val LyndSecondaryLight = Color(0xFF475569)
+val LyndSecondaryDark = Color(0xFF94A3B8)
 val LyndOnSecondaryLight = Color(0xFFFFFFFF)
-val LyndOnSecondaryDark = Color(0xFF1E1E1E)
-val LyndSecondaryContainerLight = Color(0xFFEBE8E1)
-val LyndSecondaryContainerDark = Color(0xFF3A3937)
-val LyndOnSecondaryContainerLight = Color(0xFF1C1B19)
-val LyndOnSecondaryContainerDark = Color(0xFFDCDAD5)
+val LyndOnSecondaryDark = Color(0xFF0F172A)
+val LyndSecondaryContainerLight = Color(0xFFF1F5F9)
+val LyndSecondaryContainerDark = Color(0xFF1E293B)
+val LyndOnSecondaryContainerLight = Color(0xFF0F172A)
+val LyndOnSecondaryContainerDark = Color(0xFFE2E8F0)
 
-// Financial Semantics - Profit
-val LyndProfitGreenLight = Color(0xFF137333)
-val LyndProfitGreenDark = Color(0xFF81C995)
-val LyndOnProfitLight = Color(0xFFFFFFFF)
-val LyndOnProfitDark = Color(0xFF003915)
-val LyndProfitContainerLight = Color(0xFFCEEAD6)
-val LyndProfitContainerDark = Color(0xFF0D522C)
-val LyndOnProfitContainerLight = Color(0xFF072711)
-val LyndOnProfitContainerDark = Color(0xFFCEEAD6)
+// Financial Semantics - Gain / Profit / Price (Mint Green)
+val LyndMintGreenLight = Color(0xFF059669)
+val LyndMintGreenDark = Color(0xFF34D399)
+val LyndOnMintLight = Color(0xFFFFFFFF)
+val LyndOnMintDark = Color(0xFF022C22)
+val LyndMintContainerLight = Color(0xFFD1FAE5)
+val LyndMintContainerDark = Color(0xFF064E3B)
+val LyndOnMintContainerLight = Color(0xFF064E3B)
+val LyndOnMintContainerDark = Color(0xFFA7F3D0)
 
-// Financial Semantics - Loss & Errors
-val LyndLossRedLight = Color(0xFFBA1A1A)
-val LyndLossRedDark = Color(0xFFFFB4AB)
+val LyndProfitGreenLight = LyndMintGreenLight
+val LyndProfitGreenDark = LyndMintGreenDark
+val LyndOnProfitLight = LyndOnMintLight
+val LyndOnProfitDark = LyndOnMintDark
+val LyndProfitContainerLight = LyndMintContainerLight
+val LyndProfitContainerDark = LyndMintContainerDark
+val LyndOnProfitContainerLight = LyndOnMintContainerLight
+val LyndOnProfitContainerDark = LyndOnMintContainerDark
+
+// Financial Semantics - Loss (Terracotta Rust)
+val LyndLossTerracottaLight = Color(0xFFC2410C)
+val LyndLossTerracottaDark = Color(0xFFFB923C)
 val LyndOnLossLight = Color(0xFFFFFFFF)
-val LyndOnLossDark = Color(0xFF690005)
-val LyndLossContainerLight = Color(0xFFFFDAD6)
-val LyndLossContainerDark = Color(0xFF93000A)
-val LyndOnLossContainerLight = Color(0xFF410002)
-val LyndOnLossContainerDark = Color(0xFFFFDAD6)
+val LyndOnLossDark = Color(0xFF431407)
+val LyndLossContainerLight = Color(0xFFFFEDD5)
+val LyndLossContainerDark = Color(0xFF7C2D12)
+val LyndOnLossContainerLight = Color(0xFF7C2D12)
+val LyndOnLossContainerDark = Color(0xFFFED7AA)
 
-// Financial Semantics - Principal & Redemptions
-val LyndPrincipalAmberLight = Color(0xFFCC5E00)
-val LyndPrincipalAmberDark = Color(0xFFF09A38)
+val LyndLossRedLight = LyndLossTerracottaLight
+val LyndLossRedDark = LyndLossTerracottaDark
+
+// System Errors (Pure Crimson)
+val LyndErrorCrimsonLight = Color(0xFFDC2626)
+val LyndErrorCrimsonDark = Color(0xFFF87171)
+val LyndOnErrorLight = Color(0xFFFFFFFF)
+val LyndOnErrorDark = Color(0xFF450A0A)
+val LyndErrorContainerLight = Color(0xFFFEE2E2)
+val LyndErrorContainerDark = Color(0xFF7F1D1D)
+val LyndOnErrorContainerLight = Color(0xFF7F1D1D)
+val LyndOnErrorContainerDark = Color(0xFFFECACA)
+
+// Financial Semantics - Principal & Redemptions (Slate Accent)
+val LyndPrincipalSlateLight = Color(0xFF3B82F6)
+val LyndPrincipalSlateDark = Color(0xFF93C5FD)
 val LyndOnPrincipalLight = Color(0xFFFFFFFF)
-val LyndOnPrincipalDark = Color(0xFF3D1E00)
-val LyndPrincipalContainerLight = Color(0xFFFFDEC9)
-val LyndPrincipalContainerDark = Color(0xFF5C3202)
-val LyndOnPrincipalContainerLight = Color(0xFF371200)
-val LyndOnPrincipalContainerDark = Color(0xFFFFD9B0)
+val LyndOnPrincipalDark = Color(0xFF1E3A8A)
+val LyndPrincipalContainerLight = Color(0xFFEFF6FF)
+val LyndPrincipalContainerDark = Color(0xFF172554)
+val LyndOnPrincipalContainerLight = Color(0xFF1E40AF)
+val LyndOnPrincipalContainerDark = Color(0xFFBFDBFE)
 
-// Alerts & Warnings
-val LyndWarningYellowLight = Color(0xFF9E6200)
-val LyndWarningYellowDark = Color(0xFFE5B842)
+val LyndPrincipalAmberLight = LyndPrincipalSlateLight
+val LyndPrincipalAmberDark = LyndPrincipalSlateDark
+
+// Alerts & Warnings (Warm Amber)
+val LyndWarningYellowLight = Color(0xFFD97706)
+val LyndWarningYellowDark = Color(0xFFFBBF24)
 val LyndOnWarningLight = Color(0xFFFFFFFF)
-val LyndOnWarningDark = Color(0xFF3B2C00)
-val LyndWarningContainerLight = Color(0xFFFFE3B8)
-val LyndWarningContainerDark = Color(0xFF523D00)
-val LyndOnWarningContainerLight = Color(0xFF2C1800)
-val LyndOnWarningContainerDark = Color(0xFFFFE088)
+val LyndOnWarningDark = Color(0xFF451A03)
+val LyndWarningContainerLight = Color(0xFFFEF3C7)
+val LyndWarningContainerDark = Color(0xFF78350F)
+val LyndOnWarningContainerLight = Color(0xFF78350F)
+val LyndOnWarningContainerDark = Color(0xFFFDE68A)
 
 // Surfaces & Backgrounds
-val LyndBackgroundLight = Color(0xFFFAF8F5)
-val LyndBackgroundDark = Color(0xFF131313)
-val LyndOnBackgroundLight = Color(0xFF131313)
-val LyndOnBackgroundDark = Color(0xFFF3F1EC)
+val LyndBackgroundLight = Color(0xFFF8FAFC)
+val LyndBackgroundDark = Color(0xFF0B0F17)
+val LyndOnBackgroundLight = Color(0xFF0F172A)
+val LyndOnBackgroundDark = Color(0xFFF8FAFC)
 
 val LyndSurfaceLight = Color(0xFFFFFFFF)
-val LyndSurfaceDark = Color(0xFF1C1C1B)
-val LyndOnSurfaceLight = Color(0xFF131313)
-val LyndOnSurfaceDark = Color(0xFFF3F1EC)
+val LyndSurfaceDark = Color(0xFF131926)
+val LyndOnSurfaceLight = Color(0xFF0F172A)
+val LyndOnSurfaceDark = Color(0xFFF8FAFC)
 
-val LyndSurfaceVariantLight = Color(0xFFECE9E2)
-val LyndSurfaceVariantDark = Color(0xFF2E2D2B)
-val LyndOnSurfaceVariantLight = Color(0xFF4B4A48)
-val LyndOnSurfaceVariantDark = Color(0xFFA4A4A4)
+val LyndSurfaceVariantLight = Color(0xFFF1F5F9)
+val LyndSurfaceVariantDark = Color(0xFF1E293B)
+val LyndOnSurfaceVariantLight = Color(0xFF475569)
+val LyndOnSurfaceVariantDark = Color(0xFF94A3B8)
 
-val LyndSurfaceContainerLight = Color(0xFFEFECE5)
-val LyndSurfaceContainerDark = Color(0xFF262625)
-val LyndSurfaceContainerLowLight = Color(0xFFF5F3ED)
-val LyndSurfaceContainerLowDark = Color(0xFF1E1E1D)
-val LyndSurfaceContainerHighestLight = Color(0xFFE4E0D6)
-val LyndSurfaceContainerHighestDark = Color(0xFF3B3A38)
+val LyndSurfaceContainerLight = Color(0xFFF1F5F9)
+val LyndSurfaceContainerDark = Color(0xFF1A2234)
+val LyndSurfaceContainerLowLight = Color(0xFFF8FAFC)
+val LyndSurfaceContainerLowDark = Color(0xFF101623)
+val LyndSurfaceContainerHighestLight = Color(0xFFE2E8F0)
+val LyndSurfaceContainerHighestDark = Color(0xFF243048)
 
 // Text & Outlines
-val LyndTextPrimaryLight = Color(0xFF131313)
-val LyndTextPrimaryDark = Color(0xFFF3F1EC)
-val LyndTextSecondaryLight = Color(0xFF5C5B58)
-val LyndTextSecondaryDark = Color(0xFFA4A4A4)
-val LyndTextMutedLight = Color(0xFF777674)
-val LyndTextMutedDark = Color(0xFF777674)
+val LyndTextPrimaryLight = Color(0xFF0F172A)
+val LyndTextPrimaryDark = Color(0xFFF8FAFC)
+val LyndTextSecondaryLight = Color(0xFF475569)
+val LyndTextSecondaryDark = Color(0xFF94A3B8)
+val LyndTextMutedLight = Color(0xFF64748B)
+val LyndTextMutedDark = Color(0xFF64748B)
 
-val LyndBorderSubtleLight = Color(0xFFE0DDD5)
-val LyndBorderSubtleDark = Color(0xFF3B3A38)
-val LyndBorderStrongLight = Color(0xFFB5B2A8)
-val LyndBorderStrongDark = Color(0xFF4B4A48)
+val LyndBorderSubtleLight = Color(0xFFE2E8F0)
+val LyndBorderSubtleDark = Color(0xFF243048)
+val LyndBorderStrongLight = Color(0xFFCBD5E1)
+val LyndBorderStrongDark = Color(0xFF3B4D6E)
