@@ -22,25 +22,26 @@ import com.adnlv.lynd.ui.icons.MaterialSymbols
 fun QuantitySelector(
     quantity: Int,
     onQuantityChange: (Int) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = modifier
-            .fillMaxWidth(),
+        modifier =
+            modifier
+                .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Text(
             text = "Quantity",
-            style = MaterialTheme.typography.bodyLarge
+            style = MaterialTheme.typography.bodyLarge,
         )
 
         Row(
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             IconButton(
                 onClick = { if (quantity > 1) onQuantityChange(quantity - 1) },
-                enabled = quantity > 1
+                enabled = quantity > 1,
             ) {
                 Icon(imageVector = Icons.Default.Remove, contentDescription = "Decrease quantity")
             }
@@ -49,11 +50,11 @@ fun QuantitySelector(
                 text = quantity.toString(),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(horizontal = 12.dp)
+                modifier = Modifier.padding(horizontal = 12.dp),
             )
 
             IconButton(
-                onClick = { onQuantityChange(quantity + 1) }
+                onClick = { onQuantityChange(quantity + 1) },
             ) {
                 Icon(imageVector = MaterialSymbols.Add, contentDescription = "Increase quantity")
             }

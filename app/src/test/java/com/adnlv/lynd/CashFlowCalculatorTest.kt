@@ -9,15 +9,15 @@ import java.time.LocalDate
 import java.time.YearMonth
 
 class CashFlowCalculatorTest {
-
     @Test
     fun calculateMonthlyCashFlows_returnsRequestedNumberOfConsecutiveMonths() {
         val startDate = LocalDate.of(2026, 4, 1)
-        val result = PortfolioCalculator.calculateMonthlyCashFlows(
-            payoutRows = emptyList(),
-            startDate = startDate,
-            monthCount = 12
-        )
+        val result =
+            PortfolioCalculator.calculateMonthlyCashFlows(
+                payoutRows = emptyList(),
+                startDate = startDate,
+                monthCount = 12,
+            )
 
         assertEquals(0, result.size)
     }
@@ -25,44 +25,46 @@ class CashFlowCalculatorTest {
     @Test
     fun calculateMonthlyCashFlows_separatesCouponsAndRedemptionCorrectly() {
         val startDate = LocalDate.of(2026, 4, 1)
-        val rows = listOf(
-            PayoutRow(
-                isin = "UA1",
-                bondName = "Bond 1",
-                payDate = LocalDate.of(2026, 4, 15),
-                payType = "coupon",
-                payVal = BigDecimal("50.00"),
-                quantity = 10,
-                currency = "UAH",
-                purchaseDate = LocalDate.of(2026, 1, 1)
-            ),
-            PayoutRow(
-                isin = "UA1",
-                bondName = "Bond 1",
-                payDate = LocalDate.of(2026, 4, 15),
-                payType = "redemption",
-                payVal = BigDecimal("1000.00"),
-                quantity = 10,
-                currency = "UAH",
-                purchaseDate = LocalDate.of(2026, 1, 1)
-            ),
-            PayoutRow(
-                isin = "UA2",
-                bondName = "Bond 2",
-                payDate = LocalDate.of(2026, 5, 20),
-                payType = "coupon",
-                payVal = BigDecimal("30.00"),
-                quantity = 5,
-                currency = "UAH",
-                purchaseDate = LocalDate.of(2026, 1, 1)
+        val rows =
+            listOf(
+                PayoutRow(
+                    isin = "UA1",
+                    bondName = "Bond 1",
+                    payDate = LocalDate.of(2026, 4, 15),
+                    payType = "coupon",
+                    payVal = BigDecimal("50.00"),
+                    quantity = 10,
+                    currency = "UAH",
+                    purchaseDate = LocalDate.of(2026, 1, 1),
+                ),
+                PayoutRow(
+                    isin = "UA1",
+                    bondName = "Bond 1",
+                    payDate = LocalDate.of(2026, 4, 15),
+                    payType = "redemption",
+                    payVal = BigDecimal("1000.00"),
+                    quantity = 10,
+                    currency = "UAH",
+                    purchaseDate = LocalDate.of(2026, 1, 1),
+                ),
+                PayoutRow(
+                    isin = "UA2",
+                    bondName = "Bond 2",
+                    payDate = LocalDate.of(2026, 5, 20),
+                    payType = "coupon",
+                    payVal = BigDecimal("30.00"),
+                    quantity = 5,
+                    currency = "UAH",
+                    purchaseDate = LocalDate.of(2026, 1, 1),
+                ),
             )
-        )
 
-        val result = PortfolioCalculator.calculateMonthlyCashFlows(
-            payoutRows = rows,
-            startDate = startDate,
-            monthCount = 12
-        )
+        val result =
+            PortfolioCalculator.calculateMonthlyCashFlows(
+                payoutRows = rows,
+                startDate = startDate,
+                monthCount = 12,
+            )
 
         val uahFlows = result["UAH"] ?: error("UAH missing")
         assertEquals(12, uahFlows.size)
@@ -92,34 +94,36 @@ class CashFlowCalculatorTest {
     @Test
     fun calculateMonthlyCashFlows_ignoresPastAndPrePurchasePayouts() {
         val startDate = LocalDate.of(2026, 4, 1)
-        val rows = listOf(
-            PayoutRow(
-                isin = "UA1",
-                bondName = "Past Payout",
-                payDate = LocalDate.of(2026, 3, 15),
-                payType = "coupon",
-                payVal = BigDecimal("50.00"),
-                quantity = 10,
-                currency = "UAH",
-                purchaseDate = LocalDate.of(2026, 1, 1)
-            ),
-            PayoutRow(
-                isin = "UA2",
-                bondName = "Pre-purchase Payout",
-                payDate = LocalDate.of(2026, 5, 10),
-                payType = "coupon",
-                payVal = BigDecimal("50.00"),
-                quantity = 10,
-                currency = "UAH",
-                purchaseDate = LocalDate.of(2026, 5, 20)
+        val rows =
+            listOf(
+                PayoutRow(
+                    isin = "UA1",
+                    bondName = "Past Payout",
+                    payDate = LocalDate.of(2026, 3, 15),
+                    payType = "coupon",
+                    payVal = BigDecimal("50.00"),
+                    quantity = 10,
+                    currency = "UAH",
+                    purchaseDate = LocalDate.of(2026, 1, 1),
+                ),
+                PayoutRow(
+                    isin = "UA2",
+                    bondName = "Pre-purchase Payout",
+                    payDate = LocalDate.of(2026, 5, 10),
+                    payType = "coupon",
+                    payVal = BigDecimal("50.00"),
+                    quantity = 10,
+                    currency = "UAH",
+                    purchaseDate = LocalDate.of(2026, 5, 20),
+                ),
             )
-        )
 
-        val result = PortfolioCalculator.calculateMonthlyCashFlows(
-            payoutRows = rows,
-            startDate = startDate,
-            monthCount = 12
-        )
+        val result =
+            PortfolioCalculator.calculateMonthlyCashFlows(
+                payoutRows = rows,
+                startDate = startDate,
+                monthCount = 12,
+            )
 
         val uahFlows = result["UAH"] ?: error("UAH missing")
         assertEquals(12, uahFlows.size)

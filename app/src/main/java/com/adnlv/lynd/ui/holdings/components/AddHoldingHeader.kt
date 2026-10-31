@@ -26,49 +26,52 @@ fun AddHoldingHeader(
     isFormValid: Boolean,
     onCloseClick: () -> Unit,
     onSaveClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(16.dp),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .padding(16.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             IconButton(onClick = onCloseClick) {
                 Icon(
                     imageVector = Icons.Default.Close,
-                    contentDescription = "Close"
+                    contentDescription = "Close",
                 )
             }
             Text(
                 text = if (isEditing) "Edit Holding" else "Add Holding",
                 style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
         }
 
         val buttonColors = ButtonDefaults.buttonColors()
         val primaryColor = LyndTheme.colors.coupon
-        val activeBorderColor = primaryColor.copy(
-            red = primaryColor.red * 0.8f,
-            green = primaryColor.green * 0.8f,
-            blue = primaryColor.blue * 0.8f
-        )
-        val buttonBorderColor = if (isFormValid) {
-            activeBorderColor
-        } else {
-            buttonColors.disabledContainerColor
-        }
+        val activeBorderColor =
+            primaryColor.copy(
+                red = primaryColor.red * 0.8f,
+                green = primaryColor.green * 0.8f,
+                blue = primaryColor.blue * 0.8f,
+            )
+        val buttonBorderColor =
+            if (isFormValid) {
+                activeBorderColor
+            } else {
+                buttonColors.disabledContainerColor
+            }
 
         Button(
             onClick = onSaveClick,
             enabled = isFormValid,
-            border = BorderStroke(1.dp, buttonBorderColor)
+            border = BorderStroke(1.dp, buttonBorderColor),
         ) {
             Text("Save")
         }

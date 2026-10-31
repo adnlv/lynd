@@ -35,29 +35,33 @@ import java.util.Locale
 fun CashFlowChartCard(
     cashFlows: List<MonthlyCashFlow>,
     currency: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainer
-        ),
-        border = BorderStroke(
-            width = 1.dp,
-            color = LyndTheme.colors.borderSubtle.copy(alpha = 0.5f)
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceContainer,
+            ),
+        border =
+            BorderStroke(
+                width = 1.dp,
+                color = LyndTheme.colors.borderSubtle.copy(alpha = 0.5f),
+            ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            val total12MonthsIncome = remember(cashFlows) {
-                cashFlows.fold(BigDecimal.ZERO) { acc, item -> acc.add(item.totalAmount) }
-            }
+            val total12MonthsIncome =
+                remember(cashFlows) {
+                    cashFlows.fold(BigDecimal.ZERO) { acc, item -> acc.add(item.totalAmount) }
+                }
 
             var selectedIndex by remember(cashFlows) {
                 val firstNonZeroIndex = cashFlows.indexOfFirst { it.totalAmount > BigDecimal.ZERO }
@@ -67,19 +71,19 @@ fun CashFlowChartCard(
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                     Text(
                         text = "Monthly Cash Flow",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
-                        color = LyndTheme.colors.textPrimary
+                        color = LyndTheme.colors.textPrimary,
                     )
                     Text(
                         text = "Next 12 months",
                         style = MaterialTheme.typography.labelSmall,
-                        color = LyndTheme.colors.textSecondary
+                        color = LyndTheme.colors.textSecondary,
                     )
                 }
 
@@ -87,47 +91,50 @@ fun CashFlowChartCard(
                     Text(
                         text = "Total Upcoming",
                         style = MaterialTheme.typography.labelSmall,
-                        color = LyndTheme.colors.textSecondary
+                        color = LyndTheme.colors.textSecondary,
                     )
                     Text(
                         text = "${Formatters.formatAmount(total12MonthsIncome)} $currency",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
-                        color = LyndTheme.colors.coupon
+                        color = LyndTheme.colors.coupon,
                     )
                 }
             }
 
             if (cashFlows.isEmpty() || total12MonthsIncome <= BigDecimal.ZERO) {
                 Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(140.dp),
-                    contentAlignment = Alignment.Center
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .height(140.dp),
+                    contentAlignment = Alignment.Center,
                 ) {
                     Text(
                         text = "No upcoming payments.",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = LyndTheme.colors.textSecondary
+                        color = LyndTheme.colors.textSecondary,
                     )
                 }
             } else {
-                val maxMonthlyAmount = remember(cashFlows) {
-                    val max = cashFlows.maxOfOrNull { it.totalAmount } ?: BigDecimal.ZERO
-                    if (max > BigDecimal.ZERO) max else BigDecimal.ONE
-                }
+                val maxMonthlyAmount =
+                    remember(cashFlows) {
+                        val max = cashFlows.maxOfOrNull { it.totalAmount } ?: BigDecimal.ZERO
+                        if (max > BigDecimal.ZERO) max else BigDecimal.ONE
+                    }
 
                 SnapBarChart(
                     items = cashFlows,
                     selectedIndex = selectedIndex,
                     onSelectedIndexChange = { selectedIndex = it },
                 ) { monthFlow, index, isSelected ->
-                    val monthLabel = remember(monthFlow.yearMonth) {
-                        monthFlow.yearMonth.month
-                            .getDisplayName(TextStyle.SHORT, Locale.getDefault())
-                            .filter { it.isLetter() }
-                            .take(3)
-                    }
+                    val monthLabel =
+                        remember(monthFlow.yearMonth) {
+                            monthFlow.yearMonth.month
+                                .getDisplayName(TextStyle.SHORT, Locale.getDefault())
+                                .filter { it.isLetter() }
+                                .take(3)
+                        }
                     CashFlowBar(
                         monthFlow = monthFlow,
                         monthLabel = monthLabel,
@@ -135,7 +142,7 @@ fun CashFlowChartCard(
                         isSelected = isSelected,
                         couponColor = LyndTheme.colors.coupon,
                         principalColor = LyndTheme.colors.principal,
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier.fillMaxSize(),
                     )
                 }
 
@@ -143,7 +150,7 @@ fun CashFlowChartCard(
                 if (selectedFlow != null) {
                     CashFlowDetailCard(
                         selectedFlow = selectedFlow,
-                        currency = currency
+                        currency = currency,
                     )
                 }
             }

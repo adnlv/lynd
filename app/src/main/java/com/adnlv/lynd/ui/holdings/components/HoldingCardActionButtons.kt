@@ -31,37 +31,40 @@ fun HoldingCardActionButtons(
     buttonGapDp: Dp,
     onDeleteClick: () -> Unit,
     onEditClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = modifier
-            .fillMaxHeight()
-            .padding(vertical = buttonGapDp),
+        modifier =
+            modifier
+                .fillMaxHeight()
+                .padding(vertical = buttonGapDp),
         horizontalArrangement = Arrangement.spacedBy(buttonSpacingDp, Alignment.End),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         if (deleteWidthDp > 0.dp) {
             Surface(
                 onClick = onDeleteClick,
-                modifier = Modifier
-                    .width(deleteWidthDp)
-                    .fillMaxHeight()
-                    .graphicsLayer { alpha = deleteAlpha },
+                modifier =
+                    Modifier
+                        .width(deleteWidthDp)
+                        .fillMaxHeight()
+                        .graphicsLayer { alpha = deleteAlpha },
                 shape = CircleShape,
                 color = LyndTheme.colors.lossContainer.copy(alpha = 0.95f),
-                border = BorderStroke(
-                    1.dp,
-                    LyndTheme.colors.loss.copy(alpha = 0.35f)
-                )
+                border =
+                    BorderStroke(
+                        1.dp,
+                        LyndTheme.colors.loss.copy(alpha = 0.35f),
+                    ),
             ) {
                 Box(
                     modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
+                    contentAlignment = Alignment.Center,
                 ) {
                     Icon(
                         imageVector = Icons.Default.Delete,
                         contentDescription = "Delete",
-                        tint = LyndTheme.colors.onLossContainer
+                        tint = LyndTheme.colors.onLossContainer,
                     )
                 }
             }
@@ -70,24 +73,26 @@ fun HoldingCardActionButtons(
         if (editWidthDp > 0.dp) {
             Surface(
                 onClick = onEditClick,
-                modifier = Modifier
-                    .width(editWidthDp)
-                    .fillMaxHeight(),
+                modifier =
+                    Modifier
+                        .width(editWidthDp)
+                        .fillMaxHeight(),
                 shape = CircleShape,
                 color = LyndTheme.colors.couponContainer.copy(alpha = 0.95f),
-                border = BorderStroke(
-                    1.dp,
-                    LyndTheme.colors.coupon.copy(alpha = 0.25f)
-                )
+                border =
+                    BorderStroke(
+                        1.dp,
+                        LyndTheme.colors.coupon.copy(alpha = 0.25f),
+                    ),
             ) {
                 Box(
                     modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
+                    contentAlignment = Alignment.Center,
                 ) {
                     Icon(
                         imageVector = Icons.Default.Edit,
                         contentDescription = "Edit",
-                        tint = LyndTheme.colors.onCouponContainer
+                        tint = LyndTheme.colors.onCouponContainer,
                     )
                 }
             }

@@ -7,7 +7,7 @@ import java.time.LocalDate
 enum class LadderPaymentType {
     COUPON,
     REDEMPTION,
-    COUPON_AND_REDEMPTION
+    COUPON_AND_REDEMPTION,
 }
 
 data class BondLadderMatch(
@@ -15,12 +15,12 @@ data class BondLadderMatch(
     val paymentDate: LocalDate,
     val paymentType: LadderPaymentType,
     val paymentAmount: BigDecimal,
-    val totalGapsCovered: Int
+    val totalGapsCovered: Int,
 )
 
 data class ActionableGap(
     val gap: IncomeGap,
-    val recommendedBonds: List<BondLadderMatch>
+    val recommendedBonds: List<BondLadderMatch>,
 )
 
 typealias GapMatches = ActionableGap

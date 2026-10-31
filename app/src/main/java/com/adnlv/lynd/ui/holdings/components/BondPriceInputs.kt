@@ -29,12 +29,13 @@ fun BondPriceInputs(
     onTotalPriceChange: (String) -> Unit,
     pricePerBondInput: String,
     onPricePerBondChange: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier
-            .fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        modifier =
+            modifier
+                .fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         OutlinedTextField(
             value = totalPriceInput,
@@ -43,29 +44,30 @@ fun BondPriceInputs(
             placeholder = {
                 Text(
                     text = "1000.00",
-                    color = LyndTheme.colors.textMuted
+                    color = LyndTheme.colors.textMuted,
                 )
             },
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
 
         Box(
             modifier = Modifier.fillMaxWidth(),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
         ) {
             Surface(
                 shape = RoundedCornerShape(12.dp),
-                color = MaterialTheme.colorScheme.surfaceContainerHigh
+                color = MaterialTheme.colorScheme.surfaceContainerHigh,
             ) {
                 Icon(
                     imageVector = Icons.Default.SwapVert,
                     contentDescription = "Linked price fields",
                     tint = LyndTheme.colors.textSecondary,
-                    modifier = Modifier
-                        .padding(horizontal = 8.dp, vertical = 4.dp)
-                        .size(18.dp)
+                    modifier =
+                        Modifier
+                            .padding(horizontal = 8.dp, vertical = 4.dp)
+                            .size(18.dp),
                 )
             }
         }
@@ -77,12 +79,12 @@ fun BondPriceInputs(
             placeholder = {
                 Text(
                     text = "1000.00",
-                    color = LyndTheme.colors.textMuted
+                    color = LyndTheme.colors.textMuted,
                 )
             },
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
 
         Text(
@@ -90,7 +92,7 @@ fun BondPriceInputs(
             style = MaterialTheme.typography.bodySmall,
             color = LyndTheme.colors.textSecondary,
             textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
     }
 }

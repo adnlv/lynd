@@ -28,7 +28,7 @@ fun LyndTabPager(
     payoutsListState: LazyListState,
     bottomBarActionState: BottomBarActionState?,
     onNavigateToHoldings: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val visitedPages = remember { mutableStateListOf(0) }
     LaunchedEffect(pagerState.currentPage) {
@@ -41,28 +41,31 @@ fun LyndTabPager(
         state = pagerState,
         userScrollEnabled = false,
         beyondViewportPageCount = 2,
-        modifier = modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize(),
     ) { page ->
         if (visitedPages.contains(page) || page == pagerState.currentPage) {
             when (page) {
-                0 -> OverviewScreen(
-                    viewModel = overviewViewModel,
-                    listState = overviewListState,
-                    onNavigateToHoldings = onNavigateToHoldings
-                )
-                1 -> PlannerScreen(
-                    viewModel = plannerViewModel,
-                    listState = plannerListState,
-                    onNavigateToHoldings = onNavigateToHoldings
-                )
-                2 -> PayoutsScreen(
-                    viewModel = payoutsViewModel,
-                    listState = payoutsListState,
-                    onActionChange = { action ->
-                        bottomBarActionState?.setAction(Screen.Payouts.route, action)
-                    },
-                    onNavigateToHoldings = onNavigateToHoldings
-                )
+                0 ->
+                    OverviewScreen(
+                        viewModel = overviewViewModel,
+                        listState = overviewListState,
+                        onNavigateToHoldings = onNavigateToHoldings,
+                    )
+                1 ->
+                    PlannerScreen(
+                        viewModel = plannerViewModel,
+                        listState = plannerListState,
+                        onNavigateToHoldings = onNavigateToHoldings,
+                    )
+                2 ->
+                    PayoutsScreen(
+                        viewModel = payoutsViewModel,
+                        listState = payoutsListState,
+                        onActionChange = { action ->
+                            bottomBarActionState?.setAction(Screen.Payouts.route, action)
+                        },
+                        onNavigateToHoldings = onNavigateToHoldings,
+                    )
             }
         } else {
             Box(modifier = Modifier.fillMaxSize())

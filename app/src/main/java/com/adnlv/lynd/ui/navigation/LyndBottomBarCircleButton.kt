@@ -16,20 +16,21 @@ import com.adnlv.lynd.ui.theme.LyndLayoutDefaults
 fun LyndBottomBarCircleButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     LyndGlassSurface(
         shape = CircleShape,
-        modifier = modifier.size(LyndLayoutDefaults.FloatingBarHeight)
+        modifier = modifier.size(LyndLayoutDefaults.FloatingBarHeight),
     ) {
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .clickable(
-                    role = Role.Button,
-                    onClick = onClick
-                ),
-            contentAlignment = Alignment.Center
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .clickable(
+                        role = Role.Button,
+                        onClick = onClick,
+                    ),
+            contentAlignment = Alignment.Center,
         ) {
             content()
         }

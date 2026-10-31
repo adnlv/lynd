@@ -54,7 +54,7 @@ fun HoldingsScreen(
     onActionChange: ((BottomBarAction) -> Unit)? = null,
     onNavigateBack: (() -> Unit)? = null,
     onNavigateToAdd: (() -> Unit)? = null,
-    onNavigateToEdit: ((HoldingItem) -> Unit)? = null
+    onNavigateToEdit: ((HoldingItem) -> Unit)? = null,
 ) {
     val holdings by viewModel.holdings.collectAsState()
     val groupedHoldings by viewModel.groupedHoldings.collectAsState()
@@ -68,9 +68,10 @@ fun HoldingsScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
-    val sharedPrefs = remember(context) {
-        context.getSharedPreferences("lynd_prefs", Context.MODE_PRIVATE)
-    }
+    val sharedPrefs =
+        remember(context) {
+            context.getSharedPreferences("lynd_prefs", Context.MODE_PRIVATE)
+        }
     var hasSeenSwipePeek by remember {
         mutableStateOf(sharedPrefs.getBoolean("has_seen_swipe_peek", false))
     }
@@ -95,8 +96,8 @@ fun HoldingsScreen(
                     showAddDialog = false
                     editingHolding = null
                     revealedHoldingId = null
-                }
-            )
+                },
+            ),
         )
     }
 
@@ -130,26 +131,28 @@ fun HoldingsScreen(
         snackbarHost = {
             SnackbarHost(
                 hostState = snackbarHostState,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .navigationBarsPadding()
-                    .padding(start = 16.dp, end = 16.dp, bottom = 80.dp)
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .navigationBarsPadding()
+                        .padding(start = 16.dp, end = 16.dp, bottom = 80.dp),
             ) { data ->
                 HoldingsUndoSnackbar(data = data)
             }
-        }
+        },
     ) { innerPadding ->
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .pointerInput(Unit) {
-                    detectTapGestures {
-                        if (revealedHoldingId != null) {
-                            revealedHoldingId = null
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+                    .pointerInput(Unit) {
+                        detectTapGestures {
+                            if (revealedHoldingId != null) {
+                                revealedHoldingId = null
+                            }
                         }
-                    }
-                }
+                    },
         ) {
             if (isSyncing) {
                 LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
@@ -157,25 +160,28 @@ fun HoldingsScreen(
 
             HoldingsSyncBanner(
                 syncError = syncError,
-                onRetry = { viewModel.retrySync() }
+                onRetry = { viewModel.retrySync() },
             )
 
-            val navigationIcon: (@Composable () -> Unit)? = if (onNavigateBack != null) {
-                {
-                    IconButton(onClick = onNavigateBack) {
-                        Icon(
-                            imageVector = androidx.compose.material.icons.Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Navigate back"
-                        )
+            val navigationIcon: (@Composable () -> Unit)? =
+                if (onNavigateBack != null) {
+                    {
+                        IconButton(onClick = onNavigateBack) {
+                            Icon(
+                                imageVector = androidx.compose.material.icons.Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = "Navigate back",
+                            )
+                        }
                     }
+                } else {
+                    null
                 }
-            } else null
 
             if (holdings.isEmpty()) {
                 LyndScreenHeader(
                     title = "Holdings",
                     navigationIcon = navigationIcon,
-                    modifier = Modifier.padding(top = 8.dp, start = if (navigationIcon != null) 4.dp else 20.dp, end = 20.dp)
+                    modifier = Modifier.padding(top = 8.dp, start = if (navigationIcon != null) 4.dp else 20.dp, end = 20.dp),
                 )
                 LyndNoHoldingsPlate(
                     title = "No holdings yet",
@@ -188,27 +194,29 @@ fun HoldingsScreen(
                         }
                     },
                     onLoadTestPortfolio = { viewModel.loadTestPortfolio() },
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxWidth()
+                    modifier =
+                        Modifier
+                            .weight(1f)
+                            .fillMaxWidth(),
                 )
             } else {
                 LazyColumn(
                     state = listState,
                     modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(
-                        start = 16.dp,
-                        top = 8.dp,
-                        end = 16.dp,
-                        bottom = 100.dp
-                    ),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                    contentPadding =
+                        PaddingValues(
+                            start = 16.dp,
+                            top = 8.dp,
+                            end = 16.dp,
+                            bottom = 100.dp,
+                        ),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
                     item(key = "holdings_header") {
                         LyndScreenHeader(
                             title = "Holdings",
                             navigationIcon = navigationIcon,
-                            modifier = Modifier.padding(start = if (navigationIcon != null) 0.dp else 4.dp)
+                            modifier = Modifier.padding(start = if (navigationIcon != null) 0.dp else 4.dp),
                         )
                     }
 
@@ -261,16 +269,17 @@ fun HoldingsScreen(
                                 viewModel.deleteHolding(holding.id)
                                 coroutineScope.launch {
                                     snackbarHostState.currentSnackbarData?.dismiss()
-                                    val result = snackbarHostState.showSnackbar(
-                                        message = "Holding deleted",
-                                        actionLabel = "Undo",
-                                        duration = SnackbarDuration.Indefinite
-                                    )
+                                    val result =
+                                        snackbarHostState.showSnackbar(
+                                            message = "Holding deleted",
+                                            actionLabel = "Undo",
+                                            duration = SnackbarDuration.Indefinite,
+                                        )
                                     if (result == SnackbarResult.ActionPerformed) {
                                         viewModel.restoreHolding()
                                     }
                                 }
-                            }
+                            },
                         )
                     }
                 }
@@ -284,7 +293,7 @@ fun HoldingsScreen(
                     showAddDialog = false
                     editingHolding = null
                 },
-                holdingToEdit = editingHolding
+                holdingToEdit = editingHolding,
             )
         }
     }

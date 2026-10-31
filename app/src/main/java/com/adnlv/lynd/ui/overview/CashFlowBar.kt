@@ -35,76 +35,84 @@ fun CashFlowBar(
     isSelected: Boolean,
     couponColor: Color,
     principalColor: Color,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-    val totalHeightFraction = remember(monthFlow.totalAmount, maxAmount) {
-        if (maxAmount > BigDecimal.ZERO && monthFlow.totalAmount > BigDecimal.ZERO) {
-            (monthFlow.totalAmount.toFloat() / maxAmount.toFloat()).coerceIn(0.06f, 1f)
-        } else {
-            0f
+    val totalHeightFraction =
+        remember(monthFlow.totalAmount, maxAmount) {
+            if (maxAmount > BigDecimal.ZERO && monthFlow.totalAmount > BigDecimal.ZERO) {
+                (monthFlow.totalAmount.toFloat() / maxAmount.toFloat()).coerceIn(0.06f, 1f)
+            } else {
+                0f
+            }
         }
-    }
 
-    val couponFraction = remember(monthFlow.couponAmount, monthFlow.totalAmount) {
-        if (monthFlow.totalAmount > BigDecimal.ZERO) {
-            (monthFlow.couponAmount.toFloat() / monthFlow.totalAmount.toFloat()).coerceIn(0f, 1f)
-        } else {
-            0f
+    val couponFraction =
+        remember(monthFlow.couponAmount, monthFlow.totalAmount) {
+            if (monthFlow.totalAmount > BigDecimal.ZERO) {
+                (monthFlow.couponAmount.toFloat() / monthFlow.totalAmount.toFloat()).coerceIn(0f, 1f)
+            } else {
+                0f
+            }
         }
-    }
 
-    val principalFraction = remember(monthFlow.principalAmount, monthFlow.totalAmount) {
-        if (monthFlow.totalAmount > BigDecimal.ZERO) {
-            (monthFlow.principalAmount.toFloat() / monthFlow.totalAmount.toFloat()).coerceIn(0f, 1f)
-        } else {
-            0f
+    val principalFraction =
+        remember(monthFlow.principalAmount, monthFlow.totalAmount) {
+            if (monthFlow.totalAmount > BigDecimal.ZERO) {
+                (monthFlow.principalAmount.toFloat() / monthFlow.totalAmount.toFloat()).coerceIn(0f, 1f)
+            } else {
+                0f
+            }
         }
-    }
 
     Column(
         modifier = modifier.fillMaxHeight(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Bottom
+        verticalArrangement = Arrangement.Bottom,
     ) {
         Box(
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth()
-                .padding(horizontal = 2.dp),
-            contentAlignment = Alignment.BottomCenter
+            modifier =
+                Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+                    .padding(horizontal = 2.dp),
+            contentAlignment = Alignment.BottomCenter,
         ) {
             if (totalHeightFraction > 0f) {
                 Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight(totalHeightFraction)
-                        .clip(RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp))
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight(totalHeightFraction)
+                            .clip(RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp)),
                 ) {
                     if (principalFraction > 0f) {
                         Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .weight(principalFraction)
-                                .background(principalColor)
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .weight(principalFraction)
+                                    .background(principalColor),
                         )
                     }
                     if (couponFraction > 0f) {
                         Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .weight(couponFraction)
-                                .background(couponColor)
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .weight(couponFraction)
+                                    .background(couponColor),
                         )
                     }
                 }
             } else {
                 Box(
-                    modifier = Modifier
-                        .size(width = 8.dp, height = 2.dp)
-                        .background(
-                            color = LyndTheme.colors.borderSubtle.copy(alpha = 0.4f),
-                            shape = RoundedCornerShape(1.dp)
-                        )
+                    modifier =
+                        Modifier
+                            .size(width = 8.dp, height = 2.dp)
+                            .background(
+                                color = LyndTheme.colors.borderSubtle.copy(alpha = 0.4f),
+                                shape = RoundedCornerShape(1.dp),
+                            ),
                 )
             }
         }
@@ -118,7 +126,7 @@ fun CashFlowBar(
             softWrap = false,
             overflow = TextOverflow.Clip,
             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-            color = if (isSelected) couponColor else LyndTheme.colors.textSecondary
+            color = if (isSelected) couponColor else LyndTheme.colors.textSecondary,
         )
     }
 }

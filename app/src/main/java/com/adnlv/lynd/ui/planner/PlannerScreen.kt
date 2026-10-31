@@ -21,35 +21,37 @@ fun PlannerScreen(
     viewModel: PlannerViewModel,
     modifier: Modifier = Modifier,
     listState: LazyListState = rememberLazyListState(),
-    onNavigateToHoldings: () -> Unit = {}
+    onNavigateToHoldings: () -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background),
     ) {
         if (uiState.summaries.isEmpty()) {
             LyndScreenHeader(
                 title = "Income Gap Detector",
-                modifier = Modifier.padding(top = 8.dp, start = 20.dp, end = 20.dp)
+                modifier = Modifier.padding(top = 8.dp, start = 20.dp, end = 20.dp),
             )
             LyndNoHoldingsPlate(
                 title = "No income to plan",
                 description = "Add bond holdings to identify months without coupon payments and plan cash flow.",
                 onAddHolding = onNavigateToHoldings,
                 onLoadTestPortfolio = { viewModel.loadTestPortfolio() },
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth()
+                modifier =
+                    Modifier
+                        .weight(1f)
+                        .fillMaxWidth(),
             )
         } else {
             IncomeGapGroup(
                 uiState = uiState,
                 onHorizonSelected = { viewModel.setPlannerHorizon(it) },
                 onCurrencySelected = { viewModel.setPlannerCurrency(it) },
-                listState = listState
+                listState = listState,
             )
         }
     }

@@ -33,29 +33,33 @@ import java.math.BigDecimal
 fun MaturityScheduleChartCard(
     maturities: List<YearlyMaturity>,
     currency: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-    val totalPrincipal = remember(maturities) {
-        maturities.fold(BigDecimal.ZERO) { acc, item -> acc.add(item.amount) }
-    }
+    val totalPrincipal =
+        remember(maturities) {
+            maturities.fold(BigDecimal.ZERO) { acc, item -> acc.add(item.amount) }
+        }
 
     Card(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainer
-        ),
-        border = BorderStroke(
-            width = 1.dp,
-            color = LyndTheme.colors.borderSubtle.copy(alpha = 0.5f)
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceContainer,
+            ),
+        border =
+            BorderStroke(
+                width = 1.dp,
+                color = LyndTheme.colors.borderSubtle.copy(alpha = 0.5f),
+            ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             var selectedIndex by remember(maturities) {
                 val firstNonZeroIndex = maturities.indexOfFirst { it.amount > BigDecimal.ZERO }
@@ -65,19 +69,19 @@ fun MaturityScheduleChartCard(
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                     Text(
                         text = "Maturity Schedule",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
-                        color = LyndTheme.colors.textPrimary
+                        color = LyndTheme.colors.textPrimary,
                     )
                     Text(
                         text = "Principal redemption by year",
                         style = MaterialTheme.typography.labelSmall,
-                        color = LyndTheme.colors.textSecondary
+                        color = LyndTheme.colors.textSecondary,
                     )
                 }
 
@@ -85,35 +89,37 @@ fun MaturityScheduleChartCard(
                     Text(
                         text = "Total Principal",
                         style = MaterialTheme.typography.labelSmall,
-                        color = LyndTheme.colors.textSecondary
+                        color = LyndTheme.colors.textSecondary,
                     )
                     Text(
                         text = "${Formatters.formatAmount(totalPrincipal)} $currency",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
-                        color = LyndTheme.colors.principal
+                        color = LyndTheme.colors.principal,
                     )
                 }
             }
 
             if (maturities.isEmpty() || totalPrincipal <= BigDecimal.ZERO) {
                 Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(140.dp),
-                    contentAlignment = Alignment.Center
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .height(140.dp),
+                    contentAlignment = Alignment.Center,
                 ) {
                     Text(
                         text = "No upcoming maturities.",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = LyndTheme.colors.textSecondary
+                        color = LyndTheme.colors.textSecondary,
                     )
                 }
             } else {
-                val maxYearAmount = remember(maturities) {
-                    val max = maturities.maxOfOrNull { it.amount } ?: BigDecimal.ZERO
-                    if (max > BigDecimal.ZERO) max else BigDecimal.ONE
-                }
+                val maxYearAmount =
+                    remember(maturities) {
+                        val max = maturities.maxOfOrNull { it.amount } ?: BigDecimal.ZERO
+                        if (max > BigDecimal.ZERO) max else BigDecimal.ONE
+                    }
 
                 SnapBarChart(
                     items = maturities,
@@ -125,7 +131,7 @@ fun MaturityScheduleChartCard(
                         maxAmount = maxYearAmount,
                         isSelected = isSelected,
                         barColor = LyndTheme.colors.principal,
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier.fillMaxSize(),
                     )
                 }
 
@@ -134,7 +140,7 @@ fun MaturityScheduleChartCard(
                     MaturityDetailCard(
                         selectedMaturity = selectedMaturity,
                         totalPrincipal = totalPrincipal,
-                        currency = currency
+                        currency = currency,
                     )
                 }
             }

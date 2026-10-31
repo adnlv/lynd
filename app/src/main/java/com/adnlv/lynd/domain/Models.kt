@@ -11,19 +11,19 @@ data class PayoutItem(
     val payDate: LocalDate,
     val payType: String,
     val payoutAmount: BigDecimal,
-    val currency: String
+    val currency: String,
 )
 
 enum class PayoutType {
     COUPON,
-    REDEMPTION
+    REDEMPTION,
 }
 
 data class PayoutLot(
     val holdingId: Int = 0,
     val purchaseDate: LocalDate,
     val quantity: Int,
-    val amount: BigDecimal
+    val amount: BigDecimal,
 )
 
 data class PayoutBondDetail(
@@ -35,19 +35,19 @@ data class PayoutBondDetail(
     val principalAmount: BigDecimal,
     val currency: String,
     val payoutTypes: Set<PayoutType>,
-    val lots: List<PayoutLot>
+    val lots: List<PayoutLot>,
 )
 
 data class CurrencyTotal(
     val currency: String,
-    val amount: BigDecimal
+    val amount: BigDecimal,
 )
 
 data class PayoutDateGroup(
     val date: LocalDate,
     val totalAmounts: List<CurrencyTotal>,
     val payoutTypes: Set<PayoutType>,
-    val bonds: List<PayoutBondDetail>
+    val bonds: List<PayoutBondDetail>,
 ) {
     val isSingleBond: Boolean get() = bonds.size == 1
     val singleBond: PayoutBondDetail? get() = bonds.singleOrNull()
@@ -65,24 +65,24 @@ data class HoldingItem(
     val couponRate: BigDecimal = BigDecimal.ZERO,
     val totalPayoutAmount: BigDecimal = BigDecimal.ZERO,
     val totalProfitAmount: BigDecimal = BigDecimal.ZERO,
-    val profitPercentage: BigDecimal = BigDecimal.ZERO
+    val profitPercentage: BigDecimal = BigDecimal.ZERO,
 )
 
 data class HoldingGroup(
     val isin: String,
     val currency: String = "",
     val totalQuantity: Int,
-    val items: List<HoldingItem>
+    val items: List<HoldingItem>,
 )
 
 data class MonthlyCashFlow(
     val yearMonth: YearMonth,
     val couponAmount: BigDecimal,
     val principalAmount: BigDecimal,
-    val totalAmount: BigDecimal
+    val totalAmount: BigDecimal,
 )
 
 data class YearlyMaturity(
     val year: Int,
-    val amount: BigDecimal
+    val amount: BigDecimal,
 )

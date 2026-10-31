@@ -18,7 +18,7 @@ data class HoldingWithBond(
     val totalPaidAmount: BigDecimal,
     val purchaseDate: LocalDate,
     val currency: String,
-    val couponRate: BigDecimal
+    val couponRate: BigDecimal,
 )
 
 @Dao
@@ -35,7 +35,8 @@ interface HoldingDao {
     @Query("SELECT * FROM holdings WHERE id = :id LIMIT 1")
     suspend fun getHoldingById(id: Int): HoldingEntity?
 
-    @Query("""
+    @Query(
+        """
         SELECT 
             h.id AS id,
             h.isin AS isin,
@@ -49,13 +50,16 @@ interface HoldingDao {
         FROM holdings h
         LEFT JOIN bonds b ON h.isin = b.isin
         ORDER BY h.isin ASC, h.purchase_date DESC
-    """)
+    """,
+    )
     fun getAllHoldings(): Flow<List<HoldingWithBond>>
 
-    @Query("""
+    @Query(
+        """
         SELECT * FROM bond_payments
         WHERE bond_isin IN (SELECT DISTINCT isin FROM holdings)
         ORDER BY pay_date ASC
-    """)
+    """,
+    )
     fun getPaymentsForHoldings(): Flow<List<BondPaymentEntity>>
 }

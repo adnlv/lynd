@@ -28,9 +28,8 @@ import kotlinx.coroutines.launch
 class HoldingsViewModel(
     private val holdingDao: HoldingDao,
     private val nbuRepository: NbuRepository,
-    private val bondDao: BondDao
+    private val bondDao: BondDao,
 ) : ViewModel() {
-
     private val _isSyncing = MutableStateFlow(false)
     val isSyncing: StateFlow<Boolean> = _isSyncing.asStateFlow()
 
@@ -53,11 +52,12 @@ class HoldingsViewModel(
                 val prefixes = bondDao.getDistinctIsinPrefixes()
                 if (prefixes.isNotEmpty()) {
                     val defaultPrefix = NbuRepository.FALLBACK_ISIN_PREFIX
-                    val orderedPrefixes = if (prefixes.contains(defaultPrefix)) {
-                        listOf(defaultPrefix) + prefixes.filter { it != defaultPrefix }
-                    } else {
-                        prefixes
-                    }
+                    val orderedPrefixes =
+                        if (prefixes.contains(defaultPrefix)) {
+                            listOf(defaultPrefix) + prefixes.filter { it != defaultPrefix }
+                        } else {
+                            prefixes
+                        }
                     _isinPrefixes.value = orderedPrefixes
                 }
             } catch (_: Exception) {
@@ -65,27 +65,32 @@ class HoldingsViewModel(
         }
     }
 
-    suspend fun searchBonds(query: String): List<String> {
-        return bondDao.searchBondsByIsin(query)
-    }
+    suspend fun searchBonds(query: String): List<String> = bondDao.searchBondsByIsin(query)
 
-    suspend fun searchBonds(prefix: String, codeQuery: String): List<String> {
+    suspend fun searchBonds(
+        prefix: String,
+        codeQuery: String,
+    ): List<String> {
         val candidates = bondDao.getBondsByPrefix(prefix)
         return ApproximateStringMatcher.filterAndSort(candidates, prefix, codeQuery)
     }
 
-    suspend fun getBond(isin: String): BondEntity? {
-        return bondDao.getBond(isin)
-    }
+    suspend fun getBond(isin: String): BondEntity? = bondDao.getBond(isin)
 
-    fun saveHolding(holding: HoldingEntity, onComplete: (() -> Unit)? = null) {
+    fun saveHolding(
+        holding: HoldingEntity,
+        onComplete: (() -> Unit)? = null,
+    ) {
         viewModelScope.launch {
             holdingDao.insertHolding(holding)
             onComplete?.invoke()
         }
     }
 
-    fun updateHolding(holding: HoldingEntity, onComplete: (() -> Unit)? = null) {
+    fun updateHolding(
+        holding: HoldingEntity,
+        onComplete: (() -> Unit)? = null,
+    ) {
         viewModelScope.launch {
             holdingDao.updateHolding(holding)
             onComplete?.invoke()
@@ -118,7 +123,7 @@ class HoldingsViewModel(
                 },
                 onFailure = { error ->
                     _syncError.value = error.localizedMessage ?: "Synchronization failed"
-                }
+                },
             )
         } catch (e: Exception) {
             _syncError.value = e.localizedMessage ?: "Synchronization failed"
@@ -127,35 +132,36 @@ class HoldingsViewModel(
         }
     }
 
-    val holdings: StateFlow<List<HoldingItem>> = combine(
-        holdingDao.getAllHoldings(),
-        holdingDao.getPaymentsForHoldings()
-    ) { holdingsList, paymentsList ->
-        PortfolioCalculator.mapHoldingsWithPayments(holdingsList, paymentsList)
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(AppConstants.VIEW_MODEL_STOP_TIMEOUT_MS),
-        initialValue = emptyList()
-    )
-
-    val groupedHoldings: StateFlow<List<HoldingGroup>> = holdings
-        .map { list ->
-            list.groupBy { it.isin }
-                .map { (isin, items) ->
-                    HoldingGroup(
-                        isin = isin,
-                        currency = items.firstOrNull()?.currency ?: "",
-                        totalQuantity = items.sumOf { it.quantity },
-                        items = items
-                    )
-                }
-                .sortedBy { it.isin }
-        }
-        .stateIn(
+    val holdings: StateFlow<List<HoldingItem>> =
+        combine(
+            holdingDao.getAllHoldings(),
+            holdingDao.getPaymentsForHoldings(),
+        ) { holdingsList, paymentsList ->
+            PortfolioCalculator.mapHoldingsWithPayments(holdingsList, paymentsList)
+        }.stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = emptyList()
+            started = SharingStarted.WhileSubscribed(AppConstants.VIEW_MODEL_STOP_TIMEOUT_MS),
+            initialValue = emptyList(),
         )
+
+    val groupedHoldings: StateFlow<List<HoldingGroup>> =
+        holdings
+            .map { list ->
+                list
+                    .groupBy { it.isin }
+                    .map { (isin, items) ->
+                        HoldingGroup(
+                            isin = isin,
+                            currency = items.firstOrNull()?.currency ?: "",
+                            totalQuantity = items.sumOf { it.quantity },
+                            items = items,
+                        )
+                    }.sortedBy { it.isin }
+            }.stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = emptyList(),
+            )
 
     fun deleteHolding(id: Int) {
         viewModelScope.launch {
@@ -185,11 +191,12 @@ class HoldingsViewModel(
         fun provideFactory(
             holdingDao: HoldingDao,
             nbuRepository: NbuRepository,
-            bondDao: BondDao
-        ): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                HoldingsViewModel(holdingDao, nbuRepository, bondDao)
+            bondDao: BondDao,
+        ): ViewModelProvider.Factory =
+            viewModelFactory {
+                initializer {
+                    HoldingsViewModel(holdingDao, nbuRepository, bondDao)
+                }
             }
-        }
     }
 }

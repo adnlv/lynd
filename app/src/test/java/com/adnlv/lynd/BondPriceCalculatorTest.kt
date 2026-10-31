@@ -6,7 +6,6 @@ import org.junit.Test
 import java.math.BigDecimal
 
 class BondPriceCalculatorTest {
-
     @Test
     fun calculatePricePerBond_fromTotalPriceAndQuantity() {
         val totalPrice = BigDecimal("3000.00")

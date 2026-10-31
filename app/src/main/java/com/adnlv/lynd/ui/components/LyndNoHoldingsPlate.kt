@@ -15,7 +15,7 @@ fun LyndNoHoldingsPlate(
     onLoadTestPortfolio: () -> Unit,
     modifier: Modifier = Modifier,
     addHoldingLabel: String = "Add Holding",
-    loadTestPortfolioLabel: String = "Load test portfolio"
+    loadTestPortfolioLabel: String = "Load test portfolio",
 ) {
     LyndEmptyState(
         title = title,
@@ -27,6 +27,6 @@ fun LyndNoHoldingsPlate(
         secondaryActionLabel = loadTestPortfolioLabel,
         secondaryActionIcon = MaterialSymbols.Experiment,
         onSecondaryAction = onLoadTestPortfolio,
-        modifier = modifier
+        modifier = modifier,
     )
 }

@@ -30,9 +30,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -55,7 +55,7 @@ import com.adnlv.lynd.util.Formatters
 @Composable
 fun PayoutCard(
     group: PayoutDateGroup,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     var isExpandedSingle by rememberSaveable { mutableStateOf(false) }
     var expandedIsin by rememberSaveable { mutableStateOf<String?>(null) }
@@ -63,54 +63,57 @@ fun PayoutCard(
     val shape = RoundedCornerShape(16.dp)
 
     Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .clip(shape)
-            .animateContentSize()
-            .then(
-                if (group.isSingleBond) {
-                    Modifier.clickable { isExpandedSingle = !isExpandedSingle }
-                } else {
-                    Modifier
-                }
-            ),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .clip(shape)
+                .animateContentSize()
+                .then(
+                    if (group.isSingleBond) {
+                        Modifier.clickable { isExpandedSingle = !isExpandedSingle }
+                    } else {
+                        Modifier
+                    },
+                ),
         shape = shape,
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surface,
+            ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
         ) {
             val dateColor = LyndTheme.colors.textMuted
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(6.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Icon(
                         imageVector = MaterialSymbols.Event,
                         contentDescription = null,
                         tint = dateColor,
-                        modifier = Modifier.size(16.dp)
+                        modifier = Modifier.size(16.dp),
                     )
                     Text(
                         text = Formatters.formatDate(group.date),
                         style = MaterialTheme.typography.labelMedium,
                         fontWeight = FontWeight.Normal,
-                        color = dateColor
+                        color = dateColor,
                     )
                 }
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(6.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     if (group.payoutTypes.contains(PayoutType.COUPON)) {
                         PayoutTypeBadge(type = PayoutType.COUPON)
@@ -126,12 +129,12 @@ fun PayoutCard(
             val dotTrailColor = LyndTheme.colors.borderSubtle.copy(alpha = 0.4f)
             Column(
                 modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(6.dp)
+                verticalArrangement = Arrangement.spacedBy(6.dp),
             ) {
                 group.totalAmounts.forEach { total ->
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.Bottom
+                        verticalAlignment = Alignment.Bottom,
                     ) {
                         val symbol = Formatters.getCurrencySymbol(total.currency)
                         Text(
@@ -140,35 +143,37 @@ fun PayoutCard(
                             fontFamily = RobotoFlexHeavy,
                             fontWeight = FontWeight.ExtraBold,
                             letterSpacing = 0.5.sp,
-                            color = LyndTheme.colors.coupon
+                            color = LyndTheme.colors.coupon,
                         )
                         Box(
-                            modifier = Modifier
-                                .weight(1f)
-                                .padding(horizontal = 8.dp)
-                                .padding(bottom = 5.dp)
-                                .height(1.dp)
-                                .drawBehind {
-                                    val strokeWidth = 1.5.dp.toPx()
-                                    val dotInterval = 5.dp.toPx()
-                                    drawLine(
-                                        color = dotTrailColor,
-                                        start = Offset(0f, size.height / 2),
-                                        end = Offset(size.width, size.height / 2),
-                                        strokeWidth = strokeWidth,
-                                        cap = StrokeCap.Round,
-                                        pathEffect = PathEffect.dashPathEffect(
-                                            floatArrayOf(0.1f, dotInterval),
-                                            0f
+                            modifier =
+                                Modifier
+                                    .weight(1f)
+                                    .padding(horizontal = 8.dp)
+                                    .padding(bottom = 5.dp)
+                                    .height(1.dp)
+                                    .drawBehind {
+                                        val strokeWidth = 1.5.dp.toPx()
+                                        val dotInterval = 5.dp.toPx()
+                                        drawLine(
+                                            color = dotTrailColor,
+                                            start = Offset(0f, size.height / 2),
+                                            end = Offset(size.width, size.height / 2),
+                                            strokeWidth = strokeWidth,
+                                            cap = StrokeCap.Round,
+                                            pathEffect =
+                                                PathEffect.dashPathEffect(
+                                                    floatArrayOf(0.1f, dotInterval),
+                                                    0f,
+                                                ),
                                         )
-                                    )
-                                }
+                                    },
                         )
                         Text(
                             text = total.currency.uppercase(),
                             style = MaterialTheme.typography.labelLarge,
                             fontWeight = FontWeight.Normal,
-                            color = dateColor
+                            color = dateColor,
                         )
                     }
                 }
@@ -179,60 +184,62 @@ fun PayoutCard(
 
                 AnimatedVisibility(
                     visible = isExpandedSingle,
-                    enter = expandVertically(
-                        animationSpec = tween(durationMillis = 200, easing = LinearOutSlowInEasing)
-                    ) + fadeIn(animationSpec = tween(durationMillis = 120, delayMillis = 60)),
-                    exit = shrinkVertically(
-                        animationSpec = tween(durationMillis = 180, easing = FastOutLinearInEasing)
-                    ) + fadeOut(animationSpec = tween(durationMillis = 120))
+                    enter =
+                        expandVertically(
+                            animationSpec = tween(durationMillis = 200, easing = LinearOutSlowInEasing),
+                        ) + fadeIn(animationSpec = tween(durationMillis = 120, delayMillis = 60)),
+                    exit =
+                        shrinkVertically(
+                            animationSpec = tween(durationMillis = 180, easing = FastOutLinearInEasing),
+                        ) + fadeOut(animationSpec = tween(durationMillis = 120)),
                 ) {
                     Column(modifier = Modifier.padding(top = 12.dp)) {
                         LotBreakdownList(
                             lots = bond.lots,
-                            currency = bond.currency
+                            currency = bond.currency,
                         )
                     }
                 }
             } else {
                 HorizontalDivider(
                     modifier = Modifier.padding(vertical = 10.dp),
-                    color = LyndTheme.colors.borderSubtle.copy(alpha = 0.4f)
+                    color = LyndTheme.colors.borderSubtle.copy(alpha = 0.4f),
                 )
 
                 Column(
                     modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     group.bonds.forEach { bond ->
                         val isBondExpanded = expandedIsin == bond.isin
                         val symbol = Formatters.getCurrencySymbol(bond.currency)
 
                         Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clip(RoundedCornerShape(8.dp))
-                                .clickable {
-                                    expandedIsin = if (isBondExpanded) null else bond.isin
-                                }
-                                .padding(vertical = 4.dp)
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .clip(RoundedCornerShape(8.dp))
+                                    .clickable {
+                                        expandedIsin = if (isBondExpanded) null else bond.isin
+                                    }.padding(vertical = 4.dp),
                         ) {
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
+                                verticalAlignment = Alignment.CenterVertically,
                             ) {
                                 Text(
                                     text = "${bond.isin} (${bond.totalQuantity})",
                                     style = MaterialTheme.typography.bodySmall,
                                     fontWeight = FontWeight.Medium,
                                     color = LyndTheme.colors.textPrimary,
-                                    modifier = Modifier.weight(1f)
+                                    modifier = Modifier.weight(1f),
                                 )
 
                                 Row(
                                     horizontalArrangement = Arrangement.spacedBy(4.dp),
                                     verticalAlignment = Alignment.CenterVertically,
-                                    modifier = Modifier.padding(horizontal = 8.dp)
+                                    modifier = Modifier.padding(horizontal = 8.dp),
                                 ) {
                                     if (bond.payoutTypes.contains(PayoutType.COUPON)) {
                                         PayoutTypeBadge(type = PayoutType.COUPON)
@@ -246,23 +253,25 @@ fun PayoutCard(
                                     text = "${Formatters.formatAmount(bond.totalAmount)} $symbol",
                                     style = MaterialTheme.typography.bodySmall,
                                     fontWeight = FontWeight.SemiBold,
-                                    color = LyndTheme.colors.textPrimary
+                                    color = LyndTheme.colors.textPrimary,
                                 )
                             }
 
                             AnimatedVisibility(
                                 visible = isBondExpanded,
-                                enter = expandVertically(
-                                    animationSpec = tween(durationMillis = 200, easing = LinearOutSlowInEasing)
-                                ) + fadeIn(animationSpec = tween(durationMillis = 120, delayMillis = 60)),
-                                exit = shrinkVertically(
-                                    animationSpec = tween(durationMillis = 180, easing = FastOutLinearInEasing)
-                                ) + fadeOut(animationSpec = tween(durationMillis = 120))
+                                enter =
+                                    expandVertically(
+                                        animationSpec = tween(durationMillis = 200, easing = LinearOutSlowInEasing),
+                                    ) + fadeIn(animationSpec = tween(durationMillis = 120, delayMillis = 60)),
+                                exit =
+                                    shrinkVertically(
+                                        animationSpec = tween(durationMillis = 180, easing = FastOutLinearInEasing),
+                                    ) + fadeOut(animationSpec = tween(durationMillis = 120)),
                             ) {
                                 Column(modifier = Modifier.padding(top = 8.dp)) {
                                     LotBreakdownList(
                                         lots = bond.lots,
-                                        currency = bond.currency
+                                        currency = bond.currency,
                                     )
                                 }
                             }
@@ -278,56 +287,57 @@ fun PayoutCard(
 private fun LotBreakdownList(
     lots: List<PayoutLot>,
     currency: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val symbol = remember(currency) { Formatters.getCurrencySymbol(currency) }
 
     Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(8.dp))
-            .background(MaterialTheme.colorScheme.surfaceContainerLow)
-            .padding(horizontal = 12.dp, vertical = 8.dp),
-        verticalArrangement = Arrangement.spacedBy(6.dp)
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(8.dp))
+                .background(MaterialTheme.colorScheme.surfaceContainerLow)
+                .padding(horizontal = 12.dp, vertical = 8.dp),
+        verticalArrangement = Arrangement.spacedBy(6.dp),
     ) {
         Text(
             text = "Purchase Lots",
             style = MaterialTheme.typography.labelSmall,
             fontWeight = FontWeight.SemiBold,
-            color = LyndTheme.colors.textSecondary
+            color = LyndTheme.colors.textSecondary,
         )
         lots.forEach { lot ->
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
                         text = Formatters.formatDate(lot.purchaseDate),
                         style = MaterialTheme.typography.bodySmall,
-                        color = LyndTheme.colors.textSecondary
+                        color = LyndTheme.colors.textSecondary,
                     )
                     Text(
                         text = "•",
                         style = MaterialTheme.typography.bodySmall,
-                        color = LyndTheme.colors.borderSubtle
+                        color = LyndTheme.colors.borderSubtle,
                     )
                     Text(
                         text = "${lot.quantity} bonds",
                         style = MaterialTheme.typography.bodySmall,
                         fontWeight = FontWeight.Medium,
-                        color = LyndTheme.colors.textPrimary
+                        color = LyndTheme.colors.textPrimary,
                     )
                 }
                 Text(
                     text = "${Formatters.formatAmount(lot.amount)} $symbol",
                     style = MaterialTheme.typography.bodySmall,
                     fontWeight = FontWeight.SemiBold,
-                    color = LyndTheme.colors.textPrimary
+                    color = LyndTheme.colors.textPrimary,
                 )
             }
         }

@@ -9,15 +9,16 @@ import org.junit.Assert.assertNull
 import org.junit.Test
 
 class NbuSerializationTest {
-
-    private val json = Json {
-        ignoreUnknownKeys = true
-        isLenient = true
-    }
+    private val json =
+        Json {
+            ignoreUnknownKeys = true
+            isLenient = true
+        }
 
     @Test
     fun deserializeSecurityDto_withFullFields_parsesCorrectly() {
-        val jsonString = """
+        val jsonString =
+            """
             {
                 "cpcode": "UA4000187348",
                 "nominal": 1000.0,
@@ -33,7 +34,7 @@ class NbuSerializationTest {
                     }
                 ]
             }
-        """.trimIndent()
+            """.trimIndent()
 
         val dto = json.decodeFromString<NbuSecurityDto>(jsonString)
 
@@ -54,13 +55,14 @@ class NbuSerializationTest {
 
     @Test
     fun deserializeSecurityDto_withMissingAndNullFields_handlesDefaultsSafely() {
-        val jsonString = """
+        val jsonString =
+            """
             {
                 "cpcode": "UA4000187348",
                 "nominal": null,
                 "auk_proc": null
             }
-        """.trimIndent()
+            """.trimIndent()
 
         val dto = json.decodeFromString<NbuSecurityDto>(jsonString)
 

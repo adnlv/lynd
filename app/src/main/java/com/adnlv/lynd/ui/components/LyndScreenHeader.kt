@@ -26,10 +26,11 @@ fun LyndScreenHeader(
     actions: (@Composable RowScope.() -> Unit)? = null,
 ) {
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(LyndLayoutDefaults.ScreenHeaderHeight),
-        verticalAlignment = Alignment.CenterVertically
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .height(LyndLayoutDefaults.ScreenHeaderHeight),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         if (navigationIcon != null) {
             navigationIcon()
@@ -41,7 +42,7 @@ fun LyndScreenHeader(
             fontWeight = FontWeight.Bold,
             color = LyndTheme.colors.textPrimary,
             maxLines = 1,
-            overflow = TextOverflow.Ellipsis
+            overflow = TextOverflow.Ellipsis,
         )
         if (actions != null) {
             Spacer(modifier = Modifier.weight(1f))

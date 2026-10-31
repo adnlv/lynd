@@ -26,37 +26,37 @@ data class OverviewUiState(
     val totalHoldingsCount: Int = 0,
     val holdings: List<HoldingItem> = emptyList(),
     val cashFlowsByCurrency: Map<String, List<MonthlyCashFlow>> = emptyMap(),
-    val yearlyMaturitiesByCurrency: Map<String, List<YearlyMaturity>> = emptyMap()
+    val yearlyMaturitiesByCurrency: Map<String, List<YearlyMaturity>> = emptyMap(),
 )
 
 class OverviewViewModel(
     private val holdingDao: HoldingDao,
     private val bondDao: BondDao,
-    private val payoutDao: PayoutDao
+    private val payoutDao: PayoutDao,
 ) : ViewModel() {
+    val uiState: StateFlow<OverviewUiState> =
+        combine(
+            holdingDao.getAllHoldings(),
+            holdingDao.getPaymentsForHoldings(),
+            payoutDao.getAllPayoutRows(),
+        ) { holdingsList, paymentsList, payoutRows ->
+            val domainHoldings = PortfolioCalculator.mapHoldingsWithPayments(holdingsList, paymentsList)
+            val summaries = PortfolioCalculator.calculateSummaries(domainHoldings)
+            val cashFlows = PortfolioCalculator.calculateMonthlyCashFlows(payoutRows)
+            val maturities = PortfolioCalculator.calculateYearlyMaturitySchedule(payoutRows)
 
-    val uiState: StateFlow<OverviewUiState> = combine(
-        holdingDao.getAllHoldings(),
-        holdingDao.getPaymentsForHoldings(),
-        payoutDao.getAllPayoutRows()
-    ) { holdingsList, paymentsList, payoutRows ->
-        val domainHoldings = PortfolioCalculator.mapHoldingsWithPayments(holdingsList, paymentsList)
-        val summaries = PortfolioCalculator.calculateSummaries(domainHoldings)
-        val cashFlows = PortfolioCalculator.calculateMonthlyCashFlows(payoutRows)
-        val maturities = PortfolioCalculator.calculateYearlyMaturitySchedule(payoutRows)
-
-        OverviewUiState(
-            summaries = summaries,
-            totalHoldingsCount = domainHoldings.size,
-            holdings = domainHoldings,
-            cashFlowsByCurrency = cashFlows,
-            yearlyMaturitiesByCurrency = maturities
+            OverviewUiState(
+                summaries = summaries,
+                totalHoldingsCount = domainHoldings.size,
+                holdings = domainHoldings,
+                cashFlowsByCurrency = cashFlows,
+                yearlyMaturitiesByCurrency = maturities,
+            )
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(AppConstants.VIEW_MODEL_STOP_TIMEOUT_MS),
+            initialValue = OverviewUiState(),
         )
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(AppConstants.VIEW_MODEL_STOP_TIMEOUT_MS),
-        initialValue = OverviewUiState()
-    )
 
     fun loadTestPortfolio() {
         viewModelScope.launch {
@@ -68,11 +68,12 @@ class OverviewViewModel(
         fun provideFactory(
             holdingDao: HoldingDao,
             bondDao: BondDao,
-            payoutDao: PayoutDao
-        ): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                OverviewViewModel(holdingDao, bondDao, payoutDao)
+            payoutDao: PayoutDao,
+        ): ViewModelProvider.Factory =
+            viewModelFactory {
+                initializer {
+                    OverviewViewModel(holdingDao, bondDao, payoutDao)
+                }
             }
-        }
     }
 }

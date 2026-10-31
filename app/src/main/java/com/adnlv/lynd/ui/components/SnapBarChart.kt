@@ -37,7 +37,7 @@ fun <T> SnapBarChart(
     modifier: Modifier = Modifier,
     barWidthDp: Dp = LyndLayoutDefaults.ChartBarWidth,
     chartHeight: Dp = LyndLayoutDefaults.ChartHeight,
-    barContent: @Composable (item: T, index: Int, isSelected: Boolean) -> Unit
+    barContent: @Composable (item: T, index: Int, isSelected: Boolean) -> Unit,
 ) {
     val density = LocalDensity.current
     val view = LocalView.current
@@ -70,41 +70,43 @@ fun <T> SnapBarChart(
         val sidePaddingDp = with(density) { sidePaddingPx.coerceAtLeast(0).toDp() }
 
         LazyRow(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(chartHeight),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .height(chartHeight),
             state = listState,
             flingBehavior = flingBehavior,
-            verticalAlignment = Alignment.Bottom
+            verticalAlignment = Alignment.Bottom,
         ) {
             item(key = "chart_start_spacer") { Spacer(modifier = Modifier.width(sidePaddingDp)) }
 
             itemsIndexed(
                 items = items,
-                key = { index, _ -> index }
+                key = { index, _ -> index },
             ) { index, item ->
                 val isSelected = index == selectedIndex
                 val scale by animateFloatAsState(
                     targetValue = if (isSelected) 1.2f else 0.8f,
                     animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
-                    label = "barScale"
+                    label = "barScale",
                 )
                 val alpha by animateFloatAsState(
                     targetValue = if (isSelected) 1f else 0.5f,
                     animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
-                    label = "barAlpha"
+                    label = "barAlpha",
                 )
 
                 Box(
-                    modifier = Modifier
-                        .width(barWidthDp)
-                        .fillMaxHeight()
-                        .graphicsLayer {
-                            scaleX = scale
-                            scaleY = scale
-                            this.alpha = alpha
-                        },
-                    contentAlignment = Alignment.BottomCenter
+                    modifier =
+                        Modifier
+                            .width(barWidthDp)
+                            .fillMaxHeight()
+                            .graphicsLayer {
+                                scaleX = scale
+                                scaleY = scale
+                                this.alpha = alpha
+                            },
+                    contentAlignment = Alignment.BottomCenter,
                 ) {
                     barContent(item, index, isSelected)
                 }

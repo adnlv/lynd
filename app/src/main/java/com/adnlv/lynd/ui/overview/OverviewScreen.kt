@@ -25,28 +25,30 @@ fun OverviewScreen(
     viewModel: OverviewViewModel,
     modifier: Modifier = Modifier,
     listState: LazyListState = rememberLazyListState(),
-    onNavigateToHoldings: () -> Unit = {}
+    onNavigateToHoldings: () -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background),
     ) {
         if (uiState.summaries.isEmpty()) {
             LyndScreenHeader(
                 title = "Overview",
-                modifier = Modifier.padding(top = 8.dp, start = 20.dp, end = 20.dp)
+                modifier = Modifier.padding(top = 8.dp, start = 20.dp, end = 20.dp),
             )
             LyndNoHoldingsPlate(
                 title = "No portfolio data",
                 description = "Add your bond holdings to see cash flows, balances, and maturity timelines.",
                 onAddHolding = onNavigateToHoldings,
                 onLoadTestPortfolio = { viewModel.loadTestPortfolio() },
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth()
+                modifier =
+                    Modifier
+                        .weight(1f)
+                        .fillMaxWidth(),
             )
         } else {
             val pagerState = rememberPagerState(pageCount = { uiState.summaries.size })
@@ -59,7 +61,7 @@ fun OverviewScreen(
                 state = listState,
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(top = 8.dp, bottom = 100.dp),
-                verticalArrangement = Arrangement.spacedBy(20.dp)
+                verticalArrangement = Arrangement.spacedBy(20.dp),
             ) {
                 item(key = "overview_header") {
                     LyndScreenHeader(title = "Overview")
@@ -68,7 +70,7 @@ fun OverviewScreen(
                 item {
                     PortfolioSummaryCarousel(
                         summaries = uiState.summaries,
-                        pagerState = pagerState
+                        pagerState = pagerState,
                     )
                 }
 
@@ -76,7 +78,7 @@ fun OverviewScreen(
                     CashFlowChartCard(
                         cashFlows = activeCashFlows,
                         currency = activeCurrency,
-                        modifier = Modifier.padding(horizontal = 20.dp)
+                        modifier = Modifier.padding(horizontal = 20.dp),
                     )
                 }
 
@@ -84,7 +86,7 @@ fun OverviewScreen(
                     MaturityScheduleChartCard(
                         maturities = activeMaturities,
                         currency = activeCurrency,
-                        modifier = Modifier.padding(horizontal = 20.dp)
+                        modifier = Modifier.padding(horizontal = 20.dp),
                     )
                 }
             }

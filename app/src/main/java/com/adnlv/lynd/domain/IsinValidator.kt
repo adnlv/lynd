@@ -3,7 +3,6 @@ package com.adnlv.lynd.domain
 import com.adnlv.lynd.core.AppConstants
 
 object IsinValidator {
-
     private const val LUHN_RADIX = 10
     private const val LUHN_LETTER_OFFSET = 10
     private const val LUHN_MULTIPLIER = 2
@@ -16,18 +15,20 @@ object IsinValidator {
         return validateLuhn(isin)
     }
 
-    fun extractCode(isin: String, prefix: String): String {
-        return if (isin.startsWith(prefix, ignoreCase = true)) {
+    fun extractCode(
+        isin: String,
+        prefix: String,
+    ): String =
+        if (isin.startsWith(prefix, ignoreCase = true)) {
             isin.removePrefix(prefix)
         } else {
             isin.takeLast(AppConstants.ISIN_CODE_LENGTH)
         }
-    }
 
     fun validateCodeInput(
         code: String,
         prefix: String,
-        hasMatchingRecord: Boolean = true
+        hasMatchingRecord: Boolean = true,
     ): String? {
         if (code.isEmpty()) return null
 
@@ -54,17 +55,18 @@ object IsinValidator {
     }
 
     private fun validateLuhn(isin: String): Boolean {
-        val converted = buildString {
-            for (ch in isin) {
-                if (ch.isDigit()) {
-                    append(ch)
-                } else if (ch in 'A'..'Z') {
-                    append(ch - 'A' + LUHN_LETTER_OFFSET)
-                } else {
-                    return false
+        val converted =
+            buildString {
+                for (ch in isin) {
+                    if (ch.isDigit()) {
+                        append(ch)
+                    } else if (ch in 'A'..'Z') {
+                        append(ch - 'A' + LUHN_LETTER_OFFSET)
+                    } else {
+                        return false
+                    }
                 }
             }
-        }
 
         var sum = 0
         var multiplyByTwo = true

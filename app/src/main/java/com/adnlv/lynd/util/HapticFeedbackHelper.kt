@@ -4,7 +4,6 @@ import android.view.HapticFeedbackConstants
 import android.view.View
 
 object HapticFeedbackHelper {
-
     fun vibratePageSwitch(view: View) {
         view.performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK)
     }

@@ -21,40 +21,44 @@ private data class BadgeConfig(
     val containerColor: Color,
     val contentColor: Color,
     val icon: ImageVector,
-    val contentDescription: String
+    val contentDescription: String,
 )
 
 @Composable
 fun PayoutTypeBadge(
     type: PayoutType,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-    val config = when (type) {
-        PayoutType.COUPON -> BadgeConfig(
-            containerColor = LyndTheme.colors.couponContainer.copy(alpha = 0.8f),
-            contentColor = LyndTheme.colors.onCouponContainer,
-            icon = MaterialSymbols.ConfirmationNumber,
-            contentDescription = "Coupon"
-        )
-        PayoutType.REDEMPTION -> BadgeConfig(
-            containerColor = LyndTheme.colors.principalContainer.copy(alpha = 0.8f),
-            contentColor = LyndTheme.colors.onPrincipalContainer,
-            icon = MaterialSymbols.ModeHeat,
-            contentDescription = "Redemption"
-        )
-    }
+    val config =
+        when (type) {
+            PayoutType.COUPON ->
+                BadgeConfig(
+                    containerColor = LyndTheme.colors.couponContainer.copy(alpha = 0.8f),
+                    contentColor = LyndTheme.colors.onCouponContainer,
+                    icon = MaterialSymbols.ConfirmationNumber,
+                    contentDescription = "Coupon",
+                )
+            PayoutType.REDEMPTION ->
+                BadgeConfig(
+                    containerColor = LyndTheme.colors.principalContainer.copy(alpha = 0.8f),
+                    contentColor = LyndTheme.colors.onPrincipalContainer,
+                    icon = MaterialSymbols.ModeHeat,
+                    contentDescription = "Redemption",
+                )
+        }
 
     Badge(
         containerColor = config.containerColor,
         contentColor = config.contentColor,
-        modifier = modifier.clip(RoundedCornerShape(6.dp))
+        modifier = modifier.clip(RoundedCornerShape(6.dp)),
     ) {
         Icon(
             imageVector = config.icon,
             contentDescription = config.contentDescription,
-            modifier = Modifier
-                .padding(horizontal = 4.dp, vertical = 2.dp)
-                .size(14.dp)
+            modifier =
+                Modifier
+                    .padding(horizontal = 4.dp, vertical = 2.dp)
+                    .size(14.dp),
         )
     }
 }

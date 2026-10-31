@@ -9,26 +9,27 @@ import java.math.BigDecimal
 import java.time.LocalDate
 
 class PortfolioCalculatorTest {
-
     @Test
     fun mapHoldingsWithPayments_scalesPayoutByQuantity() {
-        val holding = HoldingWithBond(
-            id = 1,
-            isin = "UA4000187348",
-            bondName = "Bond 1",
-            quantity = 5,
-            pricePerBond = BigDecimal("1000.00"),
-            totalPaidAmount = BigDecimal("5000.00"),
-            purchaseDate = LocalDate.of(2025, 1, 1),
-            currency = "UAH",
-            couponRate = BigDecimal("10.00")
-        )
-        val payment = BondPaymentEntity(
-            bondIsin = "UA4000187348",
-            payDate = LocalDate.of(2025, 6, 1),
-            payType = "coupon",
-            payVal = BigDecimal("100.00")
-        )
+        val holding =
+            HoldingWithBond(
+                id = 1,
+                isin = "UA4000187348",
+                bondName = "Bond 1",
+                quantity = 5,
+                pricePerBond = BigDecimal("1000.00"),
+                totalPaidAmount = BigDecimal("5000.00"),
+                purchaseDate = LocalDate.of(2025, 1, 1),
+                currency = "UAH",
+                couponRate = BigDecimal("10.00"),
+            )
+        val payment =
+            BondPaymentEntity(
+                bondIsin = "UA4000187348",
+                payDate = LocalDate.of(2025, 6, 1),
+                payType = "coupon",
+                payVal = BigDecimal("100.00"),
+            )
 
         val result = PortfolioCalculator.mapHoldingsWithPayments(listOf(holding), listOf(payment))
 
@@ -40,40 +41,45 @@ class PortfolioCalculatorTest {
     @Test
     fun mapHoldingsWithPayments_filtersPaymentsByPurchaseDate() {
         val purchaseDate = LocalDate.of(2025, 6, 1)
-        val holding = HoldingWithBond(
-            id = 1,
-            isin = "UA4000187348",
-            bondName = "Bond 1",
-            quantity = 1,
-            pricePerBond = BigDecimal("1000.00"),
-            totalPaidAmount = BigDecimal("1000.00"),
-            purchaseDate = purchaseDate,
-            currency = "UAH",
-            couponRate = BigDecimal("10.00")
-        )
-        val paymentBefore = BondPaymentEntity(
-            bondIsin = "UA4000187348",
-            payDate = LocalDate.of(2025, 5, 31),
-            payType = "coupon",
-            payVal = BigDecimal("50.00")
-        )
-        val paymentOnDate = BondPaymentEntity(
-            bondIsin = "UA4000187348",
-            payDate = LocalDate.of(2025, 6, 1),
-            payType = "coupon",
-            payVal = BigDecimal("50.00")
-        )
-        val paymentAfter = BondPaymentEntity(
-            bondIsin = "UA4000187348",
-            payDate = LocalDate.of(2025, 12, 1),
-            payType = "coupon",
-            payVal = BigDecimal("1000.00")
-        )
+        val holding =
+            HoldingWithBond(
+                id = 1,
+                isin = "UA4000187348",
+                bondName = "Bond 1",
+                quantity = 1,
+                pricePerBond = BigDecimal("1000.00"),
+                totalPaidAmount = BigDecimal("1000.00"),
+                purchaseDate = purchaseDate,
+                currency = "UAH",
+                couponRate = BigDecimal("10.00"),
+            )
+        val paymentBefore =
+            BondPaymentEntity(
+                bondIsin = "UA4000187348",
+                payDate = LocalDate.of(2025, 5, 31),
+                payType = "coupon",
+                payVal = BigDecimal("50.00"),
+            )
+        val paymentOnDate =
+            BondPaymentEntity(
+                bondIsin = "UA4000187348",
+                payDate = LocalDate.of(2025, 6, 1),
+                payType = "coupon",
+                payVal = BigDecimal("50.00"),
+            )
+        val paymentAfter =
+            BondPaymentEntity(
+                bondIsin = "UA4000187348",
+                payDate = LocalDate.of(2025, 12, 1),
+                payType = "coupon",
+                payVal = BigDecimal("1000.00"),
+            )
 
-        val result = PortfolioCalculator.mapHoldingsWithPayments(
-            listOf(holding),
-            listOf(paymentBefore, paymentOnDate, paymentAfter)
-        )
+        val result =
+            PortfolioCalculator.mapHoldingsWithPayments(
+                listOf(holding),
+                listOf(paymentBefore, paymentOnDate, paymentAfter),
+            )
 
         assertEquals(1, result.size)
         // 50.00 + 1000.00 = 1050.00
@@ -82,23 +88,25 @@ class PortfolioCalculatorTest {
 
     @Test
     fun mapHoldingsWithPayments_calculatesTotalProfitAndPercentage() {
-        val holding = HoldingWithBond(
-            id = 1,
-            isin = "UA4000187348",
-            bondName = "Bond 1",
-            quantity = 2,
-            pricePerBond = BigDecimal("1000.00"),
-            totalPaidAmount = BigDecimal("2000.00"),
-            purchaseDate = LocalDate.of(2025, 1, 1),
-            currency = "UAH",
-            couponRate = BigDecimal("10.00")
-        )
-        val payment = BondPaymentEntity(
-            bondIsin = "UA4000187348",
-            payDate = LocalDate.of(2025, 12, 1),
-            payType = "redemption",
-            payVal = BigDecimal("1125.00")
-        )
+        val holding =
+            HoldingWithBond(
+                id = 1,
+                isin = "UA4000187348",
+                bondName = "Bond 1",
+                quantity = 2,
+                pricePerBond = BigDecimal("1000.00"),
+                totalPaidAmount = BigDecimal("2000.00"),
+                purchaseDate = LocalDate.of(2025, 1, 1),
+                currency = "UAH",
+                couponRate = BigDecimal("10.00"),
+            )
+        val payment =
+            BondPaymentEntity(
+                bondIsin = "UA4000187348",
+                payDate = LocalDate.of(2025, 12, 1),
+                payType = "redemption",
+                payVal = BigDecimal("1125.00"),
+            )
 
         val result = PortfolioCalculator.mapHoldingsWithPayments(listOf(holding), listOf(payment))
 
@@ -113,23 +121,25 @@ class PortfolioCalculatorTest {
 
     @Test
     fun mapHoldingsWithPayments_zeroInvestment_returnsZeroPercentage() {
-        val holding = HoldingWithBond(
-            id = 1,
-            isin = "UA4000187348",
-            bondName = "Bond 1",
-            quantity = 1,
-            pricePerBond = BigDecimal.ZERO,
-            totalPaidAmount = BigDecimal.ZERO,
-            purchaseDate = LocalDate.of(2025, 1, 1),
-            currency = "UAH",
-            couponRate = BigDecimal.ZERO
-        )
-        val payment = BondPaymentEntity(
-            bondIsin = "UA4000187348",
-            payDate = LocalDate.of(2025, 6, 1),
-            payType = "coupon",
-            payVal = BigDecimal("50.00")
-        )
+        val holding =
+            HoldingWithBond(
+                id = 1,
+                isin = "UA4000187348",
+                bondName = "Bond 1",
+                quantity = 1,
+                pricePerBond = BigDecimal.ZERO,
+                totalPaidAmount = BigDecimal.ZERO,
+                purchaseDate = LocalDate.of(2025, 1, 1),
+                currency = "UAH",
+                couponRate = BigDecimal.ZERO,
+            )
+        val payment =
+            BondPaymentEntity(
+                bondIsin = "UA4000187348",
+                payDate = LocalDate.of(2025, 6, 1),
+                payType = "coupon",
+                payVal = BigDecimal("50.00"),
+            )
 
         val result = PortfolioCalculator.mapHoldingsWithPayments(listOf(holding), listOf(payment))
 
@@ -140,17 +150,18 @@ class PortfolioCalculatorTest {
 
     @Test
     fun mapHoldingsWithPayments_blankBondName_fallsBackToIsin() {
-        val holding = HoldingWithBond(
-            id = 1,
-            isin = "UA4000187348",
-            bondName = "   ",
-            quantity = 1,
-            pricePerBond = BigDecimal("1000.00"),
-            totalPaidAmount = BigDecimal("1000.00"),
-            purchaseDate = LocalDate.of(2025, 1, 1),
-            currency = "UAH",
-            couponRate = BigDecimal.ZERO
-        )
+        val holding =
+            HoldingWithBond(
+                id = 1,
+                isin = "UA4000187348",
+                bondName = "   ",
+                quantity = 1,
+                pricePerBond = BigDecimal("1000.00"),
+                totalPaidAmount = BigDecimal("1000.00"),
+                purchaseDate = LocalDate.of(2025, 1, 1),
+                currency = "UAH",
+                couponRate = BigDecimal.ZERO,
+            )
 
         val result = PortfolioCalculator.mapHoldingsWithPayments(listOf(holding), emptyList())
 

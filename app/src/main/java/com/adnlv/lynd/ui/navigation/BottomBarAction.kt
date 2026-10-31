@@ -20,45 +20,45 @@ data class BottomBarAction(
     val activeContentDescription: String = "Cancel action",
     val onClick: () -> Unit = {},
     val onCancel: (() -> Unit)? = null,
-    val menuContent: (@Composable ColumnScope.(onDismissRequest: () -> Unit) -> Unit)? = null
+    val menuContent: (@Composable ColumnScope.(onDismissRequest: () -> Unit) -> Unit)? = null,
 ) {
-    fun isContextualActive(isMenuExpanded: Boolean = false): Boolean {
-        return isActive || isMenuExpanded
-    }
+    fun isContextualActive(isMenuExpanded: Boolean = false): Boolean = isActive || isMenuExpanded
 
-    fun resolveIcon(isMenuExpanded: Boolean = false): ImageVector {
-        return if (isContextualActive(isMenuExpanded)) MaterialSymbols.Close else icon
-    }
+    fun resolveIcon(isMenuExpanded: Boolean = false): ImageVector = if (isContextualActive(isMenuExpanded)) MaterialSymbols.Close else icon
 
-    fun resolveContentDescription(isMenuExpanded: Boolean = false): String {
-        return if (isContextualActive(isMenuExpanded)) activeContentDescription else contentDescription
-    }
+    fun resolveContentDescription(isMenuExpanded: Boolean = false): String = if (isContextualActive(isMenuExpanded)) activeContentDescription else contentDescription
 
     companion object {
-        fun defaultForRoute(route: String?): BottomBarAction = when (route) {
-            Screen.Overview.route -> BottomBarAction(
-                icon = MaterialSymbols.Settings,
-                contentDescription = "Overview actions"
-            )
-            Screen.Planner.route -> BottomBarAction(
-                icon = MaterialSymbols.FilterList,
-                contentDescription = "Planner actions"
-            )
-            Screen.Payouts.route -> BottomBarAction(
-                icon = MaterialSymbols.FilterList,
-                contentDescription = "Open filter menu",
-                activeContentDescription = "Close filter menu"
-            )
-            Screen.Holdings.route -> BottomBarAction(
-                icon = MaterialSymbols.Add,
-                contentDescription = "Holdings actions",
-                activeContentDescription = "Cancel holding action"
-            )
-            else -> BottomBarAction(
-                icon = MaterialSymbols.Settings,
-                contentDescription = "Contextual actions"
-            )
-        }
+        fun defaultForRoute(route: String?): BottomBarAction =
+            when (route) {
+                Screen.Overview.route ->
+                    BottomBarAction(
+                        icon = MaterialSymbols.Settings,
+                        contentDescription = "Overview actions",
+                    )
+                Screen.Planner.route ->
+                    BottomBarAction(
+                        icon = MaterialSymbols.FilterList,
+                        contentDescription = "Planner actions",
+                    )
+                Screen.Payouts.route ->
+                    BottomBarAction(
+                        icon = MaterialSymbols.FilterList,
+                        contentDescription = "Open filter menu",
+                        activeContentDescription = "Close filter menu",
+                    )
+                Screen.Holdings.route ->
+                    BottomBarAction(
+                        icon = MaterialSymbols.Add,
+                        contentDescription = "Holdings actions",
+                        activeContentDescription = "Cancel holding action",
+                    )
+                else ->
+                    BottomBarAction(
+                        icon = MaterialSymbols.Settings,
+                        contentDescription = "Contextual actions",
+                    )
+            }
     }
 }
 
@@ -66,7 +66,10 @@ data class BottomBarAction(
 class BottomBarActionState {
     private val actionsByRoute = mutableStateMapOf<String, BottomBarAction>()
 
-    fun setAction(route: String, action: BottomBarAction) {
+    fun setAction(
+        route: String,
+        action: BottomBarAction,
+    ) {
         actionsByRoute[route] = action
     }
 
@@ -81,7 +84,10 @@ class BottomBarActionState {
 
     private val reselectHandlersByRoute = mutableStateMapOf<String, () -> Unit>()
 
-    fun setReselectHandler(route: String, handler: () -> Unit) {
+    fun setReselectHandler(
+        route: String,
+        handler: () -> Unit,
+    ) {
         reselectHandlersByRoute[route] = handler
     }
 
@@ -96,6 +102,4 @@ class BottomBarActionState {
 }
 
 @Composable
-fun rememberBottomBarActionState(): BottomBarActionState {
-    return remember { BottomBarActionState() }
-}
+fun rememberBottomBarActionState(): BottomBarActionState = remember { BottomBarActionState() }

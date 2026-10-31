@@ -8,5 +8,5 @@ data class IncomeGap(
     val currency: String,
     val consecutiveMonthIndex: Int = 1,
     val totalConsecutiveMonths: Int = 1,
-    val crossCurrencyCoverage: Map<String, BigDecimal> = emptyMap() // e.g., {"USD": 150.0}
+    val crossCurrencyCoverage: Map<String, BigDecimal> = emptyMap(), // e.g., {"USD": 150.0}
 )

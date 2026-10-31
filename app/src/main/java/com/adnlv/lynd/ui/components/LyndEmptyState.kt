@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -39,50 +38,51 @@ fun LyndEmptyState(
     onPrimaryAction: (() -> Unit)? = null,
     secondaryActionLabel: String? = null,
     secondaryActionIcon: ImageVector? = null,
-    onSecondaryAction: (() -> Unit)? = null
+    onSecondaryAction: (() -> Unit)? = null,
 ) {
     Box(
         modifier = modifier,
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier.padding(horizontal = 24.dp)
+            modifier = Modifier.padding(horizontal = 24.dp),
         ) {
             Box(
-                modifier = Modifier
-                    .size(56.dp)
-                    .background(
-                        color = LyndTheme.colors.couponContainer.copy(alpha = 0.5f),
-                        shape = CircleShape
-                    ),
-                contentAlignment = Alignment.Center
+                modifier =
+                    Modifier
+                        .size(56.dp)
+                        .background(
+                            color = LyndTheme.colors.couponContainer.copy(alpha = 0.5f),
+                            shape = CircleShape,
+                        ),
+                contentAlignment = Alignment.Center,
             ) {
                 Icon(
                     imageVector = icon,
                     contentDescription = null,
                     tint = LyndTheme.colors.coupon,
-                    modifier = Modifier.size(28.dp)
+                    modifier = Modifier.size(28.dp),
                 )
             }
 
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 Text(
                     text = title,
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.SemiBold,
                     color = LyndTheme.colors.textPrimary,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
                 )
                 Text(
                     text = description,
                     style = MaterialTheme.typography.bodyMedium,
                     color = LyndTheme.colors.textSecondary,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
                 )
             }
 
@@ -90,19 +90,20 @@ fun LyndEmptyState(
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(12.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 8.dp)
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp),
                 ) {
                     if (primaryActionLabel != null && onPrimaryAction != null) {
                         Button(
                             onClick = onPrimaryAction,
-                            modifier = Modifier.fillMaxWidth(0.7f)
+                            modifier = Modifier.fillMaxWidth(0.7f),
                         ) {
                             Icon(
                                 imageVector = primaryActionIcon,
                                 contentDescription = null,
-                                modifier = Modifier.size(18.dp)
+                                modifier = Modifier.size(18.dp),
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(primaryActionLabel)
@@ -112,13 +113,13 @@ fun LyndEmptyState(
                     if (secondaryActionLabel != null && onSecondaryAction != null) {
                         OutlinedButton(
                             onClick = onSecondaryAction,
-                            modifier = Modifier.fillMaxWidth(0.7f)
+                            modifier = Modifier.fillMaxWidth(0.7f),
                         ) {
                             if (secondaryActionIcon != null) {
                                 Icon(
                                     imageVector = secondaryActionIcon,
                                     contentDescription = null,
-                                    modifier = Modifier.size(18.dp)
+                                    modifier = Modifier.size(18.dp),
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
                             }

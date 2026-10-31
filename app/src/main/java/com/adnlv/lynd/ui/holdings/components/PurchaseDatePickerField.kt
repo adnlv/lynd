@@ -3,7 +3,6 @@ package com.adnlv.lynd.ui.holdings.components
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -19,7 +18,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import com.adnlv.lynd.ui.icons.Event
 import com.adnlv.lynd.ui.icons.MaterialSymbols
 import java.time.Instant
@@ -32,7 +30,7 @@ import java.time.format.DateTimeFormatter
 fun PurchaseDatePickerField(
     purchaseDate: LocalDate,
     onDateChange: (LocalDate) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     var showDatePicker by remember { mutableStateOf(false) }
 
@@ -46,21 +44,24 @@ fun PurchaseDatePickerField(
                 Icon(imageVector = MaterialSymbols.Event, contentDescription = "Select purchase date")
             }
         },
-        modifier = modifier
-            .fillMaxWidth()
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null
-            ) { showDatePicker = true }
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                ) { showDatePicker = true },
     )
 
     if (showDatePicker) {
-        val datePickerState = rememberDatePickerState(
-            initialSelectedDateMillis = purchaseDate
-                .atStartOfDay(ZoneId.of("UTC"))
-                .toInstant()
-                .toEpochMilli()
-        )
+        val datePickerState =
+            rememberDatePickerState(
+                initialSelectedDateMillis =
+                    purchaseDate
+                        .atStartOfDay(ZoneId.of("UTC"))
+                        .toInstant()
+                        .toEpochMilli(),
+            )
 
         DatePickerDialog(
             onDismissRequest = { showDatePicker = false },
@@ -69,13 +70,14 @@ fun PurchaseDatePickerField(
                     onClick = {
                         datePickerState.selectedDateMillis?.let { millis ->
                             onDateChange(
-                                Instant.ofEpochMilli(millis)
+                                Instant
+                                    .ofEpochMilli(millis)
                                     .atZone(ZoneId.of("UTC"))
-                                    .toLocalDate()
+                                    .toLocalDate(),
                             )
                         }
                         showDatePicker = false
-                    }
+                    },
                 ) {
                     Text("OK")
                 }
@@ -84,7 +86,7 @@ fun PurchaseDatePickerField(
                 TextButton(onClick = { showDatePicker = false }) {
                     Text("Cancel")
                 }
-            }
+            },
         ) {
             DatePicker(state = datePickerState)
         }

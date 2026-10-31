@@ -30,19 +30,20 @@ fun LyndBottomBar(
     bottomTabs: List<Screen> = Screen.defaultBottomTabs,
     action: BottomBarAction = BottomBarAction.defaultForRoute(currentRoute),
     onTabSelected: ((Screen) -> Unit)? = null,
-    onTabReselected: (Screen) -> Unit = {}
+    onTabReselected: (Screen) -> Unit = {},
 ) {
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .navigationBarsPadding()
-            .padding(
-                start = ContainerHorizontalMargin,
-                end = ContainerHorizontalMargin,
-                bottom = ContainerBottomMargin
-            ),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .navigationBarsPadding()
+                .padding(
+                    start = ContainerHorizontalMargin,
+                    end = ContainerHorizontalMargin,
+                    bottom = ContainerBottomMargin,
+                ),
         horizontalArrangement = Arrangement.spacedBy(ActionButtonSpacing),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         LyndBottomBarPill(
             bottomTabs = bottomTabs,
@@ -68,7 +69,7 @@ fun LyndBottomBar(
             onTabReselected = { screen ->
                 onTabReselected(screen)
             },
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         )
 
         LyndContextualActionButton(action = action)
@@ -80,13 +81,14 @@ fun LyndBottomBar(
 private fun LyndBottomBarPreview() {
     LyndTheme {
         Box(
-            modifier = Modifier
-                .background(MaterialTheme.colorScheme.background)
-                .padding(16.dp)
+            modifier =
+                Modifier
+                    .background(MaterialTheme.colorScheme.background)
+                    .padding(16.dp),
         ) {
             LyndBottomBar(
                 navController = rememberNavController(),
-                currentRoute = Screen.Overview.route
+                currentRoute = Screen.Overview.route,
             )
         }
     }

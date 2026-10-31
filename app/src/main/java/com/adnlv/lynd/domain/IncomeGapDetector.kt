@@ -7,43 +7,45 @@ import java.time.LocalDate
 import java.time.YearMonth
 
 object IncomeGapDetector {
-
     private const val CONSECUTIVE_MONTH_STEP = 1L
 
     fun detectGaps(
         payoutRows: List<PayoutRow>,
         currency: String,
         startDate: LocalDate = LocalDate.now(),
-        monthCount: Int = AppConstants.DEFAULT_ANALYSIS_HORIZON_MONTHS
+        monthCount: Int = AppConstants.DEFAULT_ANALYSIS_HORIZON_MONTHS,
     ): List<IncomeGap> {
-        val allCashFlows = PortfolioCalculator.calculateMonthlyCashFlows(
-            payoutRows = payoutRows,
-            startDate = startDate,
-            monthCount = monthCount
-        )
+        val allCashFlows =
+            PortfolioCalculator.calculateMonthlyCashFlows(
+                payoutRows = payoutRows,
+                startDate = startDate,
+                monthCount = monthCount,
+            )
         val selectedCashFlows = allCashFlows[currency].orEmpty()
 
         val startYearMonth = YearMonth.from(startDate)
         val allMonths = (0 until monthCount).map { startYearMonth.plusMonths(it.toLong()) }
         val flowByMonth = selectedCashFlows.associateBy { it.yearMonth }
 
-        val dryMonths = allMonths.filter { ym ->
-            val flow = flowByMonth[ym]
-            flow == null || flow.totalAmount.compareTo(BigDecimal.ZERO) == 0
-        }
+        val dryMonths =
+            allMonths.filter { ym ->
+                val flow = flowByMonth[ym]
+                flow == null || flow.totalAmount.compareTo(BigDecimal.ZERO) == 0
+            }
 
         val otherCurrencies = allCashFlows.keys.filter { !it.equals(currency, ignoreCase = true) }
-        val crossCoverageByMonth: Map<YearMonth, Map<String, BigDecimal>> = dryMonths.associateWith { ym ->
-            val coverage = mutableMapOf<String, BigDecimal>()
-            for (otherCurr in otherCurrencies) {
-                val otherFlows = allCashFlows[otherCurr].orEmpty()
-                val flow = otherFlows.find { it.yearMonth == ym }
-                if (flow != null && flow.totalAmount > BigDecimal.ZERO) {
-                    coverage[otherCurr] = flow.totalAmount
+        val crossCoverageByMonth: Map<YearMonth, Map<String, BigDecimal>> =
+            dryMonths.associateWith { ym ->
+                val coverage = mutableMapOf<String, BigDecimal>()
+                for (otherCurr in otherCurrencies) {
+                    val otherFlows = allCashFlows[otherCurr].orEmpty()
+                    val flow = otherFlows.find { it.yearMonth == ym }
+                    if (flow != null && flow.totalAmount > BigDecimal.ZERO) {
+                        coverage[otherCurr] = flow.totalAmount
+                    }
                 }
+                coverage
             }
-            coverage
-        }
 
         return computeConsecutiveGaps(dryMonths, currency, crossCoverageByMonth)
     }
@@ -51,7 +53,7 @@ object IncomeGapDetector {
     private fun computeConsecutiveGaps(
         dryMonths: List<YearMonth>,
         currency: String,
-        crossCoverageByMonth: Map<YearMonth, Map<String, BigDecimal>> = emptyMap()
+        crossCoverageByMonth: Map<YearMonth, Map<String, BigDecimal>> = emptyMap(),
     ): List<IncomeGap> {
         if (dryMonths.isEmpty()) return emptyList()
 
@@ -82,7 +84,7 @@ object IncomeGapDetector {
                     currency = currency,
                     consecutiveMonthIndex = index + 1,
                     totalConsecutiveMonths = streak.size,
-                    crossCurrencyCoverage = crossCoverageByMonth[ym].orEmpty()
+                    crossCurrencyCoverage = crossCoverageByMonth[ym].orEmpty(),
                 )
             }
         }

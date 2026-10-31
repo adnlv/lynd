@@ -8,7 +8,6 @@ import org.junit.Test
 import java.math.BigDecimal
 
 class AddHoldingValidationTest {
-
     @Test
     fun totalPrice_computesPricePerBondCorrectly() {
         val totalPrice = BigDecimal("2050.00")
@@ -27,9 +26,7 @@ class AddHoldingValidationTest {
 
     @Test
     fun priceValidation_acceptsPositiveValuesAndRejectsEmptyOrZero() {
-        fun isPriceValid(input: String): Boolean {
-            return input.toBigDecimalOrNull()?.let { it > BigDecimal.ZERO } ?: false
-        }
+        fun isPriceValid(input: String): Boolean = input.toBigDecimalOrNull()?.let { it > BigDecimal.ZERO } ?: false
 
         assertTrue(isPriceValid("100.00"))
         assertTrue(isPriceValid("0.01"))
@@ -53,15 +50,16 @@ class AddHoldingValidationTest {
 
     @Test
     fun holdingItem_mapsCorrectlyToInitialEditFields() {
-        val holding = com.adnlv.lynd.domain.HoldingItem(
-            id = 42,
-            isin = "UA4000238281",
-            bondName = "Bond 1",
-            quantity = 5,
-            pricePerBond = BigDecimal("1050.25"),
-            totalPaidAmount = BigDecimal("5251.25"),
-            purchaseDate = java.time.LocalDate.of(2025, 6, 15)
-        )
+        val holding =
+            com.adnlv.lynd.domain.HoldingItem(
+                id = 42,
+                isin = "UA4000238281",
+                bondName = "Bond 1",
+                quantity = 5,
+                pricePerBond = BigDecimal("1050.25"),
+                totalPaidAmount = BigDecimal("5251.25"),
+                purchaseDate = java.time.LocalDate.of(2025, 6, 15),
+            )
 
         val prefix = holding.isin.take(6)
         val code = holding.isin.substring(6)
@@ -81,14 +79,15 @@ class AddHoldingValidationTest {
     @Test
     fun updateHoldingEntity_retainsOriginalId() {
         val originalId = 42
-        val updatedHolding = com.adnlv.lynd.data.db.HoldingEntity(
-            id = originalId,
-            isin = "UA4000238281",
-            quantity = 10,
-            pricePerBond = BigDecimal("1000.00"),
-            totalPaidAmount = BigDecimal("10000.00"),
-            purchaseDate = java.time.LocalDate.of(2025, 7, 20)
-        )
+        val updatedHolding =
+            com.adnlv.lynd.data.db.HoldingEntity(
+                id = originalId,
+                isin = "UA4000238281",
+                quantity = 10,
+                pricePerBond = BigDecimal("1000.00"),
+                totalPaidAmount = BigDecimal("10000.00"),
+                purchaseDate = java.time.LocalDate.of(2025, 7, 20),
+            )
 
         assertEquals(originalId, updatedHolding.id)
         assertEquals(10, updatedHolding.quantity)
@@ -105,15 +104,19 @@ class AddHoldingValidationTest {
         val pricePerBondInput = "1000.00"
         val totalPriceInput = "10000.00"
 
-        val isValid = com.adnlv.lynd.domain.IsinValidator.isValid(fullIsin) &&
-            quantity >= 1 &&
-            (totalPriceInput.toDoubleOrNull() ?: 0.0) > 0.0 &&
-            (pricePerBondInput.toDoubleOrNull() ?: 0.0) > 0.0
+        val isValid =
+            com.adnlv.lynd.domain.IsinValidator
+                .isValid(fullIsin) &&
+                quantity >= 1 &&
+                (totalPriceInput.toDoubleOrNull() ?: 0.0) > 0.0 &&
+                (pricePerBondInput.toDoubleOrNull() ?: 0.0) > 0.0
 
         assertTrue(isValid)
 
         val invalidFullIsin = "${prefix}238282"
-        val isInvalidValid = com.adnlv.lynd.domain.IsinValidator.isValid(invalidFullIsin)
+        val isInvalidValid =
+            com.adnlv.lynd.domain.IsinValidator
+                .isValid(invalidFullIsin)
         assertFalse(isInvalidValid)
     }
 
@@ -121,28 +124,36 @@ class AddHoldingValidationTest {
     fun codeInput_displaysImmediateValidationErrors() {
         val prefix = "UA4000"
 
-        val nonDigitError = com.adnlv.lynd.domain.IsinValidator.validateCodeInput("123a", prefix)
+        val nonDigitError =
+            com.adnlv.lynd.domain.IsinValidator
+                .validateCodeInput("123a", prefix)
         assertEquals("Code must contain only digits", nonDigitError)
 
-        val partialValid = com.adnlv.lynd.domain.IsinValidator.validateCodeInput("23828", prefix)
+        val partialValid =
+            com.adnlv.lynd.domain.IsinValidator
+                .validateCodeInput("23828", prefix)
         org.junit.Assert.assertNull(partialValid)
 
-        val invalidChecksum = com.adnlv.lynd.domain.IsinValidator.validateCodeInput("238282", prefix)
+        val invalidChecksum =
+            com.adnlv.lynd.domain.IsinValidator
+                .validateCodeInput("238282", prefix)
         assertEquals("Invalid ISIN checksum", invalidChecksum)
 
-        val validCode = com.adnlv.lynd.domain.IsinValidator.validateCodeInput("238281", prefix)
+        val validCode =
+            com.adnlv.lynd.domain.IsinValidator
+                .validateCodeInput("238281", prefix)
         org.junit.Assert.assertNull(validCode)
     }
 
     @Test
     fun codeInput_displaysInvalidCodeWhenNoMatchingRecords() {
         val prefix = "UA4000"
-        val error = com.adnlv.lynd.domain.IsinValidator.validateCodeInput(
-            code = "999",
-            prefix = prefix,
-            hasMatchingRecord = false
-        )
+        val error =
+            com.adnlv.lynd.domain.IsinValidator.validateCodeInput(
+                code = "999",
+                prefix = prefix,
+                hasMatchingRecord = false,
+            )
         assertEquals("Invalid code", error)
     }
 }
-

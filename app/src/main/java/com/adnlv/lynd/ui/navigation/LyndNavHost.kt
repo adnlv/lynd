@@ -35,42 +35,50 @@ fun LyndNavHost(
     appContainer: AppContainer,
     modifier: Modifier = Modifier,
     bottomBarActionState: BottomBarActionState? = null,
-    tabPagerState: PagerState = rememberPagerState(pageCount = { Screen.defaultBottomTabs.size })
+    tabPagerState: PagerState = rememberPagerState(pageCount = { Screen.defaultBottomTabs.size }),
 ) {
     val activity = LocalContext.current as ComponentActivity
 
-    val overviewViewModel: OverviewViewModel = viewModel(
-        viewModelStoreOwner = activity,
-        factory = OverviewViewModel.provideFactory(
-            holdingDao = appContainer.database.holdingDao(),
-            bondDao = appContainer.database.bondDao(),
-            payoutDao = appContainer.database.payoutDao()
+    val overviewViewModel: OverviewViewModel =
+        viewModel(
+            viewModelStoreOwner = activity,
+            factory =
+                OverviewViewModel.provideFactory(
+                    holdingDao = appContainer.database.holdingDao(),
+                    bondDao = appContainer.database.bondDao(),
+                    payoutDao = appContainer.database.payoutDao(),
+                ),
         )
-    )
-    val plannerViewModel: PlannerViewModel = viewModel(
-        viewModelStoreOwner = activity,
-        factory = PlannerViewModel.provideFactory(
-            holdingDao = appContainer.database.holdingDao(),
-            bondDao = appContainer.database.bondDao(),
-            payoutDao = appContainer.database.payoutDao()
+    val plannerViewModel: PlannerViewModel =
+        viewModel(
+            viewModelStoreOwner = activity,
+            factory =
+                PlannerViewModel.provideFactory(
+                    holdingDao = appContainer.database.holdingDao(),
+                    bondDao = appContainer.database.bondDao(),
+                    payoutDao = appContainer.database.payoutDao(),
+                ),
         )
-    )
-    val payoutsViewModel: PayoutsViewModel = viewModel(
-        viewModelStoreOwner = activity,
-        factory = PayoutsViewModel.provideFactory(
-            payoutDao = appContainer.database.payoutDao(),
-            holdingDao = appContainer.database.holdingDao(),
-            bondDao = appContainer.database.bondDao()
+    val payoutsViewModel: PayoutsViewModel =
+        viewModel(
+            viewModelStoreOwner = activity,
+            factory =
+                PayoutsViewModel.provideFactory(
+                    payoutDao = appContainer.database.payoutDao(),
+                    holdingDao = appContainer.database.holdingDao(),
+                    bondDao = appContainer.database.bondDao(),
+                ),
         )
-    )
-    val holdingsViewModel: HoldingsViewModel = viewModel(
-        viewModelStoreOwner = activity,
-        factory = HoldingsViewModel.provideFactory(
-            holdingDao = appContainer.database.holdingDao(),
-            nbuRepository = appContainer.nbuRepository,
-            bondDao = appContainer.database.bondDao()
+    val holdingsViewModel: HoldingsViewModel =
+        viewModel(
+            viewModelStoreOwner = activity,
+            factory =
+                HoldingsViewModel.provideFactory(
+                    holdingDao = appContainer.database.holdingDao(),
+                    nbuRepository = appContainer.nbuRepository,
+                    bondDao = appContainer.database.bondDao(),
+                ),
         )
-    )
 
     val overviewListState = rememberLazyListState()
     val plannerListState = rememberLazyListState()
@@ -80,22 +88,22 @@ fun LyndNavHost(
     RegisterScrollToTopHandler(
         route = Screen.Overview.route,
         bottomBarActionState = bottomBarActionState,
-        listState = overviewListState
+        listState = overviewListState,
     )
     RegisterScrollToTopHandler(
         route = Screen.Planner.route,
         bottomBarActionState = bottomBarActionState,
-        listState = plannerListState
+        listState = plannerListState,
     )
     RegisterScrollToTopHandler(
         route = Screen.Payouts.route,
         bottomBarActionState = bottomBarActionState,
-        listState = payoutsListState
+        listState = payoutsListState,
     )
     RegisterScrollToTopHandler(
         route = Screen.Holdings.route,
         bottomBarActionState = bottomBarActionState,
-        listState = holdingsListState
+        listState = holdingsListState,
     )
 
     NavHost(
@@ -107,7 +115,7 @@ fun LyndNavHost(
         popEnterTransition = { EnterTransition.None },
         popExitTransition = { ExitTransition.None },
         predictivePopEnterTransition = { EnterTransition.None },
-        predictivePopExitTransition = { ExitTransition.None }
+        predictivePopExitTransition = { ExitTransition.None },
     ) {
         val onNavigateToHoldings = {
             navController.navigate(Screen.Holdings.route) {
@@ -131,7 +139,7 @@ fun LyndNavHost(
                 plannerListState = plannerListState,
                 payoutsListState = payoutsListState,
                 bottomBarActionState = bottomBarActionState,
-                onNavigateToHoldings = onNavigateToHoldings
+                onNavigateToHoldings = onNavigateToHoldings,
             )
         }
         composable(Screen.Holdings.route) {
@@ -143,7 +151,7 @@ fun LyndNavHost(
                 },
                 onNavigateBack = {
                     navController.popBackStack()
-                }
+                },
             )
         }
     }
@@ -153,7 +161,7 @@ fun LyndNavHost(
 private fun RegisterScrollToTopHandler(
     route: String,
     bottomBarActionState: BottomBarActionState?,
-    listState: LazyListState
+    listState: LazyListState,
 ) {
     val coroutineScope = rememberCoroutineScope()
     DisposableEffect(route, bottomBarActionState, listState) {
@@ -162,21 +170,28 @@ private fun RegisterScrollToTopHandler(
                 val layoutInfo = listState.layoutInfo
                 val visibleItems = layoutInfo.visibleItemsInfo
                 val firstVisible = visibleItems.firstOrNull()
-                val totalDistance = if (firstVisible != null && firstVisible.index > 0) {
-                    val avgItemSize = visibleItems.map { it.size }.average().toFloat().coerceAtLeast(100f)
-                    (firstVisible.index * avgItemSize) + listState.firstVisibleItemScrollOffset
-                } else {
-                    listState.firstVisibleItemScrollOffset.toFloat()
-                }
+                val totalDistance =
+                    if (firstVisible != null && firstVisible.index > 0) {
+                        val avgItemSize =
+                            visibleItems
+                                .map { it.size }
+                                .average()
+                                .toFloat()
+                                .coerceAtLeast(100f)
+                        (firstVisible.index * avgItemSize) + listState.firstVisibleItemScrollOffset
+                    } else {
+                        listState.firstVisibleItemScrollOffset.toFloat()
+                    }
 
                 if (totalDistance > 0f) {
                     // Decelerate curve: fast start (0.165), descending speed towards top (1.0)
                     listState.animateScrollBy(
                         value = -totalDistance,
-                        animationSpec = tween(
-                            durationMillis = LyndLayoutDefaults.ScrollToTopDurationMs,
-                            easing = CubicBezierEasing(0.165f, 0.84f, 0.44f, 1f)
-                        )
+                        animationSpec =
+                            tween(
+                                durationMillis = LyndLayoutDefaults.ScrollToTopDurationMs,
+                                easing = CubicBezierEasing(0.165f, 0.84f, 0.44f, 1f),
+                            ),
                     )
                 }
                 listState.scrollToItem(0)

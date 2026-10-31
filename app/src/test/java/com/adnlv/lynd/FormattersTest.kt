@@ -8,7 +8,6 @@ import java.time.LocalDate
 import java.util.Locale
 
 class FormattersTest {
-
     @Test
     fun formatAmount_formatsUkrainianGroupingAndDecimals() {
         val amount = BigDecimal("10000.00")
@@ -55,4 +54,3 @@ class FormattersTest {
         assertEquals("XYZ", Formatters.getCurrencySymbol("XYZ"))
     }
 }
-

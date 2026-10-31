@@ -31,61 +31,64 @@ import com.adnlv.lynd.ui.theme.LyndTheme
 fun HoldingsSyncBanner(
     syncError: String?,
     onRetry: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     AnimatedVisibility(
         visible = syncError != null,
         enter = expandVertically() + fadeIn(),
         exit = shrinkVertically() + fadeOut(),
-        modifier = modifier
+        modifier = modifier,
     ) {
         syncError?.let { error ->
             Surface(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp),
                 shape = RoundedCornerShape(12.dp),
                 color = LyndTheme.colors.warningContainer,
                 contentColor = LyndTheme.colors.onWarningContainer,
-                border = BorderStroke(
-                    width = 1.dp,
-                    color = LyndTheme.colors.warning.copy(alpha = 0.25f)
-                )
+                border =
+                    BorderStroke(
+                        width = 1.dp,
+                        color = LyndTheme.colors.warning.copy(alpha = 0.25f),
+                    ),
             ) {
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 12.dp),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 12.dp),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
                     Icon(
                         imageVector = Icons.Default.Warning,
                         contentDescription = "Sync Error",
-                        tint = LyndTheme.colors.warning
+                        tint = LyndTheme.colors.warning,
                     )
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
                             text = "Sync error",
                             style = MaterialTheme.typography.titleSmall,
                             fontWeight = FontWeight.Bold,
-                            color = LyndTheme.colors.onWarningContainer
+                            color = LyndTheme.colors.onWarningContainer,
                         )
                         Text(
                             text = error,
                             style = MaterialTheme.typography.bodySmall,
                             color = LyndTheme.colors.onWarningContainer.copy(alpha = 0.8f),
-                            maxLines = 2
+                            maxLines = 2,
                         )
                     }
                     TextButton(
                         onClick = onRetry,
-                        contentPadding = PaddingValues(horizontal = 8.dp)
+                        contentPadding = PaddingValues(horizontal = 8.dp),
                     ) {
                         Text(
                             text = "Retry",
                             fontWeight = FontWeight.Bold,
-                            color = LyndTheme.colors.warning
+                            color = LyndTheme.colors.warning,
                         )
                     }
                 }

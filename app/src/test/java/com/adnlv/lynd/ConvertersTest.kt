@@ -8,7 +8,6 @@ import java.math.BigDecimal
 import java.time.LocalDate
 
 class ConvertersTest {
-
     private val converters = Converters()
 
     @Test

@@ -11,24 +11,28 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
 @OptIn(ExperimentalTextApi::class)
-val RobotoFlexHeavy = FontFamily(
-    Font(
-        familyName = DeviceFontFamilyName("roboto-flex"),
-        weight = FontWeight.ExtraBold,
-        variationSettings = FontVariation.Settings(
-            FontVariation.weight(850),
-            FontVariation.grade(100)
-        )
+val RobotoFlexHeavy =
+    FontFamily(
+        Font(
+            familyName = DeviceFontFamilyName("roboto-flex"),
+            weight = FontWeight.ExtraBold,
+            variationSettings =
+                FontVariation.Settings(
+                    FontVariation.weight(850),
+                    FontVariation.grade(100),
+                ),
+        ),
     )
-)
 
 // Set of Material typography styles to start with
-val Typography = Typography(
-    bodyLarge = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
-        lineHeight = 24.sp,
-        letterSpacing = 0.5.sp
+val Typography =
+    Typography(
+        bodyLarge =
+            TextStyle(
+                fontFamily = FontFamily.Default,
+                fontWeight = FontWeight.Normal,
+                fontSize = 16.sp,
+                lineHeight = 24.sp,
+                letterSpacing = 0.5.sp,
+            ),
     )
-)

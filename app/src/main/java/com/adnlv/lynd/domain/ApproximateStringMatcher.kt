@@ -3,7 +3,6 @@ package com.adnlv.lynd.domain
 import com.adnlv.lynd.core.AppConstants
 
 object ApproximateStringMatcher {
-
     private const val PREFIX_MATCH_BASE_SCORE = 100
     private const val SUBSTRING_MATCH_BASE_SCORE = 80
     private const val SUBSEQUENCE_MATCH_BASE_SCORE = 60
@@ -17,10 +16,13 @@ object ApproximateStringMatcher {
     data class MatchResult(
         val isMatch: Boolean,
         val score: Int = 0,
-        val matchedIndices: Set<Int> = emptySet()
+        val matchedIndices: Set<Int> = emptySet(),
     )
 
-    fun match(query: String, target: String): MatchResult {
+    fun match(
+        query: String,
+        target: String,
+    ): MatchResult {
         val trimmedQuery = query.trim()
         if (trimmedQuery.isEmpty()) {
             return MatchResult(isMatch = true, score = 0, matchedIndices = emptySet())
@@ -56,7 +58,10 @@ object ApproximateStringMatcher {
         return MatchResult(isMatch = false)
     }
 
-    private fun findSubsequenceIndices(query: String, target: String): Set<Int>? {
+    private fun findSubsequenceIndices(
+        query: String,
+        target: String,
+    ): Set<Int>? {
         val indices = mutableSetOf<Int>()
         var targetIndex = 0
         for (qChar in query) {
@@ -75,7 +80,10 @@ object ApproximateStringMatcher {
         return indices
     }
 
-    private fun findApproximateMatch(query: String, target: String): MatchResult? {
+    private fun findApproximateMatch(
+        query: String,
+        target: String,
+    ): MatchResult? {
         if (query.length < MIN_QUERY_LENGTH_FOR_APPROX) return null
 
         val targetWindow = target.take(query.length)
@@ -94,11 +102,12 @@ object ApproximateStringMatcher {
             }
         }
 
-        val maxAllowedMismatches = if (query.length >= LONG_QUERY_LENGTH_THRESHOLD) {
-            MAX_MISMATCHES_FOR_LONG_QUERY
-        } else {
-            MAX_MISMATCHES_FOR_SHORT_QUERY
-        }
+        val maxAllowedMismatches =
+            if (query.length >= LONG_QUERY_LENGTH_THRESHOLD) {
+                MAX_MISMATCHES_FOR_LONG_QUERY
+            } else {
+                MAX_MISMATCHES_FOR_SHORT_QUERY
+            }
         if (mismatches <= maxAllowedMismatches) {
             val score = APPROXIMATE_MATCH_BASE_SCORE - mismatches * MISMATCH_PENALTY_SCORE
             return MatchResult(isMatch = true, score = score, matchedIndices = matchedIndices)
@@ -110,7 +119,7 @@ object ApproximateStringMatcher {
     fun filterAndSort(
         candidates: List<String>,
         prefix: String,
-        query: String
+        query: String,
     ): List<String> {
         val trimmedQuery = query.trim()
         if (trimmedQuery.isEmpty()) return candidates.take(AppConstants.ISIN_SEARCH_LIMIT)
@@ -120,8 +129,7 @@ object ApproximateStringMatcher {
                 val code = IsinValidator.extractCode(isin, prefix)
                 val result = match(trimmedQuery, code)
                 if (result.isMatch) isin to result else null
-            }
-            .sortedWith(compareByDescending<Pair<String, MatchResult>> { it.second.score }.thenBy { it.first })
+            }.sortedWith(compareByDescending<Pair<String, MatchResult>> { it.second.score }.thenBy { it.first })
             .map { it.first }
             .take(AppConstants.ISIN_SEARCH_LIMIT)
     }

@@ -28,69 +28,73 @@ fun MaturityDetailCard(
     selectedMaturity: YearlyMaturity,
     totalPrincipal: BigDecimal,
     currency: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-    val percentageOfTotal = remember(selectedMaturity.amount, totalPrincipal) {
-        if (totalPrincipal > BigDecimal.ZERO) {
-            selectedMaturity.amount
-                .multiply(BigDecimal(100))
-                .divide(totalPrincipal, 1, RoundingMode.HALF_UP)
-        } else {
-            BigDecimal.ZERO
+    val percentageOfTotal =
+        remember(selectedMaturity.amount, totalPrincipal) {
+            if (totalPrincipal > BigDecimal.ZERO) {
+                selectedMaturity.amount
+                    .multiply(BigDecimal(100))
+                    .divide(totalPrincipal, 1, RoundingMode.HALF_UP)
+            } else {
+                BigDecimal.ZERO
+            }
         }
-    }
 
     Card(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        ),
-        border = BorderStroke(
-            width = 1.dp,
-            color = LyndTheme.colors.borderSubtle.copy(alpha = 0.3f)
-        )
+        colors =
+            CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surface,
+            ),
+        border =
+            BorderStroke(
+                width = 1.dp,
+                color = LyndTheme.colors.borderSubtle.copy(alpha = 0.3f),
+            ),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(12.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     text = "${selectedMaturity.year}",
                     style = MaterialTheme.typography.labelLarge,
                     fontWeight = FontWeight.Bold,
-                    color = LyndTheme.colors.textPrimary
+                    color = LyndTheme.colors.textPrimary,
                 )
                 Text(
                     text = "${Formatters.formatAmount(selectedMaturity.amount)} $currency",
                     style = MaterialTheme.typography.labelLarge,
                     fontWeight = FontWeight.Bold,
-                    color = LyndTheme.colors.principal
+                    color = LyndTheme.colors.principal,
                 )
             }
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     text = "Share of Redemptions",
                     style = MaterialTheme.typography.bodySmall,
-                    color = LyndTheme.colors.textSecondary
+                    color = LyndTheme.colors.textSecondary,
                 )
                 Text(
                     text = Formatters.formatPercentage(percentageOfTotal),
                     style = MaterialTheme.typography.bodySmall,
                     fontWeight = FontWeight.Medium,
-                    color = LyndTheme.colors.textPrimary
+                    color = LyndTheme.colors.textPrimary,
                 )
             }
         }

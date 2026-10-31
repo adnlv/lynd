@@ -63,21 +63,23 @@ fun MainApp(appContainer: AppContainer) {
     CompositionLocalProvider(LocalLyndHazeState provides hazeState) {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
-            contentWindowInsets = WindowInsets.statusBars
+            contentWindowInsets = WindowInsets.statusBars,
         ) { innerPadding ->
             Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(top = innerPadding.calculateTopPadding())
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .padding(top = innerPadding.calculateTopPadding()),
             ) {
                 LyndNavHost(
                     navController = navController,
                     appContainer = appContainer,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .hazeSource(hazeState),
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .hazeSource(hazeState),
                     bottomBarActionState = bottomBarActionState,
-                    tabPagerState = tabPagerState
+                    tabPagerState = tabPagerState,
                 )
                 if (showBottomBar) {
                     LyndBottomBar(
@@ -99,7 +101,7 @@ fun MainApp(appContainer: AppContainer) {
                         onTabReselected = { screen ->
                             bottomBarActionState.onReselect(screen.route)
                         },
-                        modifier = Modifier.align(Alignment.BottomCenter)
+                        modifier = Modifier.align(Alignment.BottomCenter),
                     )
                 }
             }

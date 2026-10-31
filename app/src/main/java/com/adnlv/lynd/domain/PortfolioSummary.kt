@@ -14,32 +14,37 @@ data class PortfolioSummary(
     val investedCapital: BigDecimal,
     val expectedPayout: BigDecimal,
     val totalProfit: BigDecimal,
-    val averageInterestRate: BigDecimal
+    val averageInterestRate: BigDecimal,
 )
 
 object PortfolioCalculator {
     fun mapHoldingsWithPayments(
         holdingsList: List<HoldingWithBond>,
-        paymentsList: List<BondPaymentEntity>
+        paymentsList: List<BondPaymentEntity>,
     ): List<HoldingItem> {
         val paymentsByIsin = paymentsList.groupBy { it.bondIsin }
 
         return holdingsList.map { item ->
-            val paymentsForHolding = paymentsByIsin[item.isin].orEmpty()
-                .filter { !it.payDate.isBefore(item.purchaseDate) }
+            val paymentsForHolding =
+                paymentsByIsin[item.isin]
+                    .orEmpty()
+                    .filter { !it.payDate.isBefore(item.purchaseDate) }
 
-            val totalPayout = paymentsForHolding.fold(BigDecimal.ZERO) { acc, payment ->
-                acc.add(payment.payVal.multiply(BigDecimal.valueOf(item.quantity.toLong())))
-            }
+            val totalPayout =
+                paymentsForHolding.fold(BigDecimal.ZERO) { acc, payment ->
+                    acc.add(payment.payVal.multiply(BigDecimal.valueOf(item.quantity.toLong())))
+                }
 
             val profitAmount = totalPayout.subtract(item.totalPaidAmount)
 
-            val profitPercent = if (item.totalPaidAmount > BigDecimal.ZERO) {
-                profitAmount.multiply(AppConstants.PERCENTAGE_MULTIPLIER)
-                    .divide(item.totalPaidAmount, AppConstants.PERCENTAGE_DECIMAL_SCALE, RoundingMode.HALF_UP)
-            } else {
-                BigDecimal.ZERO
-            }
+            val profitPercent =
+                if (item.totalPaidAmount > BigDecimal.ZERO) {
+                    profitAmount
+                        .multiply(AppConstants.PERCENTAGE_MULTIPLIER)
+                        .divide(item.totalPaidAmount, AppConstants.PERCENTAGE_DECIMAL_SCALE, RoundingMode.HALF_UP)
+                } else {
+                    BigDecimal.ZERO
+                }
 
             HoldingItem(
                 id = item.id,
@@ -53,37 +58,44 @@ object PortfolioCalculator {
                 couponRate = item.couponRate,
                 totalPayoutAmount = totalPayout,
                 totalProfitAmount = profitAmount,
-                profitPercentage = profitPercent
+                profitPercentage = profitPercent,
             )
         }
     }
 
-    fun calculateSummary(currency: String, holdings: List<HoldingItem>): PortfolioSummary {
+    fun calculateSummary(
+        currency: String,
+        holdings: List<HoldingItem>,
+    ): PortfolioSummary {
         val currencyHoldings = holdings.filter { it.currency.equals(currency, ignoreCase = true) }
-        val invested = currencyHoldings.fold(BigDecimal.ZERO) { acc, item ->
-            acc.add(item.totalPaidAmount)
-        }
-        val expected = currencyHoldings.fold(BigDecimal.ZERO) { acc, item ->
-            acc.add(item.totalPayoutAmount)
-        }
+        val invested =
+            currencyHoldings.fold(BigDecimal.ZERO) { acc, item ->
+                acc.add(item.totalPaidAmount)
+            }
+        val expected =
+            currencyHoldings.fold(BigDecimal.ZERO) { acc, item ->
+                acc.add(item.totalPayoutAmount)
+            }
         val profit = expected.subtract(invested)
 
-        val weightedRateSum = currencyHoldings.fold(BigDecimal.ZERO) { acc, item ->
-            acc.add(item.couponRate.multiply(item.totalPaidAmount))
-        }
+        val weightedRateSum =
+            currencyHoldings.fold(BigDecimal.ZERO) { acc, item ->
+                acc.add(item.couponRate.multiply(item.totalPaidAmount))
+            }
 
-        val avgRate = if (invested > BigDecimal.ZERO) {
-            weightedRateSum.divide(invested, AppConstants.PERCENTAGE_DECIMAL_SCALE, RoundingMode.HALF_UP)
-        } else {
-            BigDecimal.ZERO
-        }
+        val avgRate =
+            if (invested > BigDecimal.ZERO) {
+                weightedRateSum.divide(invested, AppConstants.PERCENTAGE_DECIMAL_SCALE, RoundingMode.HALF_UP)
+            } else {
+                BigDecimal.ZERO
+            }
 
         return PortfolioSummary(
             currency = currency,
             investedCapital = invested,
             expectedPayout = expected,
             totalProfit = profit,
-            averageInterestRate = avgRate
+            averageInterestRate = avgRate,
         )
     }
 
@@ -97,15 +109,16 @@ object PortfolioCalculator {
     fun calculateMonthlyCashFlows(
         payoutRows: List<PayoutRow>,
         startDate: LocalDate = LocalDate.now(),
-        monthCount: Int = AppConstants.DEFAULT_ANALYSIS_HORIZON_MONTHS
+        monthCount: Int = AppConstants.DEFAULT_ANALYSIS_HORIZON_MONTHS,
     ): Map<String, List<MonthlyCashFlow>> {
         val currencies = payoutRows.map { it.currency }.distinct()
         val startYearMonth = YearMonth.from(startDate)
         val targetMonths = (0 until monthCount).map { startYearMonth.plusMonths(it.toLong()) }
 
-        val upcomingRows = payoutRows.filter {
-            !it.payDate.isBefore(startDate) && !it.payDate.isBefore(it.purchaseDate)
-        }
+        val upcomingRows =
+            payoutRows.filter {
+                !it.payDate.isBefore(startDate) && !it.payDate.isBefore(it.purchaseDate)
+            }
 
         return currencies.associateWith { currency ->
             val currencyRows = upcomingRows.filter { it.currency.equals(currency, ignoreCase = true) }
@@ -129,7 +142,7 @@ object PortfolioCalculator {
                     yearMonth = ym,
                     couponAmount = couponSum,
                     principalAmount = principalSum,
-                    totalAmount = couponSum.add(principalSum)
+                    totalAmount = couponSum.add(principalSum),
                 )
             }
         }
@@ -137,14 +150,15 @@ object PortfolioCalculator {
 
     fun calculateYearlyMaturitySchedule(
         payoutRows: List<PayoutRow>,
-        startDate: LocalDate = LocalDate.now()
+        startDate: LocalDate = LocalDate.now(),
     ): Map<String, List<YearlyMaturity>> {
         val currencies = payoutRows.map { it.currency }.distinct()
         val currentYear = startDate.year
 
-        val upcomingRedemptions = payoutRows.filter {
-            it.isRedemption && !it.payDate.isBefore(startDate) && !it.payDate.isBefore(it.purchaseDate)
-        }
+        val upcomingRedemptions =
+            payoutRows.filter {
+                it.isRedemption && !it.payDate.isBefore(startDate) && !it.payDate.isBefore(it.purchaseDate)
+            }
 
         return currencies.associateWith { currency ->
             val currencyRedemptions = upcomingRedemptions.filter { it.currency.equals(currency, ignoreCase = true) }
@@ -156,22 +170,24 @@ object PortfolioCalculator {
 
                 (currentYear..maxYear).map { year ->
                     val yearRows = redemptionsByYear[year].orEmpty()
-                    val totalYearAmount = yearRows.fold(BigDecimal.ZERO) { acc, row ->
-                        acc.add(row.calculateTotalAmount())
-                    }
+                    val totalYearAmount =
+                        yearRows.fold(BigDecimal.ZERO) { acc, row ->
+                            acc.add(row.calculateTotalAmount())
+                        }
                     YearlyMaturity(
                         year = year,
-                        amount = totalYearAmount
+                        amount = totalYearAmount,
                     )
                 }
             }
         }
     }
 
-    fun getCurrencyDisplayName(currency: String): String = when (currency.uppercase()) {
-        "UAH" -> "Ukrainian Hryvnia"
-        "USD" -> "US Dollar"
-        "EUR" -> "Euro"
-        else -> currency
-    }
+    fun getCurrencyDisplayName(currency: String): String =
+        when (currency.uppercase()) {
+            "UAH" -> "Ukrainian Hryvnia"
+            "USD" -> "US Dollar"
+            "EUR" -> "Euro"
+            else -> currency
+        }
 }

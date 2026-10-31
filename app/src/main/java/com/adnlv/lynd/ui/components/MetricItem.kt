@@ -24,23 +24,23 @@ fun MetricItem(
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
     labelStyle: TextStyle = MaterialTheme.typography.labelMedium,
     valueStyle: TextStyle = MaterialTheme.typography.titleMedium,
-    spacing: Dp = 4.dp
+    spacing: Dp = 4.dp,
 ) {
     Column(
         modifier = modifier,
-        horizontalAlignment = horizontalAlignment
+        horizontalAlignment = horizontalAlignment,
     ) {
         Text(
             text = label,
             style = labelStyle,
-            color = LyndTheme.colors.textSecondary
+            color = LyndTheme.colors.textSecondary,
         )
         Spacer(modifier = Modifier.height(spacing))
         Text(
             text = value,
             style = valueStyle,
             fontWeight = FontWeight.Bold,
-            color = valueColor
+            color = valueColor,
         )
     }
 }

@@ -15,14 +15,13 @@ import com.adnlv.lynd.ui.navigation.BottomBarActionState
 import com.adnlv.lynd.ui.navigation.Screen
 import com.adnlv.lynd.ui.navigation.icon
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
-import org.junit.Assert.assertFalse
 import org.junit.Test
 
 class ScreenNavigationTest {
-
     @Test
     fun overviewScreen_hasCorrectRouteAndTitle() {
         assertEquals("overview", Screen.Overview.route)
@@ -135,12 +134,13 @@ class ScreenNavigationTest {
         assertEquals("Open filter menu", defaultPayouts.contentDescription)
         assertNull(defaultPayouts.menuContent)
 
-        val customAction = BottomBarAction(
-            icon = MaterialSymbols.FilterList,
-            label = "Filter",
-            contentDescription = "Custom payouts filter",
-            menuContent = {}
-        )
+        val customAction =
+            BottomBarAction(
+                icon = MaterialSymbols.FilterList,
+                label = "Filter",
+                contentDescription = "Custom payouts filter",
+                menuContent = {},
+            )
         state.setAction(Screen.Payouts.route, customAction)
         val resolved = state.actionForRoute(Screen.Payouts.route)
         assertEquals("Filter", resolved.label)
@@ -155,11 +155,12 @@ class ScreenNavigationTest {
 
     @Test
     fun bottomBarAction_resolvesCloseIconWhenContextualStateIsActive() {
-        val action = BottomBarAction(
-            icon = MaterialSymbols.FilterList,
-            contentDescription = "Open filter menu",
-            activeContentDescription = "Close filter menu"
-        )
+        val action =
+            BottomBarAction(
+                icon = MaterialSymbols.FilterList,
+                contentDescription = "Open filter menu",
+                activeContentDescription = "Close filter menu",
+            )
 
         assertEquals(MaterialSymbols.FilterList, action.resolveIcon(isMenuExpanded = false))
         assertEquals("Open filter menu", action.resolveContentDescription(isMenuExpanded = false))

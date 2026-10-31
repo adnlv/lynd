@@ -38,7 +38,7 @@ fun IncomeGapGroup(
     onHorizonSelected: (Int) -> Unit,
     onCurrencySelected: (String) -> Unit,
     modifier: Modifier = Modifier,
-    listState: LazyListState = rememberLazyListState()
+    listState: LazyListState = rememberLazyListState(),
 ) {
     val availableCurrencies = uiState.summaries.map { it.currency }.distinct()
     val horizons = listOf(12 to "12 Months", 24 to "24 Months")
@@ -47,12 +47,12 @@ fun IncomeGapGroup(
         state = listState,
         modifier = modifier.fillMaxSize(),
         contentPadding = PaddingValues(start = 20.dp, top = 8.dp, end = 20.dp, bottom = 100.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         item(key = "planner_header") {
             LyndScreenHeader(
                 title = "Income Gap Detector",
-                modifier = Modifier
+                modifier = Modifier,
             )
         }
 
@@ -60,19 +60,19 @@ fun IncomeGapGroup(
             Text(
                 text = "Track months with zero coupon or principal payments to prevent cash shortages.",
                 style = MaterialTheme.typography.bodyMedium,
-                color = LyndTheme.colors.textSecondary
+                color = LyndTheme.colors.textSecondary,
             )
         }
 
         item {
             SingleChoiceSegmentedButtonRow(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             ) {
                 horizons.forEachIndexed { index, (months, label) ->
                     SegmentedButton(
                         selected = uiState.plannerHorizonMonths == months,
                         onClick = { onHorizonSelected(months) },
-                        shape = SegmentedButtonDefaults.itemShape(index = index, count = horizons.size)
+                        shape = SegmentedButtonDefaults.itemShape(index = index, count = horizons.size),
                     ) {
                         Text(label)
                     }
@@ -84,13 +84,13 @@ fun IncomeGapGroup(
             item {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     availableCurrencies.forEach { currency ->
                         FilterChip(
                             selected = uiState.plannerSelectedCurrency.equals(currency, ignoreCase = true),
                             onClick = { onCurrencySelected(currency) },
-                            label = { Text(currency) }
+                            label = { Text(currency) },
                         )
                     }
                 }
@@ -103,35 +103,37 @@ fun IncomeGapGroup(
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = LyndTheme.colors.warningContainer
-                    )
+                    colors =
+                        CardDefaults.cardColors(
+                            containerColor = LyndTheme.colors.warningContainer,
+                        ),
                 ) {
                     Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
                         horizontalArrangement = Arrangement.spacedBy(12.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Icon(
                             imageVector = Icons.Default.Warning,
                             contentDescription = null,
-                            tint = LyndTheme.colors.warning
+                            tint = LyndTheme.colors.warning,
                         )
                         Column(
-                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                            verticalArrangement = Arrangement.spacedBy(4.dp),
                         ) {
                             Text(
                                 text = "$gapCount dry ${if (gapCount == 1) "month" else "months"} detected",
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
-                                color = LyndTheme.colors.onWarningContainer
+                                color = LyndTheme.colors.onWarningContainer,
                             )
                             Text(
                                 text = "Zero bond payouts scheduled in selected ${uiState.plannerHorizonMonths}-month period for ${uiState.plannerSelectedCurrency}.",
                                 style = MaterialTheme.typography.bodySmall,
-                                color = LyndTheme.colors.onWarningContainer
+                                color = LyndTheme.colors.onWarningContainer,
                             )
                         }
                     }
@@ -140,35 +142,37 @@ fun IncomeGapGroup(
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = LyndTheme.colors.profitContainer
-                    )
+                    colors =
+                        CardDefaults.cardColors(
+                            containerColor = LyndTheme.colors.profitContainer,
+                        ),
                 ) {
                     Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
                         horizontalArrangement = Arrangement.spacedBy(12.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Icon(
                             imageVector = Icons.Default.CheckCircle,
                             contentDescription = null,
-                            tint = LyndTheme.colors.profit
+                            tint = LyndTheme.colors.profit,
                         )
                         Column(
-                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                            verticalArrangement = Arrangement.spacedBy(4.dp),
                         ) {
                             Text(
                                 text = "Perfect Cash Flow Ladder",
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
-                                color = LyndTheme.colors.onProfitContainer
+                                color = LyndTheme.colors.onProfitContainer,
                             )
                             Text(
                                 text = "Your cash flow is perfectly laddered for the next ${uiState.plannerHorizonMonths} months! No gaps detected.",
                                 style = MaterialTheme.typography.bodySmall,
-                                color = LyndTheme.colors.onProfitContainer
+                                color = LyndTheme.colors.onProfitContainer,
                             )
                         }
                     }
@@ -178,7 +182,7 @@ fun IncomeGapGroup(
 
         items(
             items = uiState.actionableGaps,
-            key = { "${it.gap.yearMonth}_${it.gap.currency}" }
+            key = { "${it.gap.yearMonth}_${it.gap.currency}" },
         ) { actionableGap ->
             ActionableGapCard(actionableGap = actionableGap)
         }

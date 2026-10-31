@@ -33,44 +33,48 @@ fun MaturityBar(
     maxAmount: BigDecimal,
     isSelected: Boolean,
     barColor: Color,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-    val heightFraction = remember(maturity.amount, maxAmount) {
-        if (maxAmount > BigDecimal.ZERO && maturity.amount > BigDecimal.ZERO) {
-            (maturity.amount.toFloat() / maxAmount.toFloat()).coerceIn(0.06f, 1f)
-        } else {
-            0f
+    val heightFraction =
+        remember(maturity.amount, maxAmount) {
+            if (maxAmount > BigDecimal.ZERO && maturity.amount > BigDecimal.ZERO) {
+                (maturity.amount.toFloat() / maxAmount.toFloat()).coerceIn(0.06f, 1f)
+            } else {
+                0f
+            }
         }
-    }
 
     Column(
         modifier = modifier.fillMaxHeight(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Bottom
+        verticalArrangement = Arrangement.Bottom,
     ) {
         Box(
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth()
-                .padding(horizontal = 4.dp),
-            contentAlignment = Alignment.BottomCenter
+            modifier =
+                Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+                    .padding(horizontal = 4.dp),
+            contentAlignment = Alignment.BottomCenter,
         ) {
             if (heightFraction > 0f) {
                 Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight(heightFraction)
-                        .clip(RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp))
-                        .background(barColor)
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight(heightFraction)
+                            .clip(RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp))
+                            .background(barColor),
                 )
             } else {
                 Box(
-                    modifier = Modifier
-                        .size(width = 8.dp, height = 2.dp)
-                        .background(
-                            color = LyndTheme.colors.borderSubtle.copy(alpha = 0.4f),
-                            shape = RoundedCornerShape(1.dp)
-                        )
+                    modifier =
+                        Modifier
+                            .size(width = 8.dp, height = 2.dp)
+                            .background(
+                                color = LyndTheme.colors.borderSubtle.copy(alpha = 0.4f),
+                                shape = RoundedCornerShape(1.dp),
+                            ),
                 )
             }
         }
@@ -84,7 +88,7 @@ fun MaturityBar(
             softWrap = false,
             overflow = TextOverflow.Clip,
             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-            color = if (isSelected) barColor else LyndTheme.colors.textSecondary
+            color = if (isSelected) barColor else LyndTheme.colors.textSecondary,
         )
     }
 }

@@ -34,7 +34,7 @@ fun PayoutsScreen(
     modifier: Modifier = Modifier,
     listState: LazyListState = rememberLazyListState(),
     onActionChange: ((BottomBarAction) -> Unit)? = null,
-    onNavigateToHoldings: () -> Unit = {}
+    onNavigateToHoldings: () -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -43,7 +43,7 @@ fun PayoutsScreen(
         uiState.availableCurrencies,
         uiState.selectedCurrencies,
         uiState.availablePayoutTypes,
-        uiState.selectedPayoutTypes
+        uiState.selectedPayoutTypes,
     ) {
         onActionChange?.invoke(
             BottomBarAction(
@@ -61,28 +61,30 @@ fun PayoutsScreen(
                         onSelectCurrency = viewModel::selectCurrency,
                         onToggleCurrency = viewModel::toggleCurrency,
                         onSelectPayoutType = viewModel::selectPayoutType,
-                        onTogglePayoutType = viewModel::togglePayoutType
+                        onTogglePayoutType = viewModel::togglePayoutType,
                     )
-                }
-            )
+                },
+            ),
         )
     }
 
-    val headingText = when (uiState.selectedTab) {
-        PayoutTab.UPCOMING -> "Upcoming Payouts"
-        PayoutTab.RECEIVED -> "Received Payouts"
-    }
+    val headingText =
+        when (uiState.selectedTab) {
+            PayoutTab.UPCOMING -> "Upcoming Payouts"
+            PayoutTab.RECEIVED -> "Received Payouts"
+        }
 
     Box(
-        modifier = modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background),
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
             if (uiState.dateGroups.isEmpty()) {
                 LyndScreenHeader(
                     title = headingText,
-                    modifier = Modifier.padding(top = 8.dp, start = 20.dp, end = 20.dp)
+                    modifier = Modifier.padding(top = 8.dp, start = 20.dp, end = 20.dp),
                 )
                 if (uiState.isPortfolioEmpty) {
                     LyndNoHoldingsPlate(
@@ -90,33 +92,37 @@ fun PayoutsScreen(
                         description = "Add bond holdings to track upcoming coupon payments and bond redemptions.",
                         onAddHolding = onNavigateToHoldings,
                         onLoadTestPortfolio = { viewModel.loadTestPortfolio() },
-                        modifier = Modifier
-                            .weight(1f)
-                            .fillMaxWidth()
+                        modifier =
+                            Modifier
+                                .weight(1f)
+                                .fillMaxWidth(),
                     )
                 } else {
                     Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(horizontal = 16.dp, vertical = 8.dp)
+                        modifier =
+                            Modifier
+                                .fillMaxSize()
+                                .padding(horizontal = 16.dp, vertical = 8.dp),
                     ) {
                         HoldingsSuggestionCard(
-                            onClick = onNavigateToHoldings
+                            onClick = onNavigateToHoldings,
                         )
                         Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .weight(1f),
-                            contentAlignment = Alignment.Center
+                            modifier =
+                                Modifier
+                                    .fillMaxSize()
+                                    .weight(1f),
+                            contentAlignment = Alignment.Center,
                         ) {
-                            val emptyMessage = when (uiState.selectedTab) {
-                                PayoutTab.UPCOMING -> "No upcoming payouts found."
-                                PayoutTab.RECEIVED -> "No received payouts found."
-                            }
+                            val emptyMessage =
+                                when (uiState.selectedTab) {
+                                    PayoutTab.UPCOMING -> "No upcoming payouts found."
+                                    PayoutTab.RECEIVED -> "No received payouts found."
+                                }
                             Text(
                                 text = emptyMessage,
                                 style = MaterialTheme.typography.bodyLarge,
-                                color = LyndTheme.colors.textSecondary
+                                color = LyndTheme.colors.textSecondary,
                             )
                         }
                     }
@@ -126,29 +132,29 @@ fun PayoutsScreen(
                     state = listState,
                     modifier = Modifier.fillMaxSize(),
                     contentPadding = PaddingValues(start = 16.dp, top = 8.dp, end = 16.dp, bottom = 100.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
                     item(key = "payouts_header") {
                         LyndScreenHeader(
                             title = headingText,
-                            modifier = Modifier.padding(start = 4.dp)
+                            modifier = Modifier.padding(start = 4.dp),
                         )
                     }
 
                     item(key = "holdings_suggestion") {
                         HoldingsSuggestionCard(
                             onClick = onNavigateToHoldings,
-                            modifier = Modifier.padding(bottom = 4.dp)
+                            modifier = Modifier.padding(bottom = 4.dp),
                         )
                     }
 
                     items(
                         items = uiState.dateGroups,
-                        key = { it.date.toString() }
+                        key = { it.date.toString() },
                     ) { group ->
                         PayoutCard(
                             group = group,
-                            modifier = Modifier.animateItem()
+                            modifier = Modifier.animateItem(),
                         )
                     }
                 }

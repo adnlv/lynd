@@ -34,7 +34,7 @@ import java.time.LocalDate
 
 enum class PayoutTab {
     UPCOMING,
-    RECEIVED
+    RECEIVED,
 }
 
 data class PayoutsUiState(
@@ -45,7 +45,7 @@ data class PayoutsUiState(
     val selectedTab: PayoutTab = PayoutTab.UPCOMING,
     val payouts: List<PayoutItem> = emptyList(),
     val dateGroups: List<PayoutDateGroup> = emptyList(),
-    val isPortfolioEmpty: Boolean = false
+    val isPortfolioEmpty: Boolean = false,
 ) {
     val selectedCurrency: String get() = selectedCurrencies.firstOrNull() ?: ""
 }
@@ -54,21 +54,21 @@ private data class PayoutWithPurchase(
     val item: PayoutItem,
     val payoutType: PayoutType,
     val purchaseDate: LocalDate,
-    val row: PayoutRow
+    val row: PayoutRow,
 )
 
 class PayoutsViewModel(
     payoutDao: PayoutDao,
     private val holdingDao: HoldingDao? = null,
-    private val bondDao: BondDao? = null
+    private val bondDao: BondDao? = null,
 ) : ViewModel() {
-
     private val _selectedCurrencies = MutableStateFlow<Set<String>>(setOf(AppConstants.DEFAULT_CURRENCY))
     val selectedCurrencies: StateFlow<Set<String>> = _selectedCurrencies.asStateFlow()
 
-    private val _selectedPayoutTypes = MutableStateFlow<Set<PayoutType>>(
-        setOf(PayoutType.REDEMPTION, PayoutType.COUPON)
-    )
+    private val _selectedPayoutTypes =
+        MutableStateFlow<Set<PayoutType>>(
+            setOf(PayoutType.REDEMPTION, PayoutType.COUPON),
+        )
     val selectedPayoutTypes: StateFlow<Set<PayoutType>> = _selectedPayoutTypes.asStateFlow()
 
     private val _selectedTab = MutableStateFlow(PayoutTab.UPCOMING)
@@ -77,102 +77,112 @@ class PayoutsViewModel(
     private val allPayouts = payoutDao.getAllPayoutRows()
     private val allHoldings = holdingDao?.getAllHoldings() ?: flowOf(null)
 
-    val uiState: StateFlow<PayoutsUiState> = combine(
-        allPayouts,
-        allHoldings,
-        _selectedCurrencies,
-        _selectedPayoutTypes,
-        _selectedTab
-    ) { rows, holdings, selectedCurrs, selectedTypes, currentTab ->
-        val isPortfolioEmpty = if (holdings != null) holdings.isEmpty() else rows.isEmpty()
-        val itemsWithPurchase = mapPayoutRowsToItemsWithPurchase(rows)
+    val uiState: StateFlow<PayoutsUiState> =
+        combine(
+            allPayouts,
+            allHoldings,
+            _selectedCurrencies,
+            _selectedPayoutTypes,
+            _selectedTab,
+        ) { rows, holdings, selectedCurrs, selectedTypes, currentTab ->
+            val isPortfolioEmpty = if (holdings != null) holdings.isEmpty() else rows.isEmpty()
+            val itemsWithPurchase = mapPayoutRowsToItemsWithPurchase(rows)
 
-        val currencies = itemsWithPurchase.map { it.item.currency }.distinct()
-        val orderedCurrencies = orderCurrencies(currencies)
-        val effectiveCurrencies = resolveEffectiveCurrencies(orderedCurrencies, selectedCurrs)
+            val currencies = itemsWithPurchase.map { it.item.currency }.distinct()
+            val orderedCurrencies = orderCurrencies(currencies)
+            val effectiveCurrencies = resolveEffectiveCurrencies(orderedCurrencies, selectedCurrs)
 
-        val filtered = itemsWithPurchase.filter { item ->
-            val matchesCurrency = effectiveCurrencies.isEmpty() ||
-                effectiveCurrencies.any { it.equals(item.item.currency, ignoreCase = true) }
-            val matchesType = item.payoutType in selectedTypes
-            matchesCurrency && matchesType
-        }
+            val filtered =
+                itemsWithPurchase.filter { item ->
+                    val matchesCurrency =
+                        effectiveCurrencies.isEmpty() ||
+                            effectiveCurrencies.any { it.equals(item.item.currency, ignoreCase = true) }
+                    val matchesType = item.payoutType in selectedTypes
+                    matchesCurrency && matchesType
+                }
 
-        val today = LocalDate.now()
-        val matchingCurrencyEntries = itemsWithPurchase.filter { item ->
-            effectiveCurrencies.isEmpty() ||
-                effectiveCurrencies.any { it.equals(item.item.currency, ignoreCase = true) }
-        }
+            val today = LocalDate.now()
+            val matchingCurrencyEntries =
+                itemsWithPurchase.filter { item ->
+                    effectiveCurrencies.isEmpty() ||
+                        effectiveCurrencies.any { it.equals(item.item.currency, ignoreCase = true) }
+                }
 
-        val tabEntries = when (currentTab) {
-            PayoutTab.UPCOMING -> matchingCurrencyEntries.filter { !it.item.payDate.isBefore(today) }
-            PayoutTab.RECEIVED -> matchingCurrencyEntries.filter {
-                it.item.payDate.isBefore(today) && !it.item.payDate.isBefore(it.purchaseDate)
-            }
-        }
-        val availablePayoutTypes = tabEntries.map { it.payoutType }.toSet()
+            val tabEntries =
+                when (currentTab) {
+                    PayoutTab.UPCOMING -> matchingCurrencyEntries.filter { !it.item.payDate.isBefore(today) }
+                    PayoutTab.RECEIVED ->
+                        matchingCurrencyEntries.filter {
+                            it.item.payDate.isBefore(today) && !it.item.payDate.isBefore(it.purchaseDate)
+                        }
+                }
+            val availablePayoutTypes = tabEntries.map { it.payoutType }.toSet()
 
-        val activeEntries = when (currentTab) {
-            PayoutTab.UPCOMING -> filtered
-                .filter { !it.item.payDate.isBefore(today) }
-                .sortedBy { it.item.payDate }
-            PayoutTab.RECEIVED -> filtered
-                .filter { it.item.payDate.isBefore(today) && !it.item.payDate.isBefore(it.purchaseDate) }
-                .sortedByDescending { it.item.payDate }
-        }
+            val activeEntries =
+                when (currentTab) {
+                    PayoutTab.UPCOMING ->
+                        filtered
+                            .filter { !it.item.payDate.isBefore(today) }
+                            .sortedBy { it.item.payDate }
+                    PayoutTab.RECEIVED ->
+                        filtered
+                            .filter { it.item.payDate.isBefore(today) && !it.item.payDate.isBefore(it.purchaseDate) }
+                            .sortedByDescending { it.item.payDate }
+                }
 
-        val activePayouts = activeEntries.map { it.item }
-        val dateGroups = buildDateGroups(activeEntries)
+            val activePayouts = activeEntries.map { it.item }
+            val dateGroups = buildDateGroups(activeEntries)
 
-        PayoutsUiState(
-            availableCurrencies = orderedCurrencies,
-            selectedCurrencies = effectiveCurrencies,
-            availablePayoutTypes = availablePayoutTypes,
-            selectedPayoutTypes = selectedTypes,
-            selectedTab = currentTab,
-            payouts = activePayouts,
-            dateGroups = dateGroups,
-            isPortfolioEmpty = isPortfolioEmpty
+            PayoutsUiState(
+                availableCurrencies = orderedCurrencies,
+                selectedCurrencies = effectiveCurrencies,
+                availablePayoutTypes = availablePayoutTypes,
+                selectedPayoutTypes = selectedTypes,
+                selectedTab = currentTab,
+                payouts = activePayouts,
+                dateGroups = dateGroups,
+                isPortfolioEmpty = isPortfolioEmpty,
+            )
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(AppConstants.VIEW_MODEL_STOP_TIMEOUT_MS),
+            initialValue = PayoutsUiState(),
         )
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(AppConstants.VIEW_MODEL_STOP_TIMEOUT_MS),
-        initialValue = PayoutsUiState()
-    )
 
-    private fun mapPayoutRowsToItemsWithPurchase(rows: List<PayoutRow>): List<PayoutWithPurchase> {
-        return rows.map { row ->
+    private fun mapPayoutRowsToItemsWithPurchase(rows: List<PayoutRow>): List<PayoutWithPurchase> =
+        rows.map { row ->
             PayoutWithPurchase(
-                item = PayoutItem(
-                    isin = row.isin,
-                    bondName = row.bondName.ifBlank { row.isin },
-                    payDate = row.payDate,
-                    payType = row.displayTypeLabel(),
-                    payoutAmount = row.calculateTotalAmount(),
-                    currency = row.currency
-                ),
+                item =
+                    PayoutItem(
+                        isin = row.isin,
+                        bondName = row.bondName.ifBlank { row.isin },
+                        payDate = row.payDate,
+                        payType = row.displayTypeLabel(),
+                        payoutAmount = row.calculateTotalAmount(),
+                        currency = row.currency,
+                    ),
                 payoutType = row.resolvePayoutType(),
                 purchaseDate = row.purchaseDate,
-                row = row
+                row = row,
             )
         }
-    }
 
-    private fun orderCurrencies(currencies: List<String>): List<String> {
-        return if (AppConstants.DEFAULT_CURRENCY in currencies) {
+    private fun orderCurrencies(currencies: List<String>): List<String> =
+        if (AppConstants.DEFAULT_CURRENCY in currencies) {
             listOf(AppConstants.DEFAULT_CURRENCY) + (currencies - AppConstants.DEFAULT_CURRENCY)
         } else {
             currencies
         }
-    }
 
     private fun resolveEffectiveCurrencies(
         orderedCurrencies: List<String>,
-        selectedCurrs: Set<String>
+        selectedCurrs: Set<String>,
     ): Set<String> {
-        val validCurrencies = selectedCurrs.filter { curr ->
-            orderedCurrencies.any { it.equals(curr, ignoreCase = true) }
-        }.toSet()
+        val validCurrencies =
+            selectedCurrs
+                .filter { curr ->
+                    orderedCurrencies.any { it.equals(curr, ignoreCase = true) }
+                }.toSet()
 
         return when {
             validCurrencies.isNotEmpty() -> validCurrencies
@@ -182,34 +192,35 @@ class PayoutsViewModel(
         }
     }
 
-    private fun buildDateGroups(activeEntries: List<PayoutWithPurchase>): List<PayoutDateGroup> {
-        return activeEntries
+    private fun buildDateGroups(activeEntries: List<PayoutWithPurchase>): List<PayoutDateGroup> =
+        activeEntries
             .groupBy { it.item.payDate }
             .map { (payDate, dateEntries) ->
                 val dateRows = dateEntries.map { it.row }
                 val bonds = buildBondDetails(dateRows)
                 val datePayoutTypes = bonds.flatMap { it.payoutTypes }.toSet()
 
-                val totalAmounts = dateRows
-                    .groupBy { it.currency }
-                    .map { (curr, currRows) ->
-                        val sum = currRows.fold(BigDecimal.ZERO) { acc, r ->
-                            acc.add(r.calculateTotalAmount())
+                val totalAmounts =
+                    dateRows
+                        .groupBy { it.currency }
+                        .map { (curr, currRows) ->
+                            val sum =
+                                currRows.fold(BigDecimal.ZERO) { acc, r ->
+                                    acc.add(r.calculateTotalAmount())
+                                }
+                            CurrencyTotal(currency = curr, amount = sum)
                         }
-                        CurrencyTotal(currency = curr, amount = sum)
-                    }
 
                 PayoutDateGroup(
                     date = payDate,
                     totalAmounts = totalAmounts,
                     payoutTypes = datePayoutTypes,
-                    bonds = bonds
+                    bonds = bonds,
                 )
             }
-    }
 
-    private fun buildBondDetails(dateRows: List<PayoutRow>): List<PayoutBondDetail> {
-        return dateRows
+    private fun buildBondDetails(dateRows: List<PayoutRow>): List<PayoutBondDetail> =
+        dateRows
             .groupBy { it.isin }
             .map { (isin, isinRows) ->
                 val firstRow = isinRows.first()
@@ -231,27 +242,29 @@ class PayoutsViewModel(
                     }
                 }
 
-                val bondPayoutTypes = if (PayoutType.REDEMPTION in rawPayoutTypes) {
-                    setOf(PayoutType.REDEMPTION)
-                } else {
-                    rawPayoutTypes
-                }
-
-                val lots = isinRows
-                    .groupBy { if (it.holdingId > 0) it.holdingId else Pair(it.purchaseDate, it.quantity) }
-                    .map { (_, lotRows) ->
-                        val sample = lotRows.first()
-                        val lotAmount = lotRows.fold(BigDecimal.ZERO) { acc, r ->
-                            acc.add(r.calculateTotalAmount())
-                        }
-                        PayoutLot(
-                            holdingId = sample.holdingId,
-                            purchaseDate = sample.purchaseDate,
-                            quantity = sample.quantity,
-                            amount = lotAmount
-                        )
+                val bondPayoutTypes =
+                    if (PayoutType.REDEMPTION in rawPayoutTypes) {
+                        setOf(PayoutType.REDEMPTION)
+                    } else {
+                        rawPayoutTypes
                     }
-                    .sortedBy { it.purchaseDate }
+
+                val lots =
+                    isinRows
+                        .groupBy { if (it.holdingId > 0) it.holdingId else Pair(it.purchaseDate, it.quantity) }
+                        .map { (_, lotRows) ->
+                            val sample = lotRows.first()
+                            val lotAmount =
+                                lotRows.fold(BigDecimal.ZERO) { acc, r ->
+                                    acc.add(r.calculateTotalAmount())
+                                }
+                            PayoutLot(
+                                holdingId = sample.holdingId,
+                                purchaseDate = sample.purchaseDate,
+                                quantity = sample.quantity,
+                                amount = lotAmount,
+                            )
+                        }.sortedBy { it.purchaseDate }
 
                 val totalQuantity = lots.sumOf { it.quantity }
                 val totalAmount = couponSum.add(principalSum)
@@ -265,10 +278,9 @@ class PayoutsViewModel(
                     principalAmount = principalSum,
                     currency = currency,
                     payoutTypes = bondPayoutTypes,
-                    lots = lots
+                    lots = lots,
                 )
             }
-    }
 
     fun loadTestPortfolio() {
         val bDao = bondDao ?: return
@@ -322,11 +334,12 @@ class PayoutsViewModel(
         fun provideFactory(
             payoutDao: PayoutDao,
             holdingDao: HoldingDao? = null,
-            bondDao: BondDao? = null
-        ): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                PayoutsViewModel(payoutDao, holdingDao, bondDao)
+            bondDao: BondDao? = null,
+        ): ViewModelProvider.Factory =
+            viewModelFactory {
+                initializer {
+                    PayoutsViewModel(payoutDao, holdingDao, bondDao)
+                }
             }
-        }
     }
 }

@@ -11,15 +11,18 @@ const val DATABASE_VERSION = 5
         BondEntity::class,
         BondPaymentEntity::class,
         HoldingEntity::class,
-        SyncMetadataEntity::class
+        SyncMetadataEntity::class,
     ],
     version = DATABASE_VERSION,
-    exportSchema = false
+    exportSchema = false,
 )
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun bondDao(): BondDao
+
     abstract fun holdingDao(): HoldingDao
+
     abstract fun payoutDao(): PayoutDao
+
     abstract fun syncMetadataDao(): SyncMetadataDao
 }

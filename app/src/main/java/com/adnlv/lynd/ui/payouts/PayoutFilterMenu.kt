@@ -14,7 +14,6 @@ import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,6 +28,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -109,8 +109,9 @@ fun PayoutFilterMenuContent(
     onSelectPayoutType: (PayoutType) -> Unit = {},
     onTogglePayoutType: (PayoutType) -> Unit = {},
     modifier: Modifier = Modifier,
-    horizontal: Boolean = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE ||
-        LocalConfiguration.current.screenWidthDp.dp >= HorizontalLayoutBreakpoint
+    horizontal: Boolean =
+        LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE ||
+            LocalConfiguration.current.screenWidthDp.dp >= HorizontalLayoutBreakpoint,
 ) {
     if (horizontal) {
         PayoutFilterHorizontalMenu(
@@ -124,7 +125,7 @@ fun PayoutFilterMenuContent(
             onToggleCurrency = onToggleCurrency,
             onSelectPayoutType = onSelectPayoutType,
             onTogglePayoutType = onTogglePayoutType,
-            modifier = modifier
+            modifier = modifier,
         )
     } else {
         PayoutFilterVerticalMenu(
@@ -138,7 +139,7 @@ fun PayoutFilterMenuContent(
             onToggleCurrency = onToggleCurrency,
             onSelectPayoutType = onSelectPayoutType,
             onTogglePayoutType = onTogglePayoutType,
-            modifier = modifier
+            modifier = modifier,
         )
     }
 }
@@ -155,42 +156,45 @@ private fun PayoutFilterHorizontalMenu(
     onToggleCurrency: (String) -> Unit,
     onSelectPayoutType: (PayoutType) -> Unit,
     onTogglePayoutType: (PayoutType) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = modifier
-            .height(IntrinsicSize.Min)
-            .horizontalScroll(rememberScrollState()),
-        verticalAlignment = Alignment.Top
+        modifier =
+            modifier
+                .height(IntrinsicSize.Min)
+                .horizontalScroll(rememberScrollState()),
+        verticalAlignment = Alignment.Top,
     ) {
         StatusFilterSection(
             selectedTab = selectedTab,
             onSelectTab = onSelectTab,
-            modifier = Modifier.width(IntrinsicSize.Min)
+            modifier = Modifier.width(IntrinsicSize.Min),
         )
 
         if (availablePayoutTypes.size > 1) {
             VerticalDivider(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .padding(vertical = 8.dp),
-                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = LyndGlassDefaults.BorderAlpha)
+                modifier =
+                    Modifier
+                        .fillMaxHeight()
+                        .padding(vertical = 8.dp),
+                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = LyndGlassDefaults.BorderAlpha),
             )
 
             TypeFilterSection(
                 selectedPayoutTypes = selectedPayoutTypes,
                 onSelectPayoutType = onSelectPayoutType,
                 onTogglePayoutType = onTogglePayoutType,
-                modifier = Modifier.width(IntrinsicSize.Min)
+                modifier = Modifier.width(IntrinsicSize.Min),
             )
         }
 
         if (availableCurrencies.size > 1) {
             VerticalDivider(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .padding(vertical = 8.dp),
-                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = LyndGlassDefaults.BorderAlpha)
+                modifier =
+                    Modifier
+                        .fillMaxHeight()
+                        .padding(vertical = 8.dp),
+                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = LyndGlassDefaults.BorderAlpha),
             )
 
             CurrencyFilterSection(
@@ -198,7 +202,7 @@ private fun PayoutFilterHorizontalMenu(
                 selectedCurrencies = selectedCurrencies,
                 onSelectCurrency = onSelectCurrency,
                 onToggleCurrency = onToggleCurrency,
-                modifier = Modifier.width(IntrinsicSize.Min)
+                modifier = Modifier.width(IntrinsicSize.Min),
             )
         }
     }
@@ -216,40 +220,40 @@ private fun PayoutFilterVerticalMenu(
     onToggleCurrency: (String) -> Unit,
     onSelectPayoutType: (PayoutType) -> Unit,
     onTogglePayoutType: (PayoutType) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
         StatusFilterSection(
             selectedTab = selectedTab,
             onSelectTab = onSelectTab,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
 
         if (availablePayoutTypes.size > 1) {
             HorizontalDivider(
                 modifier = Modifier.padding(vertical = 8.dp),
-                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = LyndGlassDefaults.BorderAlpha)
+                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = LyndGlassDefaults.BorderAlpha),
             )
 
             TypeFilterSection(
                 selectedPayoutTypes = selectedPayoutTypes,
                 onSelectPayoutType = onSelectPayoutType,
                 onTogglePayoutType = onTogglePayoutType,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
         }
 
         if (availableCurrencies.size > 1) {
             HorizontalDivider(
                 modifier = Modifier.padding(vertical = 8.dp),
-                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = LyndGlassDefaults.BorderAlpha)
+                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = LyndGlassDefaults.BorderAlpha),
             )
             CurrencyFilterSection(
                 availableCurrencies = availableCurrencies,
                 selectedCurrencies = selectedCurrencies,
                 onSelectCurrency = onSelectCurrency,
                 onToggleCurrency = onToggleCurrency,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
         }
     }
@@ -259,23 +263,24 @@ private fun PayoutFilterVerticalMenu(
 private fun StatusFilterSection(
     selectedTab: PayoutTab,
     onSelectTab: (PayoutTab) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         FilterGroupHeader(title = "Status")
         StatusTogglePill(
             selectedTab = selectedTab,
             onSelectTab = onSelectTab,
-            modifier = Modifier
-                .padding(
-                    start = StatusRowHorizontalPadding,
-                    top = StatusRowTopPadding,
-                    end = StatusRowHorizontalPadding,
-                    bottom = StatusRowBottomPadding
-                )
+            modifier =
+                Modifier
+                    .padding(
+                        start = StatusRowHorizontalPadding,
+                        top = StatusRowTopPadding,
+                        end = StatusRowHorizontalPadding,
+                        bottom = StatusRowBottomPadding,
+                    ),
         )
     }
 }
@@ -285,26 +290,28 @@ private fun TypeFilterSection(
     selectedPayoutTypes: Set<PayoutType>,
     onSelectPayoutType: (PayoutType) -> Unit,
     onTogglePayoutType: (PayoutType) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         FilterGroupHeader(title = "Type")
         Row(
-            modifier = Modifier
-                .padding(
-                    start = CurrencyRowHorizontalPadding,
-                    top = CurrencyRowTopPadding,
-                    end = CurrencyRowHorizontalPadding,
-                    bottom = CurrencyRowBottomPadding
+            modifier =
+                Modifier
+                    .padding(
+                        start = CurrencyRowHorizontalPadding,
+                        top = CurrencyRowTopPadding,
+                        end = CurrencyRowHorizontalPadding,
+                        bottom = CurrencyRowBottomPadding,
+                    ),
+            horizontalArrangement =
+                Arrangement.spacedBy(
+                    space = CurrencyPillSpacing,
+                    alignment = Alignment.CenterHorizontally,
                 ),
-            horizontalArrangement = Arrangement.spacedBy(
-                space = CurrencyPillSpacing,
-                alignment = Alignment.CenterHorizontally
-            ),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             val payoutTypes = listOf(PayoutType.REDEMPTION, PayoutType.COUPON)
             payoutTypes.forEach { type ->
@@ -313,7 +320,7 @@ private fun TypeFilterSection(
                     type = type,
                     selected = isSelected,
                     onClick = { onSelectPayoutType(type) },
-                    onLongClick = { onTogglePayoutType(type) }
+                    onLongClick = { onTogglePayoutType(type) },
                 )
             }
         }
@@ -326,26 +333,28 @@ private fun CurrencyFilterSection(
     selectedCurrencies: Set<String>,
     onSelectCurrency: (String) -> Unit,
     onToggleCurrency: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         FilterGroupHeader(title = "Currency")
         Row(
-            modifier = Modifier
-                .padding(
-                    start = CurrencyRowHorizontalPadding,
-                    top = CurrencyRowTopPadding,
-                    end = CurrencyRowHorizontalPadding,
-                    bottom = CurrencyRowBottomPadding
+            modifier =
+                Modifier
+                    .padding(
+                        start = CurrencyRowHorizontalPadding,
+                        top = CurrencyRowTopPadding,
+                        end = CurrencyRowHorizontalPadding,
+                        bottom = CurrencyRowBottomPadding,
+                    ),
+            horizontalArrangement =
+                Arrangement.spacedBy(
+                    space = CurrencyPillSpacing,
+                    alignment = Alignment.CenterHorizontally,
                 ),
-            horizontalArrangement = Arrangement.spacedBy(
-                space = CurrencyPillSpacing,
-                alignment = Alignment.CenterHorizontally
-            ),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             availableCurrencies.forEach { currency ->
                 val isSelected = currency in selectedCurrencies
@@ -355,7 +364,7 @@ private fun CurrencyFilterSection(
                     currencyCode = currency,
                     selected = isSelected,
                     onClick = { onSelectCurrency(currency) },
-                    onLongClick = { onToggleCurrency(currency) }
+                    onLongClick = { onToggleCurrency(currency) },
                 )
             }
         }
@@ -366,12 +375,13 @@ private fun CurrencyFilterSection(
 private fun StatusTogglePill(
     selectedTab: PayoutTab,
     onSelectTab: (PayoutTab) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-    val statusTabs = listOf(
-        PayoutTab.UPCOMING to "Upcoming",
-        PayoutTab.RECEIVED to "Received"
-    )
+    val statusTabs =
+        listOf(
+            PayoutTab.UPCOMING to "Upcoming",
+            PayoutTab.RECEIVED to "Received",
+        )
     var pressedTab by remember { mutableStateOf<PayoutTab?>(null) }
     var isIndicatorPressed by remember { mutableStateOf(false) }
     val displayedTab = pressedTab ?: selectedTab
@@ -382,36 +392,39 @@ private fun StatusTogglePill(
         modifier = modifier,
         shape = CircleShape,
         color = MaterialTheme.colorScheme.surfaceContainerHighest.copy(alpha = 0.5f),
-        border = BorderStroke(
-            width = 1.dp,
-            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.6f)
-        )
+        border =
+            BorderStroke(
+                width = 1.dp,
+                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.6f),
+            ),
     ) {
         Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(IntrinsicSize.Min)
-                .padding(StatusPillInnerPadding)
-                .onSizeChanged { containerWidthPx = it.width }
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .height(IntrinsicSize.Min)
+                    .padding(StatusPillInnerPadding)
+                    .onSizeChanged { containerWidthPx = it.width },
         ) {
-            val segmentWidthDp = if (containerWidthPx > 0) {
-                with(density) { (containerWidthPx.toFloat() / statusTabs.size).toDp() }
-            } else {
-                0.dp
-            }
+            val segmentWidthDp =
+                if (containerWidthPx > 0) {
+                    with(density) { (containerWidthPx.toFloat() / statusTabs.size).toDp() }
+                } else {
+                    0.dp
+                }
             val selectedIndex = statusTabs.indexOfFirst { it.first == displayedTab }
 
             if (segmentWidthDp > 0.dp) {
                 StatusToggleIndicator(
                     segmentWidth = segmentWidthDp,
                     selectedIndex = selectedIndex,
-                    isPressed = isIndicatorPressed
+                    isPressed = isIndicatorPressed,
                 )
             }
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 statusTabs.forEach { (tab, label) ->
                     val isSelected = displayedTab == tab
@@ -434,7 +447,7 @@ private fun StatusTogglePill(
                             pressedTab = null
                             isIndicatorPressed = false
                         },
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
                     )
                 }
             }
@@ -450,54 +463,54 @@ private fun StatusToggleItem(
     onPressStart: () -> Unit,
     onRelease: () -> Unit,
     onCancel: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val currentOnPressStart by rememberUpdatedState(onPressStart)
     val currentOnRelease by rememberUpdatedState(onRelease)
     val currentOnCancel by rememberUpdatedState(onCancel)
 
     val contentColor by animateColorAsState(
-        targetValue = if (selected) {
-            MaterialTheme.colorScheme.onSecondaryContainer
-        } else {
-            MaterialTheme.colorScheme.onSurfaceVariant
-        },
+        targetValue =
+            if (selected) {
+                MaterialTheme.colorScheme.onSecondaryContainer
+            } else {
+                MaterialTheme.colorScheme.onSurfaceVariant
+            },
         animationSpec = tween(durationMillis = 200),
-        label = "status_tab_color"
+        label = "status_tab_color",
     )
 
     Box(
         contentAlignment = Alignment.Center,
-        modifier = modifier
-            .defaultMinSize(minHeight = StatusSegmentMinHeight)
-            .clip(CircleShape)
-            .semantics {
-                this.selected = selected
-                this.role = Role.RadioButton
-                onClick {
-                    currentOnRelease()
-                    true
-                }
-            }
-            .pointerInput(tab) {
-                awaitEachGesture {
-                    awaitFirstDown(requireUnconsumed = false)
-                    currentOnPressStart()
-                    val up = waitForUpOrCancellation()
-                    if (up != null &&
-                        up.position.x in 0f..size.width.toFloat() &&
-                        up.position.y in 0f..size.height.toFloat()
-                    ) {
+        modifier =
+            modifier
+                .defaultMinSize(minHeight = StatusSegmentMinHeight)
+                .clip(CircleShape)
+                .semantics {
+                    this.selected = selected
+                    this.role = Role.RadioButton
+                    onClick {
                         currentOnRelease()
-                    } else {
-                        currentOnCancel()
+                        true
                     }
-                }
-            }
-            .padding(
-                horizontal = StatusSegmentHorizontalPadding,
-                vertical = StatusSegmentVerticalPadding
-            )
+                }.pointerInput(tab) {
+                    awaitEachGesture {
+                        awaitFirstDown(requireUnconsumed = false)
+                        currentOnPressStart()
+                        val up = waitForUpOrCancellation()
+                        if (up != null &&
+                            up.position.x in 0f..size.width.toFloat() &&
+                            up.position.y in 0f..size.height.toFloat()
+                        ) {
+                            currentOnRelease()
+                        } else {
+                            currentOnCancel()
+                        }
+                    }
+                }.padding(
+                    horizontal = StatusSegmentHorizontalPadding,
+                    vertical = StatusSegmentVerticalPadding,
+                ),
     ) {
         Text(
             text = label,
@@ -505,7 +518,7 @@ private fun StatusToggleItem(
             fontWeight = FontWeight.Medium,
             color = contentColor,
             maxLines = 1,
-            softWrap = false
+            softWrap = false,
         )
     }
 }
@@ -514,39 +527,41 @@ private fun StatusToggleItem(
 private fun StatusToggleIndicator(
     segmentWidth: Dp,
     selectedIndex: Int,
-    isPressed: Boolean = false
+    isPressed: Boolean = false,
 ) {
     val pillOffset by animateDpAsState(
         targetValue = segmentWidth * selectedIndex.coerceAtLeast(0),
-        animationSpec = spring(
-            dampingRatio = 0.82f,
-            stiffness = Spring.StiffnessMediumLow
-        ),
-        label = "status_pill_offset"
+        animationSpec =
+            spring(
+                dampingRatio = 0.82f,
+                stiffness = Spring.StiffnessMediumLow,
+            ),
+        label = "status_pill_offset",
     )
 
     val pillScale by animateFloatAsState(
         targetValue = if (isPressed) StatusIndicatorPressedScale else 1f,
-        animationSpec = spring(
-            dampingRatio = 0.82f,
-            stiffness = Spring.StiffnessMediumLow
-        ),
-        label = "status_pill_scale"
+        animationSpec =
+            spring(
+                dampingRatio = 0.82f,
+                stiffness = Spring.StiffnessMediumLow,
+            ),
+        label = "status_pill_scale",
     )
 
     Box(
-        modifier = Modifier
-            .offset { IntOffset(x = pillOffset.roundToPx(), y = 0) }
-            .width(segmentWidth)
-            .fillMaxHeight()
-            .graphicsLayer {
-                scaleX = pillScale
-                scaleY = pillScale
-            }
-            .background(
-                color = MaterialTheme.colorScheme.secondaryContainer,
-                shape = CircleShape
-            )
+        modifier =
+            Modifier
+                .offset { IntOffset(x = pillOffset.roundToPx(), y = 0) }
+                .width(segmentWidth)
+                .fillMaxHeight()
+                .graphicsLayer {
+                    scaleX = pillScale
+                    scaleY = pillScale
+                }.background(
+                    color = MaterialTheme.colorScheme.secondaryContainer,
+                    shape = CircleShape,
+                ),
     )
 }
 
@@ -555,7 +570,7 @@ private const val GroupHeaderAlpha = 0.6f
 @Composable
 private fun FilterGroupHeader(
     title: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Text(
         text = title,
@@ -563,12 +578,13 @@ private fun FilterGroupHeader(
         fontWeight = FontWeight.SemiBold,
         color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = GroupHeaderAlpha),
         textAlign = TextAlign.Center,
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(
-                horizontal = GroupHeaderHorizontalPadding,
-                vertical = GroupHeaderVerticalPadding
-            )
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .padding(
+                    horizontal = GroupHeaderHorizontalPadding,
+                    vertical = GroupHeaderVerticalPadding,
+                ),
     )
 }
 
@@ -579,69 +595,74 @@ private fun CurrencySymbolPill(
     selected: Boolean,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val hapticFeedback = LocalHapticFeedback.current
-    val containerColor = if (selected) {
-        MaterialTheme.colorScheme.secondaryContainer
-    } else {
-        MaterialTheme.colorScheme.surfaceContainerHighest.copy(alpha = 0.5f)
-    }
-    val contentColor = if (selected) {
-        MaterialTheme.colorScheme.onSecondaryContainer
-    } else {
-        MaterialTheme.colorScheme.onSurfaceVariant
-    }
-    val labelColor = if (selected) {
-        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
-    } else {
-        MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
-    }
-    val border = if (selected) {
-        null
-    } else {
-        BorderStroke(
-            width = 1.dp,
-            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.6f)
-        )
-    }
+    val containerColor =
+        if (selected) {
+            MaterialTheme.colorScheme.secondaryContainer
+        } else {
+            MaterialTheme.colorScheme.surfaceContainerHighest.copy(alpha = 0.5f)
+        }
+    val contentColor =
+        if (selected) {
+            MaterialTheme.colorScheme.onSecondaryContainer
+        } else {
+            MaterialTheme.colorScheme.onSurfaceVariant
+        }
+    val labelColor =
+        if (selected) {
+            MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
+        } else {
+            MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
+        }
+    val border =
+        if (selected) {
+            null
+        } else {
+            BorderStroke(
+                width = 1.dp,
+                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.6f),
+            )
+        }
 
     Column(
         modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Surface(
-            modifier = Modifier
-                .defaultMinSize(minWidth = CurrencyPillMinWidth, minHeight = CurrencyPillMinHeight)
-                .clip(CircleShape)
-                .combinedClickable(
-                    role = Role.Checkbox,
-                    onClick = onClick,
-                    onLongClick = {
-                        hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
-                        onLongClick()
-                    }
-                )
-                .semantics {
-                    contentDescription = currencyCode
-                    this.selected = selected
-                },
+            modifier =
+                Modifier
+                    .defaultMinSize(minWidth = CurrencyPillMinWidth, minHeight = CurrencyPillMinHeight)
+                    .clip(CircleShape)
+                    .combinedClickable(
+                        role = Role.Checkbox,
+                        onClick = onClick,
+                        onLongClick = {
+                            hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
+                            onLongClick()
+                        },
+                    ).semantics {
+                        contentDescription = currencyCode
+                        this.selected = selected
+                    },
             shape = CircleShape,
             color = containerColor,
             contentColor = contentColor,
-            border = border
+            border = border,
         ) {
             Box(
                 contentAlignment = Alignment.Center,
-                modifier = Modifier.padding(
-                    horizontal = CurrencyPillHorizontalPadding,
-                    vertical = CurrencyPillVerticalPadding
-                )
+                modifier =
+                    Modifier.padding(
+                        horizontal = CurrencyPillHorizontalPadding,
+                        vertical = CurrencyPillVerticalPadding,
+                    ),
             ) {
                 Text(
                     text = symbol,
                     style = MaterialTheme.typography.labelLarge,
-                    fontWeight = FontWeight.SemiBold
+                    fontWeight = FontWeight.SemiBold,
                 )
             }
         }
@@ -651,7 +672,7 @@ private fun CurrencySymbolPill(
             style = MaterialTheme.typography.labelSmall,
             fontWeight = FontWeight.Normal,
             color = labelColor,
-            maxLines = 1
+            maxLines = 1,
         )
     }
 }
@@ -660,7 +681,7 @@ private data class PayoutTypePillConfig(
     val containerColor: Color,
     val contentColor: Color,
     val icon: ImageVector,
-    val label: String
+    val label: String,
 )
 
 @Composable
@@ -669,84 +690,92 @@ private fun PayoutTypeFilterPill(
     selected: Boolean,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val hapticFeedback = LocalHapticFeedback.current
-    val config = when (type) {
-        PayoutType.REDEMPTION -> PayoutTypePillConfig(
-            containerColor = LyndTheme.colors.principalContainer.copy(alpha = 0.8f),
-            contentColor = LyndTheme.colors.onPrincipalContainer,
-            icon = MaterialSymbols.ModeHeat,
-            label = "Redemption"
-        )
-        PayoutType.COUPON -> PayoutTypePillConfig(
-            containerColor = LyndTheme.colors.couponContainer.copy(alpha = 0.8f),
-            contentColor = LyndTheme.colors.onCouponContainer,
-            icon = MaterialSymbols.ConfirmationNumber,
-            label = "Coupon"
-        )
-    }
+    val config =
+        when (type) {
+            PayoutType.REDEMPTION ->
+                PayoutTypePillConfig(
+                    containerColor = LyndTheme.colors.principalContainer.copy(alpha = 0.8f),
+                    contentColor = LyndTheme.colors.onPrincipalContainer,
+                    icon = MaterialSymbols.ModeHeat,
+                    label = "Redemption",
+                )
+            PayoutType.COUPON ->
+                PayoutTypePillConfig(
+                    containerColor = LyndTheme.colors.couponContainer.copy(alpha = 0.8f),
+                    contentColor = LyndTheme.colors.onCouponContainer,
+                    icon = MaterialSymbols.ConfirmationNumber,
+                    label = "Coupon",
+                )
+        }
 
-    val containerColor = if (selected) {
-        config.containerColor
-    } else {
-        MaterialTheme.colorScheme.surfaceContainerHighest.copy(alpha = 0.5f)
-    }
-    val contentColor = if (selected) {
-        config.contentColor
-    } else {
-        MaterialTheme.colorScheme.onSurfaceVariant
-    }
-    val labelColor = if (selected) {
-        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
-    } else {
-        MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
-    }
-    val border = if (selected) {
-        null
-    } else {
-        BorderStroke(
-            width = 1.dp,
-            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.6f)
-        )
-    }
+    val containerColor =
+        if (selected) {
+            config.containerColor
+        } else {
+            MaterialTheme.colorScheme.surfaceContainerHighest.copy(alpha = 0.5f)
+        }
+    val contentColor =
+        if (selected) {
+            config.contentColor
+        } else {
+            MaterialTheme.colorScheme.onSurfaceVariant
+        }
+    val labelColor =
+        if (selected) {
+            MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
+        } else {
+            MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
+        }
+    val border =
+        if (selected) {
+            null
+        } else {
+            BorderStroke(
+                width = 1.dp,
+                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.6f),
+            )
+        }
 
     Column(
         modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Surface(
-            modifier = Modifier
-                .defaultMinSize(minWidth = CurrencyPillMinWidth, minHeight = CurrencyPillMinHeight)
-                .clip(CircleShape)
-                .combinedClickable(
-                    role = Role.Checkbox,
-                    onClick = onClick,
-                    onLongClick = {
-                        hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
-                        onLongClick()
-                    }
-                )
-                .semantics {
-                    contentDescription = config.label
-                    this.selected = selected
-                },
+            modifier =
+                Modifier
+                    .defaultMinSize(minWidth = CurrencyPillMinWidth, minHeight = CurrencyPillMinHeight)
+                    .clip(CircleShape)
+                    .combinedClickable(
+                        role = Role.Checkbox,
+                        onClick = onClick,
+                        onLongClick = {
+                            hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
+                            onLongClick()
+                        },
+                    ).semantics {
+                        contentDescription = config.label
+                        this.selected = selected
+                    },
             shape = CircleShape,
             color = containerColor,
             contentColor = contentColor,
-            border = border
+            border = border,
         ) {
             Box(
                 contentAlignment = Alignment.Center,
-                modifier = Modifier.padding(
-                    horizontal = CurrencyPillHorizontalPadding,
-                    vertical = CurrencyPillVerticalPadding
-                )
+                modifier =
+                    Modifier.padding(
+                        horizontal = CurrencyPillHorizontalPadding,
+                        vertical = CurrencyPillVerticalPadding,
+                    ),
             ) {
                 Icon(
                     imageVector = config.icon,
                     contentDescription = null,
-                    modifier = Modifier.size(18.dp)
+                    modifier = Modifier.size(18.dp),
                 )
             }
         }
@@ -756,7 +785,7 @@ private fun PayoutTypeFilterPill(
             style = MaterialTheme.typography.labelSmall,
             fontWeight = FontWeight.Normal,
             color = labelColor,
-            maxLines = 1
+            maxLines = 1,
         )
     }
 }
@@ -773,7 +802,7 @@ private fun PayoutFilterMenuVerticalPreview() {
             onSelectTab = {},
             onSelectCurrency = {},
             onToggleCurrency = {},
-            horizontal = false
+            horizontal = false,
         )
     }
 }
@@ -790,8 +819,7 @@ private fun PayoutFilterMenuHorizontalPreview() {
             onSelectTab = {},
             onSelectCurrency = {},
             onToggleCurrency = {},
-            horizontal = true
+            horizontal = true,
         )
     }
 }
-
