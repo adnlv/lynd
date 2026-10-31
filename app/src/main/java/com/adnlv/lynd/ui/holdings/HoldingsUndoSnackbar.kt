@@ -154,7 +154,7 @@ fun HoldingsUndoSnackbar(
                             text = label,
                             style = MaterialTheme.typography.labelLarge,
                             fontWeight = FontWeight.Bold,
-                            color = LyndTheme.colors.coupon,
+                            color = LyndTheme.colors.actionPrimary,
                         )
                     }
                 }
@@ -167,7 +167,7 @@ fun HoldingsUndoSnackbar(
                         .fillMaxWidth()
                         .height(3.dp)
                         .align(Alignment.BottomCenter),
-                color = LyndTheme.colors.coupon.copy(alpha = 0.5f),
+                color = LyndTheme.colors.chartPrimary,
                 trackColor = MaterialTheme.colorScheme.surfaceContainerHighest,
             )
         }

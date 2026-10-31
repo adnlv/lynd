@@ -70,7 +70,7 @@ fun CashFlowDetailCard(
                     text = "${Formatters.formatAmount(selectedFlow.totalAmount)} $currency",
                     style = MaterialTheme.typography.labelLarge,
                     fontWeight = FontWeight.Bold,
-                    color = LyndTheme.colors.coupon,
+                    color = LyndTheme.colors.chartPrimary,
                 )
             }
 
@@ -106,7 +106,7 @@ fun CashFlowDetailCard(
                     text = "${Formatters.formatAmount(selectedFlow.principalAmount)} $currency",
                     style = MaterialTheme.typography.bodySmall,
                     fontWeight = FontWeight.Medium,
-                    color = LyndTheme.colors.principal,
+                    color = LyndTheme.colors.chartSecondary,
                 )
             }
         }

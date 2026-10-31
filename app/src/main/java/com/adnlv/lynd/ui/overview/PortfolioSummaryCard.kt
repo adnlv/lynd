@@ -75,7 +75,7 @@ fun PortfolioSummaryCarousel(
                                 .clip(CircleShape)
                                 .background(
                                     if (isSelected) {
-                                        LyndTheme.colors.coupon
+                                        LyndTheme.colors.actionPrimary
                                     } else {
                                         LyndTheme.colors.borderSubtle
                                     },

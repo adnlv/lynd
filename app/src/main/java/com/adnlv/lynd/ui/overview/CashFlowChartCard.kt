@@ -97,7 +97,7 @@ fun CashFlowChartCard(
                         text = "${Formatters.formatAmount(total12MonthsIncome)} $currency",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
-                        color = LyndTheme.colors.coupon,
+                        color = LyndTheme.colors.chartPrimary,
                     )
                 }
             }
@@ -140,8 +140,8 @@ fun CashFlowChartCard(
                         monthLabel = monthLabel,
                         maxAmount = maxMonthlyAmount,
                         isSelected = isSelected,
-                        couponColor = LyndTheme.colors.coupon,
-                        principalColor = LyndTheme.colors.principal,
+                        couponColor = LyndTheme.colors.chartPrimary,
+                        principalColor = LyndTheme.colors.chartSecondary,
                         modifier = Modifier.fillMaxSize(),
                     )
                 }

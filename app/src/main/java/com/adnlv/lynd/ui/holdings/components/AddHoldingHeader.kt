@@ -53,17 +53,14 @@ fun AddHoldingHeader(
             )
         }
 
-        val buttonColors = ButtonDefaults.buttonColors()
-        val primaryColor = LyndTheme.colors.coupon
-        val activeBorderColor =
-            primaryColor.copy(
-                red = primaryColor.red * 0.8f,
-                green = primaryColor.green * 0.8f,
-                blue = primaryColor.blue * 0.8f,
+        val buttonColors =
+            ButtonDefaults.buttonColors(
+                containerColor = LyndTheme.colors.actionPrimary,
+                contentColor = LyndTheme.colors.onActionPrimary,
             )
         val buttonBorderColor =
             if (isFormValid) {
-                activeBorderColor
+                LyndTheme.colors.borderStrong
             } else {
                 buttonColors.disabledContainerColor
             }
@@ -71,6 +68,7 @@ fun AddHoldingHeader(
         Button(
             onClick = onSaveClick,
             enabled = isFormValid,
+            colors = buttonColors,
             border = BorderStroke(1.dp, buttonBorderColor),
         ) {
             Text("Save")

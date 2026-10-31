@@ -76,7 +76,7 @@ fun MaturityDetailCard(
                     text = "${Formatters.formatAmount(selectedMaturity.amount)} $currency",
                     style = MaterialTheme.typography.labelLarge,
                     fontWeight = FontWeight.Bold,
-                    color = LyndTheme.colors.principal,
+                    color = LyndTheme.colors.chartSecondary,
                 )
             }
 

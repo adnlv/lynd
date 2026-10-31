@@ -95,7 +95,7 @@ fun MaturityScheduleChartCard(
                         text = "${Formatters.formatAmount(totalPrincipal)} $currency",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
-                        color = LyndTheme.colors.principal,
+                        color = LyndTheme.colors.chartSecondary,
                     )
                 }
             }
@@ -130,7 +130,7 @@ fun MaturityScheduleChartCard(
                         maturity = maturity,
                         maxAmount = maxYearAmount,
                         isSelected = isSelected,
-                        barColor = LyndTheme.colors.principal,
+                        barColor = LyndTheme.colors.chartSecondary,
                         modifier = Modifier.fillMaxSize(),
                     )
                 }

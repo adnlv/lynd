@@ -50,11 +50,11 @@ fun HoldingCardActionButtons(
                         .fillMaxHeight()
                         .graphicsLayer { alpha = deleteAlpha },
                 shape = CircleShape,
-                color = LyndTheme.colors.lossContainer.copy(alpha = 0.95f),
+                color = LyndTheme.colors.actionPrimary,
                 border =
                     BorderStroke(
                         1.dp,
-                        LyndTheme.colors.loss.copy(alpha = 0.35f),
+                        LyndTheme.colors.borderStrong,
                     ),
             ) {
                 Box(
@@ -64,7 +64,7 @@ fun HoldingCardActionButtons(
                     Icon(
                         imageVector = Icons.Default.Delete,
                         contentDescription = "Delete",
-                        tint = LyndTheme.colors.onLossContainer,
+                        tint = LyndTheme.colors.onActionPrimary,
                     )
                 }
             }
@@ -78,11 +78,11 @@ fun HoldingCardActionButtons(
                         .width(editWidthDp)
                         .fillMaxHeight(),
                 shape = CircleShape,
-                color = LyndTheme.colors.couponContainer.copy(alpha = 0.95f),
+                color = LyndTheme.colors.actionSecondary,
                 border =
                     BorderStroke(
                         1.dp,
-                        LyndTheme.colors.coupon.copy(alpha = 0.25f),
+                        LyndTheme.colors.borderSubtle,
                     ),
             ) {
                 Box(
@@ -92,7 +92,7 @@ fun HoldingCardActionButtons(
                     Icon(
                         imageVector = Icons.Default.Edit,
                         contentDescription = "Edit",
-                        tint = LyndTheme.colors.onCouponContainer,
+                        tint = LyndTheme.colors.onActionSecondary,
                     )
                 }
             }
