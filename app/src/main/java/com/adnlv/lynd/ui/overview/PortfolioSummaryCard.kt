@@ -31,6 +31,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.adnlv.lynd.domain.PortfolioSummary
 import com.adnlv.lynd.ui.components.MetricItem
+import com.adnlv.lynd.ui.theme.LyndTheme
 import com.adnlv.lynd.util.Formatters
 import java.math.BigDecimal
 
@@ -73,9 +74,9 @@ fun PortfolioSummaryCarousel(
                             .clip(CircleShape)
                             .background(
                                 if (isSelected) {
-                                    MaterialTheme.colorScheme.primary
+                                    LyndTheme.colors.coupon
                                 } else {
-                                    MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f)
+                                    LyndTheme.colors.borderSubtle
                                 }
                             )
                     )
@@ -98,7 +99,7 @@ fun PortfolioSummaryCard(
         ),
         border = BorderStroke(
             width = 1.dp,
-            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+            color = LyndTheme.colors.borderSubtle.copy(alpha = 0.5f)
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
@@ -117,15 +118,15 @@ fun PortfolioSummaryCard(
                     text = "Portfolio Summary",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = LyndTheme.colors.textPrimary
                 )
                 Surface(
                     shape = CircleShape,
-                    color = MaterialTheme.colorScheme.primaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    color = LyndTheme.colors.couponContainer,
+                    contentColor = LyndTheme.colors.onCouponContainer,
                     border = BorderStroke(
                         width = 1.dp,
-                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.25f)
+                        color = LyndTheme.colors.coupon.copy(alpha = 0.25f)
                     )
                 ) {
                     Text(
@@ -138,7 +139,7 @@ fun PortfolioSummaryCard(
             }
 
             HorizontalDivider(
-                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+                color = LyndTheme.colors.borderSubtle.copy(alpha = 0.5f)
             )
 
             Row(
@@ -153,7 +154,7 @@ fun PortfolioSummaryCard(
                 MetricItem(
                     label = "Expected Payout",
                     value = "${Formatters.formatAmount(summary.expectedPayout)} ${summary.currency}",
-                    valueColor = MaterialTheme.colorScheme.primary,
+                    valueColor = LyndTheme.colors.coupon,
                     modifier = Modifier.weight(1f),
                     horizontalAlignment = Alignment.End
                 )
@@ -166,9 +167,9 @@ fun PortfolioSummaryCard(
                 val isProfitPositive = summary.totalProfit >= BigDecimal.ZERO
                 val profitPrefix = if (isProfitPositive && summary.totalProfit > BigDecimal.ZERO) "+" else ""
                 val profitColor = if (isProfitPositive) {
-                    MaterialTheme.colorScheme.tertiary
+                    LyndTheme.colors.profit
                 } else {
-                    MaterialTheme.colorScheme.error
+                    LyndTheme.colors.loss
                 }
 
                 MetricItem(
@@ -180,7 +181,7 @@ fun PortfolioSummaryCard(
                 MetricItem(
                     label = "Avg Interest Rate",
                     value = Formatters.formatPercentage(summary.averageInterestRate),
-                    valueColor = MaterialTheme.colorScheme.secondary,
+                    valueColor = LyndTheme.colors.coupon,
                     modifier = Modifier.weight(1f),
                     horizontalAlignment = Alignment.End
                 )

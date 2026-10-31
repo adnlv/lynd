@@ -24,6 +24,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.adnlv.lynd.domain.YearlyMaturity
+import com.adnlv.lynd.ui.theme.LyndTheme
 import java.math.BigDecimal
 
 @Composable
@@ -43,8 +44,7 @@ fun MaturityBar(
     }
 
     Column(
-        modifier = modifier
-            .fillMaxHeight(),
+        modifier = modifier.fillMaxHeight(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Bottom
     ) {
@@ -68,7 +68,7 @@ fun MaturityBar(
                     modifier = Modifier
                         .size(width = 8.dp, height = 2.dp)
                         .background(
-                            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f),
+                            color = LyndTheme.colors.borderSubtle.copy(alpha = 0.4f),
                             shape = RoundedCornerShape(1.dp)
                         )
                 )
@@ -84,7 +84,7 @@ fun MaturityBar(
             softWrap = false,
             overflow = TextOverflow.Clip,
             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-            color = if (isSelected) barColor else MaterialTheme.colorScheme.onSurfaceVariant
+            color = if (isSelected) barColor else LyndTheme.colors.textSecondary
         )
     }
 }

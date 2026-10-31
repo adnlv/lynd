@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.adnlv.lynd.domain.MonthlyCashFlow
+import com.adnlv.lynd.ui.theme.LyndTheme
 import com.adnlv.lynd.util.Formatters
 import java.time.format.TextStyle
 import java.util.Locale
@@ -41,7 +42,7 @@ fun CashFlowDetailCard(
         ),
         border = BorderStroke(
             width = 1.dp,
-            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f)
+            color = LyndTheme.colors.borderSubtle.copy(alpha = 0.3f)
         )
     ) {
         Column(
@@ -59,13 +60,13 @@ fun CashFlowDetailCard(
                     text = formattedMonthName,
                     style = MaterialTheme.typography.labelLarge,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = LyndTheme.colors.textPrimary
                 )
                 Text(
                     text = "${Formatters.formatAmount(selectedFlow.totalAmount)} $currency",
                     style = MaterialTheme.typography.labelLarge,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
+                    color = LyndTheme.colors.coupon
                 )
             }
 
@@ -77,13 +78,13 @@ fun CashFlowDetailCard(
                 Text(
                     text = "Coupon",
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = LyndTheme.colors.textSecondary
                 )
                 Text(
                     text = "${Formatters.formatAmount(selectedFlow.couponAmount)} $currency",
                     style = MaterialTheme.typography.bodySmall,
                     fontWeight = FontWeight.Medium,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = LyndTheme.colors.textPrimary
                 )
             }
 
@@ -95,13 +96,13 @@ fun CashFlowDetailCard(
                 Text(
                     text = "Principal",
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = LyndTheme.colors.textSecondary
                 )
                 Text(
                     text = "${Formatters.formatAmount(selectedFlow.principalAmount)} $currency",
                     style = MaterialTheme.typography.bodySmall,
                     fontWeight = FontWeight.Medium,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = LyndTheme.colors.principal
                 )
             }
         }

@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import com.adnlv.lynd.ui.components.SnapBarChart
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -25,6 +24,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.adnlv.lynd.domain.YearlyMaturity
+import com.adnlv.lynd.ui.components.SnapBarChart
+import com.adnlv.lynd.ui.theme.LyndTheme
 import com.adnlv.lynd.util.Formatters
 import java.math.BigDecimal
 
@@ -34,6 +35,10 @@ fun MaturityScheduleChartCard(
     currency: String,
     modifier: Modifier = Modifier
 ) {
+    val totalPrincipal = remember(maturities) {
+        maturities.fold(BigDecimal.ZERO) { acc, item -> acc.add(item.amount) }
+    }
+
     Card(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
@@ -42,7 +47,7 @@ fun MaturityScheduleChartCard(
         ),
         border = BorderStroke(
             width = 1.dp,
-            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+            color = LyndTheme.colors.borderSubtle.copy(alpha = 0.5f)
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
@@ -52,10 +57,6 @@ fun MaturityScheduleChartCard(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            val totalPrincipal = remember(maturities) {
-                maturities.fold(BigDecimal.ZERO) { acc, item -> acc.add(item.amount) }
-            }
-
             var selectedIndex by remember(maturities) {
                 val firstNonZeroIndex = maturities.indexOfFirst { it.amount > BigDecimal.ZERO }
                 mutableStateOf(if (firstNonZeroIndex >= 0) firstNonZeroIndex else 0)
@@ -71,12 +72,12 @@ fun MaturityScheduleChartCard(
                         text = "Maturity Schedule",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = LyndTheme.colors.textPrimary
                     )
                     Text(
                         text = "Principal redemption by year",
                         style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = LyndTheme.colors.textSecondary
                     )
                 }
 
@@ -84,13 +85,13 @@ fun MaturityScheduleChartCard(
                     Text(
                         text = "Total Principal",
                         style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = LyndTheme.colors.textSecondary
                     )
                     Text(
                         text = "${Formatters.formatAmount(totalPrincipal)} $currency",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.tertiary
+                        color = LyndTheme.colors.principal
                     )
                 }
             }
@@ -105,7 +106,7 @@ fun MaturityScheduleChartCard(
                     Text(
                         text = "No upcoming maturities.",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = LyndTheme.colors.textSecondary
                     )
                 }
             } else {
@@ -123,7 +124,7 @@ fun MaturityScheduleChartCard(
                         maturity = maturity,
                         maxAmount = maxYearAmount,
                         isSelected = isSelected,
-                        barColor = MaterialTheme.colorScheme.tertiary,
+                        barColor = LyndTheme.colors.principal,
                         modifier = Modifier.fillMaxSize()
                     )
                 }

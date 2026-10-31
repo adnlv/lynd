@@ -1,7 +1,6 @@
 package com.adnlv.lynd.ui.overview
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,10 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import com.adnlv.lynd.ui.components.SnapBarChart
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -25,11 +21,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.adnlv.lynd.domain.MonthlyCashFlow
+import com.adnlv.lynd.ui.components.SnapBarChart
+import com.adnlv.lynd.ui.theme.LyndTheme
 import com.adnlv.lynd.util.Formatters
 import java.math.BigDecimal
 import java.time.format.TextStyle
@@ -49,7 +45,7 @@ fun CashFlowChartCard(
         ),
         border = BorderStroke(
             width = 1.dp,
-            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+            color = LyndTheme.colors.borderSubtle.copy(alpha = 0.5f)
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
@@ -78,12 +74,12 @@ fun CashFlowChartCard(
                         text = "Monthly Cash Flow",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = LyndTheme.colors.textPrimary
                     )
                     Text(
                         text = "Next 12 months",
                         style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = LyndTheme.colors.textSecondary
                     )
                 }
 
@@ -91,32 +87,18 @@ fun CashFlowChartCard(
                     Text(
                         text = "Total Upcoming",
                         style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = LyndTheme.colors.textSecondary
                     )
                     Text(
                         text = "${Formatters.formatAmount(total12MonthsIncome)} $currency",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary
+                        color = LyndTheme.colors.coupon
                     )
                 }
             }
 
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                LegendItem(
-                    color = MaterialTheme.colorScheme.primary,
-                    label = "Coupon"
-                )
-                LegendItem(
-                    color = MaterialTheme.colorScheme.tertiary,
-                    label = "Principal"
-                )
-            }
-
-            if (cashFlows.isEmpty()) {
+            if (cashFlows.isEmpty() || total12MonthsIncome <= BigDecimal.ZERO) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -126,7 +108,7 @@ fun CashFlowChartCard(
                     Text(
                         text = "No upcoming payments.",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = LyndTheme.colors.textSecondary
                     )
                 }
             } else {
@@ -151,8 +133,8 @@ fun CashFlowChartCard(
                         monthLabel = monthLabel,
                         maxAmount = maxMonthlyAmount,
                         isSelected = isSelected,
-                        couponColor = MaterialTheme.colorScheme.primary,
-                        principalColor = MaterialTheme.colorScheme.tertiary,
+                        couponColor = LyndTheme.colors.coupon,
+                        principalColor = LyndTheme.colors.principal,
                         modifier = Modifier.fillMaxSize()
                     )
                 }
@@ -166,30 +148,5 @@ fun CashFlowChartCard(
                 }
             }
         }
-    }
-}
-
-@Composable
-private fun LegendItem(
-    color: Color,
-    label: String,
-    modifier: Modifier = Modifier
-) {
-    Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(6.dp)
-    ) {
-        Box(
-            modifier = Modifier
-                .size(8.dp)
-                .clip(CircleShape)
-                .background(color)
-        )
-        Text(
-            text = label,
-            style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
     }
 }

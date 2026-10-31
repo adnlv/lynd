@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.adnlv.lynd.domain.YearlyMaturity
+import com.adnlv.lynd.ui.theme.LyndTheme
 import com.adnlv.lynd.util.Formatters
 import java.math.BigDecimal
 import java.math.RoundingMode
@@ -31,8 +32,9 @@ fun MaturityDetailCard(
 ) {
     val percentageOfTotal = remember(selectedMaturity.amount, totalPrincipal) {
         if (totalPrincipal > BigDecimal.ZERO) {
-            selectedMaturity.amount.multiply(BigDecimal("100"))
-                .divide(totalPrincipal, 2, RoundingMode.HALF_UP)
+            selectedMaturity.amount
+                .multiply(BigDecimal(100))
+                .divide(totalPrincipal, 1, RoundingMode.HALF_UP)
         } else {
             BigDecimal.ZERO
         }
@@ -46,7 +48,7 @@ fun MaturityDetailCard(
         ),
         border = BorderStroke(
             width = 1.dp,
-            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f)
+            color = LyndTheme.colors.borderSubtle.copy(alpha = 0.3f)
         )
     ) {
         Column(
@@ -64,13 +66,13 @@ fun MaturityDetailCard(
                     text = "${selectedMaturity.year}",
                     style = MaterialTheme.typography.labelLarge,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = LyndTheme.colors.textPrimary
                 )
                 Text(
                     text = "${Formatters.formatAmount(selectedMaturity.amount)} $currency",
                     style = MaterialTheme.typography.labelLarge,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.tertiary
+                    color = LyndTheme.colors.principal
                 )
             }
 
@@ -82,13 +84,13 @@ fun MaturityDetailCard(
                 Text(
                     text = "Share of Redemptions",
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = LyndTheme.colors.textSecondary
                 )
                 Text(
                     text = Formatters.formatPercentage(percentageOfTotal),
                     style = MaterialTheme.typography.bodySmall,
                     fontWeight = FontWeight.Medium,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = LyndTheme.colors.textPrimary
                 )
             }
         }

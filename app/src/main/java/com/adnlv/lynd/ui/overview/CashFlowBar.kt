@@ -24,6 +24,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.adnlv.lynd.domain.MonthlyCashFlow
+import com.adnlv.lynd.ui.theme.LyndTheme
 import java.math.BigDecimal
 
 @Composable
@@ -61,8 +62,7 @@ fun CashFlowBar(
     }
 
     Column(
-        modifier = modifier
-            .fillMaxHeight(),
+        modifier = modifier.fillMaxHeight(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Bottom
     ) {
@@ -102,7 +102,7 @@ fun CashFlowBar(
                     modifier = Modifier
                         .size(width = 8.dp, height = 2.dp)
                         .background(
-                            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f),
+                            color = LyndTheme.colors.borderSubtle.copy(alpha = 0.4f),
                             shape = RoundedCornerShape(1.dp)
                         )
                 )
@@ -118,7 +118,7 @@ fun CashFlowBar(
             softWrap = false,
             overflow = TextOverflow.Clip,
             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-            color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
+            color = if (isSelected) couponColor else LyndTheme.colors.textSecondary
         )
     }
 }
