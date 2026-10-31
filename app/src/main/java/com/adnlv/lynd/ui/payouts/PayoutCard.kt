@@ -30,9 +30,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -48,6 +48,7 @@ import com.adnlv.lynd.domain.PayoutLot
 import com.adnlv.lynd.domain.PayoutType
 import com.adnlv.lynd.ui.icons.Event
 import com.adnlv.lynd.ui.icons.MaterialSymbols
+import com.adnlv.lynd.ui.theme.LyndTheme
 import com.adnlv.lynd.ui.theme.RobotoFlexHeavy
 import com.adnlv.lynd.util.Formatters
 
@@ -84,8 +85,7 @@ fun PayoutCard(
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            // Header Row: Prominent Date with Event Icon and Summary Badges
-            val dateColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
+            val dateColor = LyndTheme.colors.textMuted
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -123,7 +123,7 @@ fun PayoutCard(
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            val dotTrailColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.25f)
+            val dotTrailColor = LyndTheme.colors.borderSubtle.copy(alpha = 0.4f)
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(6.dp)
@@ -140,7 +140,7 @@ fun PayoutCard(
                             fontFamily = RobotoFlexHeavy,
                             fontWeight = FontWeight.ExtraBold,
                             letterSpacing = 0.5.sp,
-                            color = MaterialTheme.colorScheme.primary
+                            color = LyndTheme.colors.coupon
                         )
                         Box(
                             modifier = Modifier
@@ -196,7 +196,7 @@ fun PayoutCard(
             } else {
                 HorizontalDivider(
                     modifier = Modifier.padding(vertical = 10.dp),
-                    color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f)
+                    color = LyndTheme.colors.borderSubtle.copy(alpha = 0.4f)
                 )
 
                 Column(
@@ -225,7 +225,7 @@ fun PayoutCard(
                                     text = "${bond.isin} (${bond.totalQuantity})",
                                     style = MaterialTheme.typography.bodySmall,
                                     fontWeight = FontWeight.Medium,
-                                    color = MaterialTheme.colorScheme.onSurface,
+                                    color = LyndTheme.colors.textPrimary,
                                     modifier = Modifier.weight(1f)
                                 )
 
@@ -246,7 +246,7 @@ fun PayoutCard(
                                     text = "${Formatters.formatAmount(bond.totalAmount)} $symbol",
                                     style = MaterialTheme.typography.bodySmall,
                                     fontWeight = FontWeight.SemiBold,
-                                    color = MaterialTheme.colorScheme.onSurface
+                                    color = LyndTheme.colors.textPrimary
                                 )
                             }
 
@@ -294,7 +294,7 @@ private fun LotBreakdownList(
             text = "Purchase Lots",
             style = MaterialTheme.typography.labelSmall,
             fontWeight = FontWeight.SemiBold,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = LyndTheme.colors.textSecondary
         )
         lots.forEach { lot ->
             Row(
@@ -309,25 +309,25 @@ private fun LotBreakdownList(
                     Text(
                         text = Formatters.formatDate(lot.purchaseDate),
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = LyndTheme.colors.textSecondary
                     )
                     Text(
                         text = "•",
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.outlineVariant
+                        color = LyndTheme.colors.borderSubtle
                     )
                     Text(
                         text = "${lot.quantity} bonds",
                         style = MaterialTheme.typography.bodySmall,
                         fontWeight = FontWeight.Medium,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = LyndTheme.colors.textPrimary
                     )
                 }
                 Text(
                     text = "${Formatters.formatAmount(lot.amount)} $symbol",
                     style = MaterialTheme.typography.bodySmall,
                     fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = LyndTheme.colors.textPrimary
                 )
             }
         }

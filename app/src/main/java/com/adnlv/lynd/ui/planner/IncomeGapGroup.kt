@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.adnlv.lynd.ui.components.LyndScreenHeader
+import com.adnlv.lynd.ui.theme.LyndTheme
 
 @Composable
 fun IncomeGapGroup(
@@ -59,7 +60,7 @@ fun IncomeGapGroup(
             Text(
                 text = "Track months with zero coupon or principal payments to prevent cash shortages.",
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = LyndTheme.colors.textSecondary
             )
         }
 
@@ -103,7 +104,7 @@ fun IncomeGapGroup(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
                     colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.errorContainer
+                        containerColor = LyndTheme.colors.warningContainer
                     )
                 ) {
                     Row(
@@ -116,7 +117,7 @@ fun IncomeGapGroup(
                         Icon(
                             imageVector = Icons.Default.Warning,
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onErrorContainer
+                            tint = LyndTheme.colors.warning
                         )
                         Column(
                             verticalArrangement = Arrangement.spacedBy(4.dp)
@@ -125,12 +126,12 @@ fun IncomeGapGroup(
                                 text = "$gapCount dry ${if (gapCount == 1) "month" else "months"} detected",
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onErrorContainer
+                                color = LyndTheme.colors.onWarningContainer
                             )
                             Text(
                                 text = "Zero bond payouts scheduled in selected ${uiState.plannerHorizonMonths}-month period for ${uiState.plannerSelectedCurrency}.",
                                 style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onErrorContainer
+                                color = LyndTheme.colors.onWarningContainer
                             )
                         }
                     }
@@ -140,7 +141,7 @@ fun IncomeGapGroup(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
                     colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer
+                        containerColor = LyndTheme.colors.profitContainer
                     )
                 ) {
                     Row(
@@ -153,7 +154,7 @@ fun IncomeGapGroup(
                         Icon(
                             imageVector = Icons.Default.CheckCircle,
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onPrimaryContainer
+                            tint = LyndTheme.colors.profit
                         )
                         Column(
                             verticalArrangement = Arrangement.spacedBy(4.dp)
@@ -162,12 +163,12 @@ fun IncomeGapGroup(
                                 text = "Perfect Cash Flow Ladder",
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onPrimaryContainer
+                                color = LyndTheme.colors.onProfitContainer
                             )
                             Text(
                                 text = "Your cash flow is perfectly laddered for the next ${uiState.plannerHorizonMonths} months! No gaps detected.",
                                 style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onPrimaryContainer
+                                color = LyndTheme.colors.onProfitContainer
                             )
                         }
                     }

@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import com.adnlv.lynd.domain.ActionableGap
 import com.adnlv.lynd.domain.BondLadderMatch
 import com.adnlv.lynd.domain.LadderPaymentType
+import com.adnlv.lynd.ui.theme.LyndTheme
 import com.adnlv.lynd.util.Formatters
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -68,19 +69,19 @@ fun ActionableGapCard(
                     text = monthTitle,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = LyndTheme.colors.textPrimary
                 )
 
                 if (gap.totalConsecutiveMonths > 1) {
                     Surface(
                         shape = RoundedCornerShape(8.dp),
-                        color = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.7f)
+                        color = LyndTheme.colors.warningContainer.copy(alpha = 0.7f)
                     ) {
                         Text(
                             text = "Month ${gap.consecutiveMonthIndex} of ${gap.totalConsecutiveMonths}",
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = FontWeight.Medium,
-                            color = MaterialTheme.colorScheme.onErrorContainer,
+                            color = LyndTheme.colors.onWarningContainer,
                             modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                         )
                     }
@@ -99,13 +100,13 @@ fun ActionableGapCard(
                     Icon(
                         imageVector = Icons.Default.Warning,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.error,
+                        tint = LyndTheme.colors.warning,
                         modifier = Modifier.padding(end = 2.dp)
                     )
                     Text(
                         text = "Income decreases to 0 ${gap.currency}",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.error
+                        color = LyndTheme.colors.warning
                     )
                 }
 
@@ -113,20 +114,20 @@ fun ActionableGapCard(
                     text = "0.00 ${gap.currency}",
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = LyndTheme.colors.textSecondary
                 )
             }
 
             if (hasCrossCoverage) {
                 Surface(
                     shape = RoundedCornerShape(8.dp),
-                    color = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.6f),
+                    color = LyndTheme.colors.profitContainer.copy(alpha = 0.6f),
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
                         text = "🟡 Note: Expected $crossCoverageText equivalent",
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onTertiaryContainer,
+                        color = LyndTheme.colors.onProfitContainer,
                         modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
                     )
                 }
@@ -137,7 +138,7 @@ fun ActionableGapCard(
                     text = "Recommended Bonds to Fill Gap",
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = LyndTheme.colors.textPrimary
                 )
 
                 LazyRow(
@@ -190,21 +191,21 @@ fun BondLadderMatchMiniCard(
                     text = bond.isin,
                     style = MaterialTheme.typography.bodySmall,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = LyndTheme.colors.textPrimary
                 )
 
                 Text(
                     text = Formatters.formatCouponRate(bond.couponRate),
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
+                    color = LyndTheme.colors.coupon
                 )
             }
 
             Text(
                 text = bond.name,
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = LyndTheme.colors.textSecondary,
                 maxLines = 1
             )
 
@@ -212,25 +213,25 @@ fun BondLadderMatchMiniCard(
                 text = "${Formatters.formatAmount(match.paymentAmount)} ${bond.currency} ($paymentTypeLabel)",
                 style = MaterialTheme.typography.bodySmall,
                 fontWeight = FontWeight.Medium,
-                color = MaterialTheme.colorScheme.onSurface
+                color = LyndTheme.colors.textPrimary
             )
 
             Text(
                 text = "Payout: $formattedPayDate",
                 style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = LyndTheme.colors.textSecondary
             )
 
             if (match.totalGapsCovered > 1) {
                 Surface(
                     shape = RoundedCornerShape(6.dp),
-                    color = MaterialTheme.colorScheme.secondaryContainer
+                    color = LyndTheme.colors.couponContainer
                 ) {
                     Text(
                         text = "✨ Fills ${match.totalGapsCovered} dry months!",
                         style = MaterialTheme.typography.labelSmall,
                         fontWeight = FontWeight.Medium,
-                        color = MaterialTheme.colorScheme.onSecondaryContainer,
+                        color = LyndTheme.colors.onCouponContainer,
                         modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
                     )
                 }

@@ -72,6 +72,7 @@ import com.adnlv.lynd.ui.icons.ConfirmationNumber
 import com.adnlv.lynd.ui.icons.MaterialSymbols
 import com.adnlv.lynd.ui.icons.ModeHeat
 import com.adnlv.lynd.ui.theme.LyndGlassDefaults
+import com.adnlv.lynd.ui.theme.LyndTheme
 import com.adnlv.lynd.util.Formatters
 
 private const val StatusIndicatorPressedScale = 0.90f
@@ -673,14 +674,14 @@ private fun PayoutTypeFilterPill(
     val hapticFeedback = LocalHapticFeedback.current
     val config = when (type) {
         PayoutType.REDEMPTION -> PayoutTypePillConfig(
-            containerColor = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.8f),
-            contentColor = MaterialTheme.colorScheme.onErrorContainer,
+            containerColor = LyndTheme.colors.principalContainer.copy(alpha = 0.8f),
+            contentColor = LyndTheme.colors.onPrincipalContainer,
             icon = MaterialSymbols.ModeHeat,
             label = "Redemption"
         )
         PayoutType.COUPON -> PayoutTypePillConfig(
-            containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.8f),
-            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+            containerColor = LyndTheme.colors.couponContainer.copy(alpha = 0.8f),
+            contentColor = LyndTheme.colors.onCouponContainer,
             icon = MaterialSymbols.ConfirmationNumber,
             label = "Coupon"
         )
@@ -793,3 +794,4 @@ private fun PayoutFilterMenuHorizontalPreview() {
         )
     }
 }
+

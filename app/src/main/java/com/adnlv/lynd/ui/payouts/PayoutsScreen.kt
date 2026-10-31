@@ -26,6 +26,7 @@ import com.adnlv.lynd.ui.components.LyndScreenHeader
 import com.adnlv.lynd.ui.icons.FilterList
 import com.adnlv.lynd.ui.icons.MaterialSymbols
 import com.adnlv.lynd.ui.navigation.BottomBarAction
+import com.adnlv.lynd.ui.theme.LyndTheme
 
 @Composable
 fun PayoutsScreen(
@@ -115,7 +116,7 @@ fun PayoutsScreen(
                             Text(
                                 text = emptyMessage,
                                 style = MaterialTheme.typography.bodyLarge,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                color = LyndTheme.colors.textSecondary
                             )
                         }
                     }
