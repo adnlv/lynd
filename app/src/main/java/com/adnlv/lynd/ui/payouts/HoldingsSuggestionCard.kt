@@ -33,7 +33,7 @@ fun HoldingsSuggestionCard(
         shape = RoundedCornerShape(16.dp),
         colors =
             CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surface,
+                containerColor = LyndTheme.colors.surface,
             ),
         border =
             BorderStroke(

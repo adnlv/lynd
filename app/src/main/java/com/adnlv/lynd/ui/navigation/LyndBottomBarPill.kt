@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -30,6 +29,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.adnlv.lynd.ui.components.LyndGlassSurface
 import com.adnlv.lynd.ui.theme.LyndLayoutDefaults
+import com.adnlv.lynd.ui.theme.LyndTheme
 
 private const val IndicatorPressedScale = 0.90f
 private val ContainerInnerPaddingHorizontal = 4.dp
@@ -159,7 +159,7 @@ private fun LyndBottomBarIndicator(
                         scaleY = pillScale
                         alpha = pillAlpha
                     }.background(
-                        color = MaterialTheme.colorScheme.surfaceContainer,
+                        color = LyndTheme.colors.surfaceContainer,
                         shape = CircleShape,
                     ),
         )

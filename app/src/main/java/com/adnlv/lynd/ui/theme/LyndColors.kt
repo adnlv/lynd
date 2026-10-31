@@ -8,6 +8,11 @@ import androidx.compose.ui.graphics.Color
 
 @Immutable
 data class LyndColors(
+    // Surface group
+    val background: Color,
+    val surface: Color,
+    val surfaceContainer: Color,
+    val surfaceVariant: Color,
     // Action group
     val actionPrimary: Color,
     val onActionPrimary: Color,
@@ -59,6 +64,10 @@ data class LyndColors(
 
 val LyndLightColors =
     LyndColors(
+        background = LyndBackgroundLight,
+        surface = LyndSurfaceLight,
+        surfaceContainer = LyndSurfaceContainerLight,
+        surfaceVariant = LyndSurfaceVariantLight,
         actionPrimary = LyndActionPrimaryLight,
         onActionPrimary = LyndOnActionPrimaryLight,
         actionSecondary = LyndActionSecondaryLight,
@@ -104,6 +113,10 @@ val LyndLightColors =
 
 val LyndDarkColors =
     LyndColors(
+        background = LyndBackgroundDark,
+        surface = LyndSurfaceDark,
+        surfaceContainer = LyndSurfaceContainerDark,
+        surfaceVariant = LyndSurfaceVariantDark,
         actionPrimary = LyndActionPrimaryDark,
         onActionPrimary = LyndOnActionPrimaryDark,
         actionSecondary = LyndActionSecondaryDark,

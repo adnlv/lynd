@@ -97,7 +97,7 @@ fun PortfolioSummaryCard(
         shape = RoundedCornerShape(24.dp),
         colors =
             CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                containerColor = LyndTheme.colors.surfaceContainer,
             ),
         border =
             BorderStroke(

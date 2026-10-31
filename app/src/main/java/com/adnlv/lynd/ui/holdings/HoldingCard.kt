@@ -331,7 +331,7 @@ fun HoldingCard(
                 },
                 colors =
                     ListItemDefaults.colors(
-                        containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                        containerColor = LyndTheme.colors.surfaceContainer,
                     ),
             )
 
