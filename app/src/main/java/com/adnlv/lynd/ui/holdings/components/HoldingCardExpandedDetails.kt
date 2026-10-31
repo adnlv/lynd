@@ -6,13 +6,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.adnlv.lynd.domain.HoldingItem
 import com.adnlv.lynd.ui.components.MetricItem
+import com.adnlv.lynd.ui.theme.LyndTheme
 import com.adnlv.lynd.util.Formatters
 import java.math.BigDecimal
 
@@ -28,7 +28,7 @@ fun HoldingCardExpandedDetails(
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         HorizontalDivider(
-            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.35f)
+            color = LyndTheme.colors.borderSubtle.copy(alpha = 0.35f)
         )
 
         Row(
@@ -48,7 +48,7 @@ fun HoldingCardExpandedDetails(
             MetricItem(
                 label = "Coupon rate",
                 value = Formatters.formatPercentage(displayRate),
-                valueColor = MaterialTheme.colorScheme.secondary,
+                valueColor = LyndTheme.colors.coupon,
                 modifier = Modifier.weight(1f),
                 horizontalAlignment = Alignment.End
             )
@@ -61,15 +61,15 @@ fun HoldingCardExpandedDetails(
             MetricItem(
                 label = "Total payout",
                 value = Formatters.formatAmount(holding.totalPayoutAmount),
-                valueColor = MaterialTheme.colorScheme.primary,
+                valueColor = LyndTheme.colors.coupon,
                 modifier = Modifier.weight(1f)
             )
             val isProfitPositive = holding.totalProfitAmount >= BigDecimal.ZERO
             val profitPrefix = if (isProfitPositive && holding.totalProfitAmount > BigDecimal.ZERO) "+" else ""
             val profitColor = if (isProfitPositive) {
-                MaterialTheme.colorScheme.tertiary
+                LyndTheme.colors.profit
             } else {
-                MaterialTheme.colorScheme.error
+                LyndTheme.colors.loss
             }
             MetricItem(
                 label = "Total profit",

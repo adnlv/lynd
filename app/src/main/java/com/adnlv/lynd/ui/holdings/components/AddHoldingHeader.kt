@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.adnlv.lynd.ui.theme.LyndTheme
 
 @Composable
 fun AddHoldingHeader(
@@ -30,13 +31,13 @@ fun AddHoldingHeader(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 8.dp, vertical = 8.dp),
+            .padding(16.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             IconButton(onClick = onCloseClick) {
                 Icon(
@@ -52,7 +53,7 @@ fun AddHoldingHeader(
         }
 
         val buttonColors = ButtonDefaults.buttonColors()
-        val primaryColor = MaterialTheme.colorScheme.primary
+        val primaryColor = LyndTheme.colors.coupon
         val activeBorderColor = primaryColor.copy(
             red = primaryColor.red * 0.8f,
             green = primaryColor.green * 0.8f,

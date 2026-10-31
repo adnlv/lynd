@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.adnlv.lynd.ui.theme.LyndTheme
 
 @Composable
 fun BondPriceInputs(
@@ -42,7 +43,7 @@ fun BondPriceInputs(
             placeholder = {
                 Text(
                     text = "1000.00",
-                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                    color = LyndTheme.colors.textMuted
                 )
             },
             singleLine = true,
@@ -61,7 +62,7 @@ fun BondPriceInputs(
                 Icon(
                     imageVector = Icons.Default.SwapVert,
                     contentDescription = "Linked price fields",
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f),
+                    tint = LyndTheme.colors.textSecondary,
                     modifier = Modifier
                         .padding(horizontal = 8.dp, vertical = 4.dp)
                         .size(18.dp)
@@ -76,7 +77,7 @@ fun BondPriceInputs(
             placeholder = {
                 Text(
                     text = "1000.00",
-                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                    color = LyndTheme.colors.textMuted
                 )
             },
             singleLine = true,
@@ -87,7 +88,7 @@ fun BondPriceInputs(
         Text(
             text = "Adjusting either field updates the other",
             style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+            color = LyndTheme.colors.textSecondary,
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth()
         )

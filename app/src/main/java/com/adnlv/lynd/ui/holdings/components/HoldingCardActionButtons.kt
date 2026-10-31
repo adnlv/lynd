@@ -13,7 +13,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -21,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.adnlv.lynd.ui.theme.LyndTheme
 
 @Composable
 fun HoldingCardActionButtons(
@@ -48,10 +48,10 @@ fun HoldingCardActionButtons(
                     .fillMaxHeight()
                     .graphicsLayer { alpha = deleteAlpha },
                 shape = CircleShape,
-                color = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.95f),
+                color = LyndTheme.colors.lossContainer.copy(alpha = 0.95f),
                 border = BorderStroke(
                     1.dp,
-                    MaterialTheme.colorScheme.error.copy(alpha = 0.35f)
+                    LyndTheme.colors.loss.copy(alpha = 0.35f)
                 )
             ) {
                 Box(
@@ -61,7 +61,7 @@ fun HoldingCardActionButtons(
                     Icon(
                         imageVector = Icons.Default.Delete,
                         contentDescription = "Delete",
-                        tint = MaterialTheme.colorScheme.onErrorContainer
+                        tint = LyndTheme.colors.onLossContainer
                     )
                 }
             }
@@ -74,10 +74,10 @@ fun HoldingCardActionButtons(
                     .width(editWidthDp)
                     .fillMaxHeight(),
                 shape = CircleShape,
-                color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.95f),
+                color = LyndTheme.colors.couponContainer.copy(alpha = 0.95f),
                 border = BorderStroke(
                     1.dp,
-                    MaterialTheme.colorScheme.primary.copy(alpha = 0.25f)
+                    LyndTheme.colors.coupon.copy(alpha = 0.25f)
                 )
             ) {
                 Box(
@@ -87,7 +87,7 @@ fun HoldingCardActionButtons(
                     Icon(
                         imageVector = Icons.Default.Edit,
                         contentDescription = "Edit",
-                        tint = MaterialTheme.colorScheme.onPrimaryContainer
+                        tint = LyndTheme.colors.onCouponContainer
                     )
                 }
             }

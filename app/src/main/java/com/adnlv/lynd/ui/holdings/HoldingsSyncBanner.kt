@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.adnlv.lynd.ui.theme.LyndTheme
 
 @Composable
 fun HoldingsSyncBanner(
@@ -44,11 +45,11 @@ fun HoldingsSyncBanner(
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 8.dp),
                 shape = RoundedCornerShape(12.dp),
-                color = MaterialTheme.colorScheme.errorContainer,
-                contentColor = MaterialTheme.colorScheme.onErrorContainer,
+                color = LyndTheme.colors.warningContainer,
+                contentColor = LyndTheme.colors.onWarningContainer,
                 border = BorderStroke(
                     width = 1.dp,
-                    color = MaterialTheme.colorScheme.error.copy(alpha = 0.25f)
+                    color = LyndTheme.colors.warning.copy(alpha = 0.25f)
                 )
             ) {
                 Row(
@@ -61,19 +62,19 @@ fun HoldingsSyncBanner(
                     Icon(
                         imageVector = Icons.Default.Warning,
                         contentDescription = "Sync Error",
-                        tint = MaterialTheme.colorScheme.error
+                        tint = LyndTheme.colors.warning
                     )
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
                             text = "Sync error",
                             style = MaterialTheme.typography.titleSmall,
                             fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onErrorContainer
+                            color = LyndTheme.colors.onWarningContainer
                         )
                         Text(
                             text = error,
                             style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onErrorContainer.copy(alpha = 0.8f),
+                            color = LyndTheme.colors.onWarningContainer.copy(alpha = 0.8f),
                             maxLines = 2
                         )
                     }
@@ -84,7 +85,7 @@ fun HoldingsSyncBanner(
                         Text(
                             text = "Retry",
                             fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.error
+                            color = LyndTheme.colors.warning
                         )
                     }
                 }

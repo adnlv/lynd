@@ -33,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.pointer.pointerInput
+import com.adnlv.lynd.ui.theme.LyndTheme
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntOffset
@@ -107,10 +108,10 @@ fun HoldingsUndoSnackbar(
             },
         shape = RoundedCornerShape(16.dp),
         color = MaterialTheme.colorScheme.surfaceContainerHighest,
-        contentColor = MaterialTheme.colorScheme.onSurface,
+        contentColor = LyndTheme.colors.textPrimary,
         border = BorderStroke(
             width = 1.dp,
-            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+            color = LyndTheme.colors.borderSubtle.copy(alpha = 0.5f)
         ),
         shadowElevation = 6.dp
     ) {
@@ -130,13 +131,13 @@ fun HoldingsUndoSnackbar(
                     Text(
                         text = data.visuals.message,
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurface,
+                        color = LyndTheme.colors.textPrimary,
                         maxLines = 1
                     )
                     Text(
                         text = "${remainingSeconds}s",
                         style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = LyndTheme.colors.textSecondary
                     )
                 }
 
@@ -149,7 +150,7 @@ fun HoldingsUndoSnackbar(
                             text = label,
                             style = MaterialTheme.typography.labelLarge,
                             fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.primary
+                            color = LyndTheme.colors.coupon
                         )
                     }
                 }
@@ -161,7 +162,7 @@ fun HoldingsUndoSnackbar(
                     .fillMaxWidth()
                     .height(3.dp)
                     .align(Alignment.BottomCenter),
-                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
+                color = LyndTheme.colors.coupon.copy(alpha = 0.5f),
                 trackColor = MaterialTheme.colorScheme.surfaceContainerHighest
             )
         }

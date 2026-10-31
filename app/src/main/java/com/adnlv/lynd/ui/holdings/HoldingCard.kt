@@ -69,6 +69,7 @@ import com.adnlv.lynd.ui.components.MetricItem
 import com.adnlv.lynd.ui.holdings.components.HoldingCardActionButtons
 import com.adnlv.lynd.ui.holdings.components.HoldingCardExpandedDetails
 import com.adnlv.lynd.ui.theme.LyndLayoutDefaults
+import com.adnlv.lynd.ui.theme.LyndTheme
 import com.adnlv.lynd.util.Formatters
 import com.adnlv.lynd.util.HapticFeedbackHelper
 import kotlinx.coroutines.launch
@@ -211,7 +212,7 @@ fun HoldingCard(
                 .clip(shape)
                 .border(
                     width = 1.dp,
-                    color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f),
+                    color = LyndTheme.colors.borderSubtle.copy(alpha = 0.5f),
                     shape = shape
                 )
                 .animateContentSize(
@@ -310,14 +311,14 @@ fun HoldingCard(
                         Text(
                             text = Formatters.formatDate(holding.purchaseDate),
                             style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                            color = LyndTheme.colors.textSecondary
                         )
                         Badge(
-                            containerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.14f),
-                            contentColor = MaterialTheme.colorScheme.onSurface,
+                            containerColor = LyndTheme.colors.borderSubtle.copy(alpha = 0.2f),
+                            contentColor = LyndTheme.colors.textPrimary,
                             modifier = Modifier.border(
                                 width = 1.dp,
-                                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.35f),
+                                color = LyndTheme.colors.borderSubtle.copy(alpha = 0.35f),
                                 shape = CircleShape
                             )
                         ) {
@@ -334,7 +335,7 @@ fun HoldingCard(
                         text = Formatters.formatAmount(holding.totalPaidAmount),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary
+                        color = LyndTheme.colors.coupon
                     )
                 },
                 colors = ListItemDefaults.colors(

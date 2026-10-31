@@ -28,6 +28,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.adnlv.lynd.ui.theme.LyndTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -143,11 +144,11 @@ fun IsinSelectionSection(
                         val annotatedText = androidx.compose.ui.text.buildAnnotatedString {
                             displayCode.forEachIndexed { index, char ->
                                 if (index in matchResult.matchedIndices) {
-                                    pushStyle(androidx.compose.ui.text.SpanStyle(fontWeight = androidx.compose.ui.text.font.FontWeight.Bold, color = MaterialTheme.colorScheme.primary))
+                                    pushStyle(androidx.compose.ui.text.SpanStyle(fontWeight = androidx.compose.ui.text.font.FontWeight.Bold, color = LyndTheme.colors.coupon))
                                     append(char)
                                     pop()
                                 } else {
-                                    pushStyle(androidx.compose.ui.text.SpanStyle(fontWeight = androidx.compose.ui.text.font.FontWeight.Normal, color = MaterialTheme.colorScheme.onSurfaceVariant))
+                                    pushStyle(androidx.compose.ui.text.SpanStyle(fontWeight = androidx.compose.ui.text.font.FontWeight.Normal, color = LyndTheme.colors.textSecondary))
                                     append(char)
                                     pop()
                                 }
@@ -169,7 +170,7 @@ fun IsinSelectionSection(
         if (codeError != null) {
             Text(
                 text = codeError,
-                color = MaterialTheme.colorScheme.error,
+                color = LyndTheme.colors.loss,
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier.padding(start = 16.dp, top = 4.dp)
             )

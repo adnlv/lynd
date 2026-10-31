@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import com.adnlv.lynd.domain.HoldingGroup
 import com.adnlv.lynd.domain.HoldingItem
 import com.adnlv.lynd.ui.theme.LyndLayoutDefaults
+import com.adnlv.lynd.ui.theme.LyndTheme
 
 @Composable
 fun HoldingGroupCard(
@@ -53,7 +54,7 @@ fun HoldingGroupCard(
                 text = group.isin,
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onBackground
+                color = LyndTheme.colors.textPrimary
             )
 
             Row(
@@ -61,11 +62,11 @@ fun HoldingGroupCard(
                 horizontalArrangement = Arrangement.spacedBy(6.dp)
             ) {
                 Badge(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
-                    contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    containerColor = LyndTheme.colors.borderSubtle.copy(alpha = 0.2f),
+                    contentColor = LyndTheme.colors.textSecondary,
                     modifier = Modifier.border(
                         width = 1.dp,
-                        color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.35f),
+                        color = LyndTheme.colors.borderSubtle.copy(alpha = 0.35f),
                         shape = CircleShape
                     )
                 ) {
@@ -79,11 +80,11 @@ fun HoldingGroupCard(
 
                 if (group.currency.isNotBlank()) {
                     Badge(
-                        containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
-                        contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        containerColor = LyndTheme.colors.borderSubtle.copy(alpha = 0.2f),
+                        contentColor = LyndTheme.colors.textSecondary,
                         modifier = Modifier.border(
                             width = 1.dp,
-                            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.35f),
+                            color = LyndTheme.colors.borderSubtle.copy(alpha = 0.35f),
                             shape = CircleShape
                         )
                     ) {
