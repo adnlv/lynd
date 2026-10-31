@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -38,6 +37,7 @@ import com.adnlv.lynd.ui.icons.Event
 import com.adnlv.lynd.ui.icons.Home
 import com.adnlv.lynd.ui.icons.MaterialSymbols
 import com.adnlv.lynd.ui.icons.PlannerReview
+import com.adnlv.lynd.ui.theme.LyndTheme
 
 private val IconSize = 20.dp
 private val ItemSpacing = 4.dp
@@ -64,9 +64,9 @@ fun LyndBottomBarItem(
 
     val itemColor by animateColorAsState(
         targetValue = if (selected) {
-            MaterialTheme.colorScheme.onSurface
+            LyndTheme.colors.textPrimary
         } else {
-            MaterialTheme.colorScheme.onSurfaceVariant
+            LyndTheme.colors.textMuted
         },
         animationSpec = tween(durationMillis = 200),
         label = "tab_color"

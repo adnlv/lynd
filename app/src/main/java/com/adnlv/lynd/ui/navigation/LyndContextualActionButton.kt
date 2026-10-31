@@ -26,13 +26,13 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.TransformOrigin
@@ -55,6 +55,7 @@ import androidx.compose.ui.window.PopupPositionProvider
 import androidx.compose.ui.window.PopupProperties
 import com.adnlv.lynd.ui.components.LyndGlassSurface
 import com.adnlv.lynd.ui.theme.LyndGlassDefaults
+import com.adnlv.lynd.ui.theme.LyndTheme
 import com.adnlv.lynd.util.HapticFeedbackHelper
 
 private val ActionIconSize = 20.dp
@@ -75,7 +76,7 @@ fun LyndContextualActionButton(
     var menuExpanded by remember(action.icon, action.label, action.contentDescription) {
         mutableStateOf(false)
     }
-    val contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+    val contentColor = LyndTheme.colors.textSecondary
 
     Box(modifier = modifier) {
         LyndBottomBarCircleButton(

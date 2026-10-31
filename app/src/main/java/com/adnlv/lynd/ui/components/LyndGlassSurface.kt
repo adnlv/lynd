@@ -13,6 +13,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Shape
 import com.adnlv.lynd.ui.theme.LocalLyndHazeState
 import com.adnlv.lynd.ui.theme.LyndGlassDefaults
+import com.adnlv.lynd.ui.theme.LyndTheme
 import com.adnlv.lynd.ui.theme.rememberLyndGlassStyle
 import dev.chrisbanes.haze.HazeInput
 import dev.chrisbanes.haze.blur.HazeBlurStyle
@@ -54,7 +55,7 @@ fun LyndGlassSurface(
             .then(backdropModifier)
             .border(
                 width = LyndGlassDefaults.BorderWidth,
-                color = colorScheme.outlineVariant.copy(alpha = LyndGlassDefaults.BorderAlpha),
+                color = LyndTheme.colors.borderSubtle.copy(alpha = LyndGlassDefaults.BorderAlpha),
                 shape = shape
             ),
         contentAlignment = contentAlignment,

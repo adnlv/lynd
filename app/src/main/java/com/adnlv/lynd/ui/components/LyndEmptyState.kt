@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import com.adnlv.lynd.ui.icons.Add
 import com.adnlv.lynd.ui.icons.Lightbulb
 import com.adnlv.lynd.ui.icons.MaterialSymbols
+import com.adnlv.lynd.ui.theme.LyndTheme
 
 @Composable
 fun LyndEmptyState(
@@ -53,7 +54,7 @@ fun LyndEmptyState(
                 modifier = Modifier
                     .size(56.dp)
                     .background(
-                        color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f),
+                        color = LyndTheme.colors.couponContainer.copy(alpha = 0.5f),
                         shape = CircleShape
                     ),
                 contentAlignment = Alignment.Center
@@ -61,7 +62,7 @@ fun LyndEmptyState(
                 Icon(
                     imageVector = icon,
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
+                    tint = LyndTheme.colors.coupon,
                     modifier = Modifier.size(28.dp)
                 )
             }
@@ -74,13 +75,13 @@ fun LyndEmptyState(
                     text = title,
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.onBackground,
+                    color = LyndTheme.colors.textPrimary,
                     textAlign = TextAlign.Center
                 )
                 Text(
                     text = description,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    color = LyndTheme.colors.textSecondary,
                     textAlign = TextAlign.Center
                 )
             }

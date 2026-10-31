@@ -16,6 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.adnlv.lynd.ui.theme.LyndLayoutDefaults
+import com.adnlv.lynd.ui.theme.LyndTheme
 
 @Composable
 fun LyndScreenHeader(
@@ -38,7 +39,7 @@ fun LyndScreenHeader(
             text = title,
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onBackground,
+            color = LyndTheme.colors.textPrimary,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
