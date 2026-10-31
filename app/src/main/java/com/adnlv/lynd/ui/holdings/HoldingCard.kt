@@ -304,12 +304,12 @@ fun HoldingCard(
                             color = LyndTheme.colors.textSecondary,
                         )
                         Badge(
-                            containerColor = LyndTheme.colors.borderSubtle.copy(alpha = 0.2f),
-                            contentColor = LyndTheme.colors.textPrimary,
+                            containerColor = LyndTheme.colors.badgeNeutralContainer,
+                            contentColor = LyndTheme.colors.onBadgeNeutralContainer,
                             modifier =
                                 Modifier.border(
                                     width = 1.dp,
-                                    color = LyndTheme.colors.borderSubtle.copy(alpha = 0.35f),
+                                    color = LyndTheme.colors.borderSubtle,
                                     shape = CircleShape,
                                 ),
                         ) {

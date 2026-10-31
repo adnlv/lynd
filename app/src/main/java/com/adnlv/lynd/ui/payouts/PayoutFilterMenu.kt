@@ -697,15 +697,15 @@ private fun PayoutTypeFilterPill(
         when (type) {
             PayoutType.REDEMPTION ->
                 PayoutTypePillConfig(
-                    containerColor = LyndTheme.colors.principalContainer.copy(alpha = 0.8f),
-                    contentColor = LyndTheme.colors.onPrincipalContainer,
+                    containerColor = LyndTheme.colors.badgeRedemptionContainer,
+                    contentColor = LyndTheme.colors.onBadgeRedemptionContainer,
                     icon = MaterialSymbols.ModeHeat,
                     label = "Redemption",
                 )
             PayoutType.COUPON ->
                 PayoutTypePillConfig(
-                    containerColor = LyndTheme.colors.couponContainer.copy(alpha = 0.8f),
-                    contentColor = LyndTheme.colors.onCouponContainer,
+                    containerColor = LyndTheme.colors.badgeCouponContainer,
+                    contentColor = LyndTheme.colors.onBadgeCouponContainer,
                     icon = MaterialSymbols.ConfirmationNumber,
                     label = "Coupon",
                 )

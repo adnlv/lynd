@@ -64,12 +64,12 @@ fun HoldingGroupCard(
                 horizontalArrangement = Arrangement.spacedBy(6.dp),
             ) {
                 Badge(
-                    containerColor = LyndTheme.colors.borderSubtle.copy(alpha = 0.2f),
-                    contentColor = LyndTheme.colors.textSecondary,
+                    containerColor = LyndTheme.colors.badgeNeutralContainer,
+                    contentColor = LyndTheme.colors.onBadgeNeutralContainer,
                     modifier =
                         Modifier.border(
                             width = 1.dp,
-                            color = LyndTheme.colors.borderSubtle.copy(alpha = 0.35f),
+                            color = LyndTheme.colors.borderSubtle,
                             shape = CircleShape,
                         ),
                 ) {
@@ -83,12 +83,12 @@ fun HoldingGroupCard(
 
                 if (group.currency.isNotBlank()) {
                     Badge(
-                        containerColor = LyndTheme.colors.borderSubtle.copy(alpha = 0.2f),
-                        contentColor = LyndTheme.colors.textSecondary,
+                        containerColor = LyndTheme.colors.badgeNeutralContainer,
+                        contentColor = LyndTheme.colors.onBadgeNeutralContainer,
                         modifier =
                             Modifier.border(
                                 width = 1.dp,
-                                color = LyndTheme.colors.borderSubtle.copy(alpha = 0.35f),
+                                color = LyndTheme.colors.borderSubtle,
                                 shape = CircleShape,
                             ),
                     ) {

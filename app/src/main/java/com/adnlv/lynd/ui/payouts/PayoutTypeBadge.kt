@@ -33,15 +33,15 @@ fun PayoutTypeBadge(
         when (type) {
             PayoutType.COUPON ->
                 BadgeConfig(
-                    containerColor = LyndTheme.colors.couponContainer.copy(alpha = 0.8f),
-                    contentColor = LyndTheme.colors.onCouponContainer,
+                    containerColor = LyndTheme.colors.badgeCouponContainer,
+                    contentColor = LyndTheme.colors.onBadgeCouponContainer,
                     icon = MaterialSymbols.ConfirmationNumber,
                     contentDescription = "Coupon",
                 )
             PayoutType.REDEMPTION ->
                 BadgeConfig(
-                    containerColor = LyndTheme.colors.principalContainer.copy(alpha = 0.8f),
-                    contentColor = LyndTheme.colors.onPrincipalContainer,
+                    containerColor = LyndTheme.colors.badgeRedemptionContainer,
+                    contentColor = LyndTheme.colors.onBadgeRedemptionContainer,
                     icon = MaterialSymbols.ModeHeat,
                     contentDescription = "Redemption",
                 )

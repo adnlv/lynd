@@ -126,12 +126,12 @@ fun PortfolioSummaryCard(
                 )
                 Surface(
                     shape = CircleShape,
-                    color = LyndTheme.colors.couponContainer,
-                    contentColor = LyndTheme.colors.onCouponContainer,
+                    color = LyndTheme.colors.badgeNeutralContainer,
+                    contentColor = LyndTheme.colors.onBadgeNeutralContainer,
                     border =
                         BorderStroke(
                             width = 1.dp,
-                            color = LyndTheme.colors.coupon.copy(alpha = 0.25f),
+                            color = LyndTheme.colors.borderSubtle,
                         ),
                 ) {
                     Text(
