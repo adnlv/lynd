@@ -105,7 +105,7 @@ fun IncomeGapGroup(
                     shape = RoundedCornerShape(16.dp),
                     colors =
                         CardDefaults.cardColors(
-                            containerColor = LyndTheme.colors.warningContainer,
+                            containerColor = LyndTheme.colors.feedbackContainer,
                         ),
                 ) {
                     Row(
@@ -119,7 +119,7 @@ fun IncomeGapGroup(
                         Icon(
                             imageVector = Icons.Default.Warning,
                             contentDescription = null,
-                            tint = LyndTheme.colors.warning,
+                            tint = LyndTheme.colors.onFeedbackContainer,
                         )
                         Column(
                             verticalArrangement = Arrangement.spacedBy(4.dp),
@@ -128,12 +128,12 @@ fun IncomeGapGroup(
                                 text = "$gapCount dry ${if (gapCount == 1) "month" else "months"} detected",
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
-                                color = LyndTheme.colors.onWarningContainer,
+                                color = LyndTheme.colors.onFeedbackContainer,
                             )
                             Text(
                                 text = "Zero bond payouts scheduled in selected ${uiState.plannerHorizonMonths}-month period for ${uiState.plannerSelectedCurrency}.",
                                 style = MaterialTheme.typography.bodySmall,
-                                color = LyndTheme.colors.onWarningContainer,
+                                color = LyndTheme.colors.onFeedbackContainer,
                             )
                         }
                     }
@@ -144,7 +144,7 @@ fun IncomeGapGroup(
                     shape = RoundedCornerShape(16.dp),
                     colors =
                         CardDefaults.cardColors(
-                            containerColor = LyndTheme.colors.profitContainer,
+                            containerColor = LyndTheme.colors.surfaceContainer,
                         ),
                 ) {
                     Row(
@@ -158,7 +158,7 @@ fun IncomeGapGroup(
                         Icon(
                             imageVector = Icons.Default.CheckCircle,
                             contentDescription = null,
-                            tint = LyndTheme.colors.profit,
+                            tint = LyndTheme.colors.textPrimary,
                         )
                         Column(
                             verticalArrangement = Arrangement.spacedBy(4.dp),
@@ -167,12 +167,12 @@ fun IncomeGapGroup(
                                 text = "Perfect Cash Flow Ladder",
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
-                                color = LyndTheme.colors.onProfitContainer,
+                                color = LyndTheme.colors.textPrimary,
                             )
                             Text(
                                 text = "Your cash flow is perfectly laddered for the next ${uiState.plannerHorizonMonths} months! No gaps detected.",
                                 style = MaterialTheme.typography.bodySmall,
-                                color = LyndTheme.colors.onProfitContainer,
+                                color = LyndTheme.colors.textPrimary,
                             )
                         }
                     }

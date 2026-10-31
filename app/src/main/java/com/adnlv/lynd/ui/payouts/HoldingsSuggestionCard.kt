@@ -58,7 +58,7 @@ fun HoldingsSuggestionCard(
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.List,
                     contentDescription = null,
-                    tint = LyndTheme.colors.coupon,
+                    tint = LyndTheme.colors.textPrimary,
                 )
                 Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                     Text(

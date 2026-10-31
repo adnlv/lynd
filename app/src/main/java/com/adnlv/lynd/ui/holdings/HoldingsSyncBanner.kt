@@ -46,12 +46,12 @@ fun HoldingsSyncBanner(
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp, vertical = 8.dp),
                 shape = RoundedCornerShape(12.dp),
-                color = LyndTheme.colors.warningContainer,
-                contentColor = LyndTheme.colors.onWarningContainer,
+                color = LyndTheme.colors.feedbackContainer,
+                contentColor = LyndTheme.colors.onFeedbackContainer,
                 border =
                     BorderStroke(
                         width = 1.dp,
-                        color = LyndTheme.colors.warning.copy(alpha = 0.25f),
+                        color = LyndTheme.colors.borderSubtle,
                     ),
             ) {
                 Row(
@@ -65,19 +65,19 @@ fun HoldingsSyncBanner(
                     Icon(
                         imageVector = Icons.Default.Warning,
                         contentDescription = "Sync Error",
-                        tint = LyndTheme.colors.warning,
+                        tint = LyndTheme.colors.onFeedbackContainer,
                     )
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
                             text = "Sync error",
                             style = MaterialTheme.typography.titleSmall,
                             fontWeight = FontWeight.Bold,
-                            color = LyndTheme.colors.onWarningContainer,
+                            color = LyndTheme.colors.onFeedbackContainer,
                         )
                         Text(
                             text = error,
                             style = MaterialTheme.typography.bodySmall,
-                            color = LyndTheme.colors.onWarningContainer.copy(alpha = 0.8f),
+                            color = LyndTheme.colors.onFeedbackContainer,
                             maxLines = 2,
                         )
                     }
@@ -88,7 +88,7 @@ fun HoldingsSyncBanner(
                         Text(
                             text = "Retry",
                             fontWeight = FontWeight.Bold,
-                            color = LyndTheme.colors.warning,
+                            color = LyndTheme.colors.onFeedbackContainer,
                         )
                     }
                 }

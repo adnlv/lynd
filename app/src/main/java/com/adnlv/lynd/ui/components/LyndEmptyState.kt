@@ -54,7 +54,7 @@ fun LyndEmptyState(
                     Modifier
                         .size(56.dp)
                         .background(
-                            color = LyndTheme.colors.couponContainer.copy(alpha = 0.5f),
+                            color = LyndTheme.colors.surfaceContainer,
                             shape = CircleShape,
                         ),
                 contentAlignment = Alignment.Center,
@@ -62,7 +62,7 @@ fun LyndEmptyState(
                 Icon(
                     imageVector = icon,
                     contentDescription = null,
-                    tint = LyndTheme.colors.coupon,
+                    tint = LyndTheme.colors.textPrimary,
                     modifier = Modifier.size(28.dp),
                 )
             }

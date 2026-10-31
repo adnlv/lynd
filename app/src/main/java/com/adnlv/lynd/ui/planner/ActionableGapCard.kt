@@ -82,13 +82,13 @@ fun ActionableGapCard(
                 if (gap.totalConsecutiveMonths > 1) {
                     Surface(
                         shape = RoundedCornerShape(8.dp),
-                        color = LyndTheme.colors.warningContainer.copy(alpha = 0.7f),
+                        color = LyndTheme.colors.feedbackContainer,
                     ) {
                         Text(
                             text = "Month ${gap.consecutiveMonthIndex} of ${gap.totalConsecutiveMonths}",
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = FontWeight.Medium,
-                            color = LyndTheme.colors.onWarningContainer,
+                            color = LyndTheme.colors.onFeedbackContainer,
                             modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                         )
                     }
@@ -128,13 +128,13 @@ fun ActionableGapCard(
             if (hasCrossCoverage) {
                 Surface(
                     shape = RoundedCornerShape(8.dp),
-                    color = LyndTheme.colors.profitContainer.copy(alpha = 0.6f),
+                    color = LyndTheme.colors.surfaceContainer,
                     modifier = Modifier.fillMaxWidth(),
                 ) {
                     Text(
                         text = "🟡 Note: Expected $crossCoverageText equivalent",
                         style = MaterialTheme.typography.bodySmall,
-                        color = LyndTheme.colors.onProfitContainer,
+                        color = LyndTheme.colors.textPrimary,
                         modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
                     )
                 }
@@ -235,13 +235,13 @@ fun BondLadderMatchMiniCard(
             if (match.totalGapsCovered > 1) {
                 Surface(
                     shape = RoundedCornerShape(6.dp),
-                    color = LyndTheme.colors.couponContainer,
+                    color = LyndTheme.colors.badgeNeutralContainer,
                 ) {
                     Text(
                         text = "✨ Fills ${match.totalGapsCovered} dry months!",
                         style = MaterialTheme.typography.labelSmall,
                         fontWeight = FontWeight.Medium,
-                        color = LyndTheme.colors.onCouponContainer,
+                        color = LyndTheme.colors.onBadgeNeutralContainer,
                         modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
                     )
                 }
