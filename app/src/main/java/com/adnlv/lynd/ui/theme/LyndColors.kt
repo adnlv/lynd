@@ -8,6 +8,26 @@ import androidx.compose.ui.graphics.Color
 
 @Immutable
 data class LyndColors(
+    // Action group
+    val actionPrimary: Color,
+    val onActionPrimary: Color,
+    val actionSecondary: Color,
+    val onActionSecondary: Color,
+    // Chart group
+    val chartPrimary: Color,
+    val chartSecondary: Color,
+    val chartTrack: Color,
+    // Feedback group
+    val feedbackContainer: Color,
+    val onFeedbackContainer: Color,
+    // Unique badge group
+    val badgeCouponContainer: Color,
+    val onBadgeCouponContainer: Color,
+    val badgeRedemptionContainer: Color,
+    val onBadgeRedemptionContainer: Color,
+    val badgeNeutralContainer: Color,
+    val onBadgeNeutralContainer: Color,
+    // Financial semantics (preserved for upcoming color assignment)
     val profit: Color,
     val onProfit: Color,
     val profitContainer: Color,
@@ -28,6 +48,7 @@ data class LyndColors(
     val onWarning: Color,
     val warningContainer: Color,
     val onWarningContainer: Color,
+    // Typography & borders
     val textPrimary: Color,
     val textSecondary: Color,
     val textMuted: Color,
@@ -38,6 +59,21 @@ data class LyndColors(
 
 val LyndLightColors =
     LyndColors(
+        actionPrimary = LyndActionPrimaryLight,
+        onActionPrimary = LyndOnActionPrimaryLight,
+        actionSecondary = LyndActionSecondaryLight,
+        onActionSecondary = LyndOnActionSecondaryLight,
+        chartPrimary = LyndChartPrimaryLight,
+        chartSecondary = LyndChartSecondaryLight,
+        chartTrack = LyndChartTrackLight,
+        feedbackContainer = LyndFeedbackContainerLight,
+        onFeedbackContainer = LyndOnFeedbackContainerLight,
+        badgeCouponContainer = LyndBadgeCouponContainerLight,
+        onBadgeCouponContainer = LyndOnBadgeCouponContainerLight,
+        badgeRedemptionContainer = LyndBadgeRedemptionContainerLight,
+        onBadgeRedemptionContainer = LyndOnBadgeRedemptionContainerLight,
+        badgeNeutralContainer = LyndBadgeNeutralContainerLight,
+        onBadgeNeutralContainer = LyndOnBadgeNeutralContainerLight,
         profit = LyndProfitGreenLight,
         onProfit = LyndOnProfitLight,
         profitContainer = LyndProfitContainerLight,
@@ -68,6 +104,21 @@ val LyndLightColors =
 
 val LyndDarkColors =
     LyndColors(
+        actionPrimary = LyndActionPrimaryDark,
+        onActionPrimary = LyndOnActionPrimaryDark,
+        actionSecondary = LyndActionSecondaryDark,
+        onActionSecondary = LyndOnActionSecondaryDark,
+        chartPrimary = LyndChartPrimaryDark,
+        chartSecondary = LyndChartSecondaryDark,
+        chartTrack = LyndChartTrackDark,
+        feedbackContainer = LyndFeedbackContainerDark,
+        onFeedbackContainer = LyndOnFeedbackContainerDark,
+        badgeCouponContainer = LyndBadgeCouponContainerDark,
+        onBadgeCouponContainer = LyndOnBadgeCouponContainerDark,
+        badgeRedemptionContainer = LyndBadgeRedemptionContainerDark,
+        onBadgeRedemptionContainer = LyndOnBadgeRedemptionContainerDark,
+        badgeNeutralContainer = LyndBadgeNeutralContainerDark,
+        onBadgeNeutralContainer = LyndOnBadgeNeutralContainerDark,
         profit = LyndProfitGreenDark,
         onProfit = LyndOnProfitDark,
         profitContainer = LyndProfitContainerDark,
