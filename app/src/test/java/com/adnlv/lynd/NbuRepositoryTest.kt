@@ -295,4 +295,65 @@ class NbuRepositoryTest {
             val result = repository.getOrFetchBond("UA4000999999")
             assertTrue(result.isFailure)
         }
+
+    @Test
+    fun syncAllBonds_skipsSecurityWithNullCpcode() =
+        runTest {
+            val api =
+                FakeNbuApiService().apply {
+                    securitiesResponse =
+                        listOf(
+                            NbuSecurityDto(cpcode = null, emitName = "Null ISIN Bond"),
+                            NbuSecurityDto(cpcode = "UA4000187348", emitName = "Valid Bond"),
+                        )
+                }
+            val bondDao = FakeBondDao()
+            val repository = NbuRepository(api, bondDao, FakeSyncMetadataDao())
+
+            val result = repository.syncAllBonds()
+
+            assertTrue(result.isSuccess)
+            assertEquals(1, bondDao.bonds.size)
+            assertNotNull(bondDao.bonds["UA4000187348"])
+        }
+
+    @Test
+    fun syncAllBonds_withoutPayments_doesNotUpsertPayments() =
+        runTest {
+            val api =
+                FakeNbuApiService().apply {
+                    securitiesResponse =
+                        listOf(
+                            NbuSecurityDto(cpcode = "UA4000187348", emitName = "Bond Without Payments", payments = null),
+                        )
+                }
+            val bondDao = FakeBondDao()
+            val repository = NbuRepository(api, bondDao, FakeSyncMetadataDao())
+
+            val result = repository.syncAllBonds()
+
+            assertTrue(result.isSuccess)
+            assertEquals(1, bondDao.bonds.size)
+            assertTrue(bondDao.payments.isEmpty())
+        }
+
+    @Test
+    fun getOrFetchBond_withEmptyPayments_doesNotUpsertPayments() =
+        runTest {
+            val api =
+                FakeNbuApiService().apply {
+                    securitiesResponse =
+                        listOf(
+                            NbuSecurityDto(cpcode = "UA4000187348", emitName = "Remote Bond", payments = emptyList()),
+                        )
+                }
+            val bondDao = FakeBondDao()
+            val repository = NbuRepository(api, bondDao, FakeSyncMetadataDao())
+
+            val result = repository.getOrFetchBond("UA4000187348")
+
+            assertTrue(result.isSuccess)
+            assertNotNull(bondDao.bonds["UA4000187348"])
+            assertTrue(bondDao.payments.isEmpty())
+        }
 }
