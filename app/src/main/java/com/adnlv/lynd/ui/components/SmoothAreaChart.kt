@@ -1,5 +1,8 @@
 package com.adnlv.lynd.ui.components
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectDragGestures
@@ -103,6 +106,7 @@ fun <T> SmoothAreaChart(
         }
 
     var tooltipSize by remember { mutableStateOf(IntSize.Zero) }
+    var isInteracting by remember { mutableStateOf(false) }
 
     BoxWithConstraints(
         modifier =
@@ -214,14 +218,27 @@ fun <T> SmoothAreaChart(
                 Modifier
                     .fillMaxSize()
                     .pointerInput(items) {
-                        detectTapGestures { offset ->
-                            selectNearest(offset.x)
-                        }
+                        detectTapGestures(
+                            onPress = { offset ->
+                                isInteracting = true
+                                selectNearest(offset.x)
+                                tryAwaitRelease()
+                                isInteracting = false
+                            },
+                        )
                     }.pointerInput(items) {
-                        detectDragGestures { change, _ ->
-                            change.consume()
-                            selectNearest(change.position.x)
-                        }
+                        detectDragGestures(
+                            onDragStart = { offset ->
+                                isInteracting = true
+                                selectNearest(offset.x)
+                            },
+                            onDragEnd = { isInteracting = false },
+                            onDragCancel = { isInteracting = false },
+                            onDrag = { change, _ ->
+                                change.consume()
+                                selectNearest(change.position.x)
+                            },
+                        )
                     },
         ) {
             val gridDashEffect = PathEffect.dashPathEffect(floatArrayOf(6f, 8f), 0f)
@@ -350,7 +367,11 @@ fun <T> SmoothAreaChart(
         val tooltipTopLimitPx = with(density) { 4.dp.toPx() }
 
         // Floating Pill Tooltip (FPT)
-        if (selectedIndex in items.indices && selectedIndex in points.indices) {
+        AnimatedVisibility(
+            visible = isInteracting && selectedIndex in items.indices && selectedIndex in points.indices,
+            enter = fadeIn(),
+            exit = fadeOut(),
+        ) {
             val item = items[selectedIndex]
             val selectedPoint = points[selectedIndex]
 
