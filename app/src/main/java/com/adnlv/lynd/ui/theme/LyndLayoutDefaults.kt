@@ -9,7 +9,6 @@ object LyndLayoutDefaults {
 
     val CardCornerRadius = 16.dp
     val CardCornerRadiusSmall = 4.dp
-    val ChartBarWidth = 48.dp
     val ChartHeight = 140.dp
 
     const val DefaultAnimationDurationMs = 200
