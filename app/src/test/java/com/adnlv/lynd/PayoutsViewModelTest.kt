@@ -932,4 +932,174 @@ class PayoutsViewModelTest {
 
             collectJob.cancel()
         }
+
+    @Test
+    fun resolveEffectiveCurrencies_fallsBackToDefaultCurrency() =
+        runTest {
+            val today = LocalDate.now()
+            val fakeDao =
+                FakePayoutDao().apply {
+                    rowsFlow.value =
+                        listOf(
+                            PayoutRow(
+                                isin = "UA1",
+                                bondName = "Bond 1",
+                                payDate = today.plusDays(5),
+                                payType = "coupon",
+                                payVal = BigDecimal("50.00"),
+                                quantity = 1,
+                                currency = "UAH",
+                                purchaseDate = today.minusDays(10),
+                            ),
+                            PayoutRow(
+                                isin = "UA2",
+                                bondName = "Bond 2",
+                                payDate = today.plusDays(5),
+                                payType = "coupon",
+                                payVal = BigDecimal("50.00"),
+                                quantity = 1,
+                                currency = "USD",
+                                purchaseDate = today.minusDays(10),
+                            ),
+                        )
+                }
+            val viewModel = PayoutsViewModel(fakeDao)
+            val collectJob = launch(UnconfinedTestDispatcher()) { viewModel.uiState.collect {} }
+
+            viewModel.selectCurrency("INVALID_CURRENCY")
+            assertEquals(setOf("UAH"), viewModel.uiState.value.selectedCurrencies)
+
+            collectJob.cancel()
+        }
+
+    @Test
+    fun resolveEffectiveCurrencies_fallsBackToFirstAvailableCurrency() =
+        runTest {
+            val today = LocalDate.now()
+            val fakeDao =
+                FakePayoutDao().apply {
+                    rowsFlow.value =
+                        listOf(
+                            PayoutRow(
+                                isin = "US1",
+                                bondName = "USD Bond",
+                                payDate = today.plusDays(5),
+                                payType = "coupon",
+                                payVal = BigDecimal("50.00"),
+                                quantity = 1,
+                                currency = "USD",
+                                purchaseDate = today.minusDays(10),
+                            ),
+                        )
+                }
+            val viewModel = PayoutsViewModel(fakeDao)
+            val collectJob = launch(UnconfinedTestDispatcher()) { viewModel.uiState.collect {} }
+
+            viewModel.selectCurrency("INVALID_CURRENCY")
+            assertEquals(setOf("USD"), viewModel.uiState.value.selectedCurrencies)
+
+            collectJob.cancel()
+        }
+
+    @Test
+    fun mapPayoutRows_withBlankBondName_fallsBackToIsin() =
+        runTest {
+            val today = LocalDate.now()
+            val fakeDao =
+                FakePayoutDao().apply {
+                    rowsFlow.value =
+                        listOf(
+                            PayoutRow(
+                                isin = "UA4000187348",
+                                bondName = "   ",
+                                payDate = today.plusDays(5),
+                                payType = "coupon",
+                                payVal = BigDecimal("50.00"),
+                                quantity = 1,
+                                currency = "UAH",
+                                purchaseDate = today.minusDays(10),
+                            ),
+                        )
+                }
+            val viewModel = PayoutsViewModel(fakeDao)
+            val collectJob = launch(UnconfinedTestDispatcher()) { viewModel.uiState.collect {} }
+
+            assertEquals(
+                "UA4000187348",
+                viewModel.uiState.value.payouts[0]
+                    .bondName,
+            )
+            assertEquals(
+                "UA4000187348",
+                viewModel.uiState.value.dateGroups[0]
+                    .bonds[0]
+                    .bondName,
+            )
+
+            collectJob.cancel()
+        }
+
+    @Test
+    fun uiState_withNullHoldingDao_usesRowsForEmptyCheck() =
+        runTest {
+            val fakeDao = FakePayoutDao()
+            val viewModel = PayoutsViewModel(payoutDao = fakeDao, holdingDao = null)
+            val collectJob = launch(UnconfinedTestDispatcher()) { viewModel.uiState.collect {} }
+
+            assertTrue(viewModel.uiState.value.isPortfolioEmpty)
+
+            fakeDao.rowsFlow.value =
+                listOf(
+                    PayoutRow(
+                        isin = "UA1",
+                        bondName = "Bond 1",
+                        payDate = LocalDate.now().plusDays(5),
+                        payType = "coupon",
+                        payVal = BigDecimal("50.00"),
+                        quantity = 1,
+                        currency = "UAH",
+                        purchaseDate = LocalDate.now().minusDays(10),
+                    ),
+                )
+            org.junit.Assert.assertFalse(viewModel.uiState.value.isPortfolioEmpty)
+
+            collectJob.cancel()
+        }
+
+    @Test
+    fun selectAllCurrencies_emptyCollection_doesNotChangeSelection() =
+        runTest {
+            val fakeDao = FakePayoutDao()
+            val viewModel = PayoutsViewModel(fakeDao)
+            val initial = viewModel.selectedCurrencies.value
+
+            viewModel.selectAllCurrencies(emptyList())
+            assertEquals(initial, viewModel.selectedCurrencies.value)
+        }
+
+    @Test
+    fun loadTestPortfolio_seedsDatabase() =
+        runTest {
+            val fakePayoutDao = FakePayoutDao()
+            val fakeHoldingDao = FakeHoldingDao()
+            val fakeBondDao = FakeBondDao()
+
+            val viewModel = PayoutsViewModel(fakePayoutDao, fakeHoldingDao, fakeBondDao)
+            viewModel.loadTestPortfolio()
+
+            assertTrue(fakeHoldingDao.holdings.isNotEmpty())
+            assertTrue(fakeBondDao.bonds.isNotEmpty())
+
+            // Without DAOs
+            val vmWithoutDaos = PayoutsViewModel(fakePayoutDao, null, null)
+            vmWithoutDaos.loadTestPortfolio()
+        }
+
+    @Test
+    fun provideFactory_createsViewModel() {
+        val fakePayoutDao = FakePayoutDao()
+        val factory = PayoutsViewModel.provideFactory(fakePayoutDao)
+        val vm = factory.create(PayoutsViewModel::class.java, androidx.lifecycle.viewmodel.CreationExtras.Empty)
+        org.junit.Assert.assertNotNull(vm)
+    }
 }

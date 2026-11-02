@@ -324,4 +324,163 @@ class HoldingsViewModelTest {
             holdingDao.allHoldingsFlow.value = listOf(bond1, bond3)
             assertEquals(listOf("UA4000100000", "UA4000300000"), viewModel.groupedHoldings.value.map { it.isin })
         }
+
+    @Test
+    fun init_loadsIsinPrefixes_whenDefaultPrefixNotInList() =
+        runTest {
+            val holdingDao = FakeHoldingDao()
+            val bondDao =
+                FakeBondDao().apply {
+                    prefixesToReturn = listOf("UA5000", "UA6000")
+                }
+            val repository =
+                NbuRepository(
+                    FakeNbuApiService(),
+                    bondDao,
+                    FakeSyncMetadataDao().apply {
+                        lastSync = System.currentTimeMillis()
+                    },
+                )
+
+            val viewModel = HoldingsViewModel(holdingDao, repository, bondDao)
+
+            assertEquals(listOf("UA5000", "UA6000"), viewModel.isinPrefixes.value)
+        }
+
+    @Test
+    fun retrySync_triggersSync() =
+        runTest {
+            val holdingDao = FakeHoldingDao()
+            val bondDao = FakeBondDao()
+            val syncDao = FakeSyncMetadataDao().apply { lastSync = System.currentTimeMillis() }
+            val apiService = FakeNbuApiService()
+            val repository =
+                NbuRepository(
+                    apiService = apiService,
+                    bondDao = bondDao,
+                    syncMetadataDao = syncDao,
+                    ioDispatcher = mainDispatcherRule.testDispatcher,
+                )
+
+            val viewModel = HoldingsViewModel(holdingDao, repository, bondDao)
+            viewModel.retrySync()
+
+            assertNull(viewModel.syncError.value)
+        }
+
+    @Test
+    fun performSync_onFailure_updatesSyncErrorState() =
+        runTest {
+            val holdingDao = FakeHoldingDao()
+            val bondDao = FakeBondDao()
+            val syncDao = FakeSyncMetadataDao().apply { lastSync = System.currentTimeMillis() }
+            val apiService = FakeNbuApiService().apply { shouldThrow = true }
+            val repository =
+                NbuRepository(
+                    apiService = apiService,
+                    bondDao = bondDao,
+                    syncMetadataDao = syncDao,
+                    ioDispatcher = mainDispatcherRule.testDispatcher,
+                )
+
+            val viewModel = HoldingsViewModel(holdingDao, repository, bondDao)
+            viewModel.retrySync()
+
+            assertEquals("Network error", viewModel.syncError.value)
+        }
+
+    @Test
+    fun deleteHolding_nonExistentId_doesNothing() =
+        runTest {
+            val holdingDao = FakeHoldingDao()
+            val bondDao = FakeBondDao()
+            val repository = NbuRepository(FakeNbuApiService(), bondDao, FakeSyncMetadataDao().apply { lastSync = System.currentTimeMillis() })
+            val viewModel = HoldingsViewModel(holdingDao, repository, bondDao)
+
+            viewModel.deleteHolding(999)
+            assertTrue(holdingDao.holdings.isEmpty())
+        }
+
+    @Test
+    fun restoreHolding_whenNoDeletedHolding_doesNothing() =
+        runTest {
+            val holdingDao = FakeHoldingDao()
+            val bondDao = FakeBondDao()
+            val repository = NbuRepository(FakeNbuApiService(), bondDao, FakeSyncMetadataDao().apply { lastSync = System.currentTimeMillis() })
+            val viewModel = HoldingsViewModel(holdingDao, repository, bondDao)
+
+            viewModel.restoreHolding()
+            assertTrue(holdingDao.holdings.isEmpty())
+        }
+
+    @Test
+    fun saveHolding_withOnComplete_invokesCallback() =
+        runTest {
+            val holdingDao = FakeHoldingDao()
+            val bondDao = FakeBondDao()
+            val repository = NbuRepository(FakeNbuApiService(), bondDao, FakeSyncMetadataDao().apply { lastSync = System.currentTimeMillis() })
+            val viewModel = HoldingsViewModel(holdingDao, repository, bondDao)
+
+            var called = false
+            val holding =
+                HoldingEntity(
+                    id = 1,
+                    isin = "UA4000187348",
+                    quantity = 5,
+                    pricePerBond = BigDecimal("1000.00"),
+                    totalPaidAmount = BigDecimal("5000.00"),
+                    purchaseDate = LocalDate.now(),
+                )
+
+            viewModel.saveHolding(holding) { called = true }
+            assertTrue(called)
+            assertEquals(1, holdingDao.holdings.size)
+        }
+
+    @Test
+    fun updateHolding_withOnComplete_invokesCallback() =
+        runTest {
+            val holdingDao = FakeHoldingDao()
+            val bondDao = FakeBondDao()
+            val repository = NbuRepository(FakeNbuApiService(), bondDao, FakeSyncMetadataDao().apply { lastSync = System.currentTimeMillis() })
+            val viewModel = HoldingsViewModel(holdingDao, repository, bondDao)
+
+            var called = false
+            val holding =
+                HoldingEntity(
+                    id = 1,
+                    isin = "UA4000187348",
+                    quantity = 10,
+                    pricePerBond = BigDecimal("1000.00"),
+                    totalPaidAmount = BigDecimal("10000.00"),
+                    purchaseDate = LocalDate.now(),
+                )
+
+            viewModel.updateHolding(holding) { called = true }
+            assertTrue(called)
+        }
+
+    @Test
+    fun loadTestPortfolio_seedsDatabase() =
+        runTest {
+            val holdingDao = FakeHoldingDao()
+            val bondDao = FakeBondDao()
+            val repository = NbuRepository(FakeNbuApiService(), bondDao, FakeSyncMetadataDao().apply { lastSync = System.currentTimeMillis() })
+            val viewModel = HoldingsViewModel(holdingDao, repository, bondDao)
+
+            viewModel.loadTestPortfolio()
+            assertTrue(holdingDao.holdings.isNotEmpty())
+            assertTrue(bondDao.bonds.isNotEmpty())
+        }
+
+    @Test
+    fun provideFactory_createsViewModel() {
+        val holdingDao = FakeHoldingDao()
+        val bondDao = FakeBondDao()
+        val repository = NbuRepository(FakeNbuApiService(), bondDao, FakeSyncMetadataDao().apply { lastSync = System.currentTimeMillis() })
+
+        val factory = HoldingsViewModel.provideFactory(holdingDao, repository, bondDao)
+        val vm = factory.create(HoldingsViewModel::class.java, androidx.lifecycle.viewmodel.CreationExtras.Empty)
+        assertNotNull(vm)
+    }
 }

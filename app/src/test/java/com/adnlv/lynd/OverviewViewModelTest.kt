@@ -95,4 +95,15 @@ class OverviewViewModelTest {
             assertTrue(bondDao.bonds.isNotEmpty())
             assertTrue(holdingDao.holdings.isNotEmpty())
         }
+
+    @Test
+    fun provideFactory_createsViewModel() {
+        val holdingDao = FakeHoldingDao()
+        val bondDao = FakeBondDao()
+        val payoutDao = FakePayoutDao()
+
+        val factory = OverviewViewModel.provideFactory(holdingDao, bondDao, payoutDao)
+        val vm = factory.create(OverviewViewModel::class.java, androidx.lifecycle.viewmodel.CreationExtras.Empty)
+        org.junit.Assert.assertNotNull(vm)
+    }
 }
