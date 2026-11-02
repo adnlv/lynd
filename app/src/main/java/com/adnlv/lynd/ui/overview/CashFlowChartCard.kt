@@ -155,79 +155,87 @@ fun CashFlowChartCard(
                     thickness = 1.dp,
                 )
 
-                Row(
+                Column(
                     modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
-                    // Left: Coupon badge
                     Row(
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Start,
                     ) {
-                        Box(
-                            modifier =
-                                Modifier
-                                    .size(10.dp)
-                                    .clip(RoundedCornerShape(2.dp))
-                                    .background(LyndTheme.colors.chartPrimary),
-                        )
-                        Spacer(modifier = Modifier.width(6.dp))
-                        Text(
-                            text = "Coupons: ",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = LyndTheme.colors.textSecondary,
-                            maxLines = 1,
-                        )
-                        Text(
-                            text = "$currencySymbol${Formatters.formatAmount(selectedFlow?.couponAmount ?: BigDecimal.ZERO)}",
-                            style = MaterialTheme.typography.bodySmall,
-                            fontWeight = FontWeight.SemiBold,
-                            color = LyndTheme.colors.textPrimary,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                        )
+                        // Left: Coupon badge
+                        Row(
+                            modifier = Modifier.weight(1f),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Box(
+                                    modifier =
+                                        Modifier
+                                            .size(10.dp)
+                                            .clip(RoundedCornerShape(2.dp))
+                                            .background(LyndTheme.colors.chartPrimary),
+                                )
+                                Spacer(modifier = Modifier.width(6.dp))
+                                Text(
+                                    text = "Coupons",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = LyndTheme.colors.textSecondary,
+                                    maxLines = 1,
+                                )
+                            }
+                            Text(
+                                text = "$currencySymbol${Formatters.formatAmount(selectedFlow?.couponAmount ?: BigDecimal.ZERO)}",
+                                style = MaterialTheme.typography.bodySmall,
+                                fontWeight = FontWeight.SemiBold,
+                                color = LyndTheme.colors.textPrimary,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                            )
+                        }
+
+                        // Right: Principal badge
+                        Row(
+                            modifier = Modifier.weight(1f),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Box(
+                                    modifier =
+                                        Modifier
+                                            .size(10.dp)
+                                            .clip(RoundedCornerShape(2.dp))
+                                            .background(LyndTheme.colors.chartSecondary),
+                                )
+                                Spacer(modifier = Modifier.width(6.dp))
+                                Text(
+                                    text = "Principal",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = LyndTheme.colors.textSecondary,
+                                    maxLines = 1,
+                                )
+                            }
+                            Text(
+                                text = "$currencySymbol${Formatters.formatAmount(selectedFlow?.principalAmount ?: BigDecimal.ZERO)}",
+                                style = MaterialTheme.typography.bodySmall,
+                                fontWeight = FontWeight.SemiBold,
+                                color = LyndTheme.colors.textPrimary,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                            )
+                        }
                     }
 
-                    // Center: Principal badge (fixed position anchor)
-                    Row(
-                        modifier = Modifier.weight(1f),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Start,
-                    ) {
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Box(
-                            modifier =
-                                Modifier
-                                    .size(10.dp)
-                                    .clip(RoundedCornerShape(2.dp))
-                                    .background(LyndTheme.colors.chartSecondary),
-                        )
-                        Spacer(modifier = Modifier.width(6.dp))
-                        Text(
-                            text = "Principal: ",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = LyndTheme.colors.textSecondary,
-                            maxLines = 1,
-                        )
-                        Text(
-                            text = "$currencySymbol${Formatters.formatAmount(selectedFlow?.principalAmount ?: BigDecimal.ZERO)}",
-                            style = MaterialTheme.typography.bodySmall,
-                            fontWeight = FontWeight.SemiBold,
-                            color = LyndTheme.colors.textPrimary,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                        )
-                    }
-
-                    // Right: Drag hint
                     Text(
                         text = "Drag to inspect",
                         style = MaterialTheme.typography.bodySmall,
                         color = LyndTheme.colors.textSecondary,
-                        textAlign = TextAlign.End,
+                        textAlign = TextAlign.Center,
                         maxLines = 1,
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier.fillMaxWidth(),
                     )
                 }
             }
