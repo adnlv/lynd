@@ -328,4 +328,76 @@ class SmartLadderMatcherTest {
         assertEquals(1, matches.size)
         assertTrue(matches[0].recommendedBonds.isEmpty())
     }
+
+    @Test
+    fun matchGaps_matchesBondPayingBothCouponAndRedemptionInDryMonth() {
+        val gap = IncomeGap(yearMonth = YearMonth.of(2026, 3), currency = "UAH")
+        val bond =
+            BondEntity(
+                isin = "UA4000187348",
+                name = "Maturing Bond",
+                currency = "UAH",
+                nominalValue = BigDecimal("1000.00"),
+                couponRate = BigDecimal("15.00"),
+                maturityDate = LocalDate.of(2026, 3, 15),
+            )
+        val couponPayment =
+            BondPaymentEntity(
+                bondIsin = "UA4000187348",
+                payDate = LocalDate.of(2026, 3, 15),
+                payType = "coupon",
+                payVal = BigDecimal("75.00"),
+            )
+        val redemptionPayment =
+            BondPaymentEntity(
+                bondIsin = "UA4000187348",
+                payDate = LocalDate.of(2026, 3, 15),
+                payType = "redemption",
+                payVal = BigDecimal("1000.00"),
+            )
+
+        val matches =
+            SmartLadderMatcher.matchGaps(
+                gaps = listOf(gap),
+                bonds = listOf(bond),
+                payments = listOf(couponPayment, redemptionPayment),
+                today = baseDate,
+            )
+
+        assertEquals(1, matches.size)
+        assertEquals(LadderPaymentType.COUPON_AND_REDEMPTION, matches[0].recommendedBonds[0].paymentType)
+        assertEquals(BigDecimal("1075.00"), matches[0].recommendedBonds[0].paymentAmount)
+    }
+
+    @Test
+    fun matchGaps_usesDefaultTodayParameter() {
+        val futureDate = LocalDate.now().plusMonths(2)
+        val gap = IncomeGap(yearMonth = YearMonth.from(futureDate), currency = "UAH")
+        val bond =
+            BondEntity(
+                isin = "UA4000187348",
+                name = "Active Bond",
+                currency = "UAH",
+                nominalValue = BigDecimal("1000.00"),
+                couponRate = BigDecimal("15.00"),
+                maturityDate = futureDate.plusMonths(1),
+            )
+        val payment =
+            BondPaymentEntity(
+                bondIsin = "UA4000187348",
+                payDate = futureDate,
+                payType = "coupon",
+                payVal = BigDecimal("75.00"),
+            )
+
+        val matches =
+            SmartLadderMatcher.matchGaps(
+                gaps = listOf(gap),
+                bonds = listOf(bond),
+                payments = listOf(payment),
+            )
+
+        assertEquals(1, matches.size)
+        assertEquals(1, matches[0].recommendedBonds.size)
+    }
 }

@@ -73,4 +73,16 @@ class IsinValidatorTest {
         val validWithRecord = IsinValidator.validateCodeInput("2", "UA4000", hasMatchingRecord = true)
         assertNull(validWithRecord)
     }
+
+    @Test
+    fun extractCode_withMatchingPrefix_stripsPrefix() {
+        assertEquals("187348", IsinValidator.extractCode("UA4000187348", "UA4000"))
+        assertEquals("187348", IsinValidator.extractCode("UA5000187348", "UA5000"))
+    }
+
+    @Test
+    fun extractCode_withoutMatchingPrefix_takesLastSixChars() {
+        assertEquals("187348", IsinValidator.extractCode("US0378187348", "UA4000"))
+        assertEquals("187348", IsinValidator.extractCode("CUSTOM187348", "UA4000"))
+    }
 }

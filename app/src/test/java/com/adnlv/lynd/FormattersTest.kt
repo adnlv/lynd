@@ -40,6 +40,19 @@ class FormattersTest {
     }
 
     @Test
+    fun formatDate_usesDefaultLocale() {
+        val date = LocalDate.of(2026, 9, 15)
+        val formatted = Formatters.formatDate(date)
+        assertEquals(
+            date.format(
+                java.time.format.DateTimeFormatter
+                    .ofPattern("d MMM yyyy", Locale.getDefault()),
+            ),
+            formatted,
+        )
+    }
+
+    @Test
     fun getCurrencySymbol_returnsKnownSymbols() {
         assertEquals("₴", Formatters.getCurrencySymbol("UAH"))
         assertEquals("₴", Formatters.getCurrencySymbol("uah"))
@@ -52,5 +65,14 @@ class FormattersTest {
     @Test
     fun getCurrencySymbol_fallsBackForUnknownCurrency() {
         assertEquals("XYZ", Formatters.getCurrencySymbol("XYZ"))
+    }
+
+    @Test
+    fun getCurrencySymbol_returnsSymbolForStandardIsoCurrency() {
+        val expected =
+            java.util.Currency
+                .getInstance("JPY")
+                .symbol
+        assertEquals(expected, Formatters.getCurrencySymbol("JPY"))
     }
 }

@@ -67,6 +67,15 @@ class ApproximateStringMatcherTest {
     }
 
     @Test
+    fun match_queryLongerThanTarget_handlesTrailingMismatches() {
+        // Query length 6 with target length 4: 4 matching chars + 2 trailing characters
+        val result = ApproximateStringMatcher.match("187399", "1873")
+        assertTrue(result.isMatch)
+        assertEquals(setOf(0, 1, 2, 3), result.matchedIndices)
+        assertEquals(20, result.score) // 40 - 2 * 10
+    }
+
+    @Test
     fun filterAndSort_ordersExactOverFuzzy() {
         val candidates =
             listOf(

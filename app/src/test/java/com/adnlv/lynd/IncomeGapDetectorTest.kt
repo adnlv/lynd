@@ -182,4 +182,40 @@ class IncomeGapDetectorTest {
         org.junit.Assert.assertNotNull(febGap)
         assertEquals(BigDecimal("150.00"), febGap?.crossCurrencyCoverage?.get("USD"))
     }
+
+    @Test
+    fun detectGaps_usesDefaultParameters() {
+        val gaps = IncomeGapDetector.detectGaps(payoutRows = emptyList(), currency = "UAH")
+        assertEquals(com.adnlv.lynd.core.AppConstants.DEFAULT_ANALYSIS_HORIZON_MONTHS, gaps.size)
+    }
+
+    @Test
+    fun detectGaps_crossCurrencyCoverageWithZeroCashFlow_doesNotIncludeZeroInCoverage() {
+        val uahRow =
+            createPayoutRow(
+                payDate = LocalDate.of(2026, 1, 15),
+                currency = "UAH",
+                payVal = BigDecimal("100.00"),
+                quantity = 1,
+            )
+        val zeroUsdRow =
+            createPayoutRow(
+                payDate = LocalDate.of(2026, 2, 20),
+                currency = "USD",
+                payVal = BigDecimal.ZERO,
+                quantity = 1,
+            )
+
+        val gaps =
+            IncomeGapDetector.detectGaps(
+                payoutRows = listOf(uahRow, zeroUsdRow),
+                currency = "UAH",
+                startDate = startDate,
+                monthCount = 12,
+            )
+
+        val febGap = gaps.find { it.yearMonth == YearMonth.of(2026, 2) }
+        org.junit.Assert.assertNotNull(febGap)
+        assertTrue(febGap?.crossCurrencyCoverage?.isEmpty() == true)
+    }
 }
