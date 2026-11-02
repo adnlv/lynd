@@ -321,11 +321,9 @@ fun <T> SmoothAreaChart(
             }
 
             // X-Axis Labels
+            val step = if (items.size > 8) 2 else 1
             points.forEachIndexed { index, point ->
-                val shouldShow =
-                    items.size <= 8 ||
-                        index % 2 == 0 ||
-                        index == items.lastIndex
+                val shouldShow = index % step == 0
 
                 if (shouldShow) {
                     val item = items[index]
