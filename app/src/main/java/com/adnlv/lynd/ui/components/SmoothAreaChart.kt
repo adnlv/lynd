@@ -365,6 +365,7 @@ fun <T> SmoothAreaChart(
         val tooltipMarginPx = with(density) { 8.dp.toPx() }
         val tooltipSpacingPx = with(density) { 10.dp.toPx() }
         val tooltipTopLimitPx = with(density) { 4.dp.toPx() }
+        val indicatorHaloRadiusPx = with(density) { 8.dp.toPx() }
 
         // Floating Pill Tooltip (FPT)
         AnimatedVisibility(
@@ -413,9 +414,17 @@ fun <T> SmoothAreaChart(
                         .coerceIn(tooltipMarginPx, widthPx - tooltipWidth - tooltipMarginPx)
                         .roundToInt()
 
+                val fitsAbove = (selectedPoint.y - tooltipHeight - tooltipSpacingPx) >= tooltipTopLimitPx
+                val targetY =
+                    if (fitsAbove) {
+                        selectedPoint.y - tooltipHeight - tooltipSpacingPx
+                    } else {
+                        selectedPoint.y + indicatorHaloRadiusPx + tooltipSpacingPx
+                    }
+
                 val clampedY =
-                    (selectedPoint.y - tooltipHeight - tooltipSpacingPx)
-                        .coerceAtLeast(tooltipTopLimitPx)
+                    targetY
+                        .coerceIn(tooltipTopLimitPx, heightPx - tooltipHeight - tooltipMarginPx)
                         .roundToInt()
 
                 layout(constraints.maxWidth, constraints.maxHeight) {
