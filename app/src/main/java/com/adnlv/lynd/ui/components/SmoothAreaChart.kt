@@ -7,7 +7,6 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -36,7 +35,7 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.TextStyle
@@ -45,8 +44,6 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.IntOffset
-import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.adnlv.lynd.ui.theme.LyndTheme
@@ -106,7 +103,6 @@ fun <T> SmoothAreaChart(
             if (max > 0f) max else 1f
         }
 
-    var tooltipSize by remember { mutableStateOf(IntSize.Zero) }
     var isInteracting by remember { mutableStateOf(false) }
 
     BoxWithConstraints(
@@ -375,57 +371,55 @@ fun <T> SmoothAreaChart(
             visible = isInteracting && selectedIndex in items.indices && selectedIndex in points.indices,
             enter = fadeIn(),
             exit = fadeOut(),
+            modifier = Modifier.fillMaxSize(),
         ) {
             val item = items[selectedIndex]
             val selectedPoint = points[selectedIndex]
 
-            val tooltipWidthPx = tooltipSize.width.toFloat()
-            val tooltipHeightPx = tooltipSize.height.toFloat()
-
-            val clampedX =
-                if (tooltipWidthPx > 0f) {
-                    (selectedPoint.x - tooltipWidthPx / 2f)
-                        .coerceIn(tooltipMarginPx, widthPx - tooltipWidthPx - tooltipMarginPx)
-                } else {
-                    selectedPoint.x
-                }
-
-            val clampedY =
-                if (tooltipHeightPx > 0f) {
-                    (selectedPoint.y - tooltipHeightPx - tooltipSpacingPx)
-                        .coerceAtLeast(tooltipTopLimitPx)
-                } else {
-                    tooltipTopLimitPx
-                }
-
-            Box(
-                modifier =
-                    Modifier
-                        .offset { IntOffset(clampedX.roundToInt(), clampedY.roundToInt()) }
-                        .onSizeChanged { tooltipSize = it },
-            ) {
-                Surface(
-                    shape = RoundedCornerShape(12.dp),
-                    color = surfaceColor,
-                    border = BorderStroke(1.dp, borderSubtleColor.copy(alpha = 0.5f)),
-                    shadowElevation = 3.dp,
-                ) {
-                    Column(
-                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
+            Layout(
+                content = {
+                    Surface(
+                        shape = RoundedCornerShape(12.dp),
+                        color = surfaceColor,
+                        border = BorderStroke(1.dp, borderSubtleColor.copy(alpha = 0.5f)),
+                        shadowElevation = 3.dp,
                     ) {
-                        Text(
-                            text = tooltipTitleSelector(item),
-                            style = MaterialTheme.typography.labelSmall,
-                            color = textSecondaryColor,
-                        )
-                        Text(
-                            text = tooltipValueSelector(item),
-                            style = MaterialTheme.typography.titleSmall,
-                            fontWeight = FontWeight.Bold,
-                            color = textPrimaryColor,
-                        )
+                        Column(
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                        ) {
+                            Text(
+                                text = tooltipTitleSelector(item),
+                                style = MaterialTheme.typography.labelSmall,
+                                color = textSecondaryColor,
+                            )
+                            Text(
+                                text = tooltipValueSelector(item),
+                                style = MaterialTheme.typography.titleSmall,
+                                fontWeight = FontWeight.Bold,
+                                color = textPrimaryColor,
+                            )
+                        }
                     }
+                },
+                modifier = Modifier.fillMaxSize(),
+            ) { measurables, constraints ->
+                val placeable = measurables.first().measure(constraints.copy(minWidth = 0, minHeight = 0))
+                val tooltipWidth = placeable.width.toFloat()
+                val tooltipHeight = placeable.height.toFloat()
+
+                val clampedX =
+                    (selectedPoint.x - tooltipWidth / 2f)
+                        .coerceIn(tooltipMarginPx, widthPx - tooltipWidth - tooltipMarginPx)
+                        .roundToInt()
+
+                val clampedY =
+                    (selectedPoint.y - tooltipHeight - tooltipSpacingPx)
+                        .coerceAtLeast(tooltipTopLimitPx)
+                        .roundToInt()
+
+                layout(constraints.maxWidth, constraints.maxHeight) {
+                    placeable.placeRelative(clampedX, clampedY)
                 }
             }
         }
