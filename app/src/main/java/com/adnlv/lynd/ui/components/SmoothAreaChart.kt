@@ -5,14 +5,15 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.gestures.detectHorizontalDragGestures
-import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.gestures.awaitHorizontalTouchSlopOrCancellation
+import androidx.compose.foundation.gestures.horizontalDrag
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -218,27 +219,32 @@ fun <T> SmoothAreaChart(
                 Modifier
                     .fillMaxSize()
                     .pointerInput(items) {
-                        detectTapGestures(
-                            onPress = { offset ->
-                                isInteracting = true
-                                selectNearest(offset.x)
-                                tryAwaitRelease()
-                                isInteracting = false
-                            },
-                        )
-                    }.pointerInput(items) {
-                        detectHorizontalDragGestures(
-                            onDragStart = { offset ->
-                                isInteracting = true
-                                selectNearest(offset.x)
-                            },
-                            onDragEnd = { isInteracting = false },
-                            onDragCancel = { isInteracting = false },
-                            onHorizontalDrag = { change, _ ->
-                                change.consume()
-                                selectNearest(change.position.x)
-                            },
-                        )
+                        awaitEachGesture {
+                            val down = awaitFirstDown(requireUnconsumed = false)
+                            isInteracting = true
+                            selectNearest(down.position.x)
+
+                            val drag =
+                                awaitHorizontalTouchSlopOrCancellation(down.id) { change, _ ->
+                                    change.consume()
+                                    selectNearest(change.position.x)
+                                }
+
+                            if (drag != null) {
+                                horizontalDrag(drag.id) { change ->
+                                    change.consume()
+                                    selectNearest(change.position.x)
+                                }
+                            } else {
+                                while (true) {
+                                    val event = awaitPointerEvent()
+                                    val change = event.changes.firstOrNull { it.id == down.id } ?: break
+                                    if (!change.pressed || change.isConsumed) break
+                                }
+                            }
+
+                            isInteracting = false
+                        }
                     },
         ) {
             val gridDashEffect = PathEffect.dashPathEffect(floatArrayOf(6f, 8f), 0f)
