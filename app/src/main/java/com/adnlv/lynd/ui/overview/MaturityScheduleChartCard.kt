@@ -1,17 +1,21 @@
 package com.adnlv.lynd.ui.overview
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,13 +25,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.adnlv.lynd.domain.YearlyMaturity
-import com.adnlv.lynd.ui.components.SnapBarChart
+import com.adnlv.lynd.ui.components.SmoothAreaChart
 import com.adnlv.lynd.ui.theme.LyndTheme
 import com.adnlv.lynd.util.Formatters
 import java.math.BigDecimal
+import java.math.RoundingMode
 
 @Composable
 fun MaturityScheduleChartCard(
@@ -65,6 +73,8 @@ fun MaturityScheduleChartCard(
                 val firstNonZeroIndex = maturities.indexOfFirst { it.amount > BigDecimal.ZERO }
                 mutableStateOf(if (firstNonZeroIndex >= 0) firstNonZeroIndex else 0)
             }
+
+            val currencySymbol = remember(currency) { Formatters.getCurrencySymbol(currency) }
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -115,32 +125,103 @@ fun MaturityScheduleChartCard(
                     )
                 }
             } else {
-                val maxYearAmount =
-                    remember(maturities) {
-                        val max = maturities.maxOfOrNull { it.amount } ?: BigDecimal.ZERO
-                        if (max > BigDecimal.ZERO) max else BigDecimal.ONE
-                    }
-
-                SnapBarChart(
+                SmoothAreaChart(
                     items = maturities,
                     selectedIndex = selectedIndex,
                     onSelectedIndexChange = { selectedIndex = it },
-                ) { maturity, index, isSelected ->
-                    MaturityBar(
-                        maturity = maturity,
-                        maxAmount = maxYearAmount,
-                        isSelected = isSelected,
-                        barColor = LyndTheme.colors.chartSecondary,
-                        modifier = Modifier.fillMaxSize(),
-                    )
-                }
+                    valueSelector = { it.amount.toFloat() },
+                    xLabelSelector = { "${it.year}" },
+                    tooltipTitleSelector = { "${it.year}" },
+                    tooltipValueSelector = { maturity ->
+                        "$currencySymbol${Formatters.formatAmount(maturity.amount)}"
+                    },
+                    currencySymbol = currencySymbol,
+                    modifier = Modifier.fillMaxWidth(),
+                )
 
-                val selectedMaturity = maturities.getOrNull(selectedIndex)
-                if (selectedMaturity != null) {
-                    MaturityDetailCard(
-                        selectedMaturity = selectedMaturity,
-                        totalPrincipal = totalPrincipal,
-                        currency = currency,
+                val selectedMaturity = maturities.getOrNull(selectedIndex) ?: maturities.firstOrNull()
+
+                val percentageOfTotal =
+                    remember(selectedMaturity?.amount, totalPrincipal) {
+                        if (selectedMaturity != null && totalPrincipal > BigDecimal.ZERO) {
+                            selectedMaturity.amount
+                                .multiply(BigDecimal(100))
+                                .divide(totalPrincipal, 1, RoundingMode.HALF_UP)
+                        } else {
+                            BigDecimal.ZERO
+                        }
+                    }
+
+                HorizontalDivider(
+                    color = LyndTheme.colors.borderSubtle.copy(alpha = 0.5f),
+                    thickness = 1.dp,
+                )
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    // Left: Principal badge
+                    Row(
+                        modifier = Modifier.weight(1f),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start,
+                    ) {
+                        Box(
+                            modifier =
+                                Modifier
+                                    .size(10.dp)
+                                    .clip(RoundedCornerShape(2.dp))
+                                    .background(LyndTheme.colors.chartSecondary),
+                        )
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text(
+                            text = "Principal: ",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = LyndTheme.colors.textSecondary,
+                            maxLines = 1,
+                        )
+                        Text(
+                            text = "$currencySymbol${Formatters.formatAmount(selectedMaturity?.amount ?: BigDecimal.ZERO)}",
+                            style = MaterialTheme.typography.bodySmall,
+                            fontWeight = FontWeight.SemiBold,
+                            color = LyndTheme.colors.textPrimary,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                    }
+
+                    // Center: Share badge (fixed position anchor)
+                    Row(
+                        modifier = Modifier.weight(1f),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start,
+                    ) {
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(
+                            text = "Share: ",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = LyndTheme.colors.textSecondary,
+                            maxLines = 1,
+                        )
+                        Text(
+                            text = Formatters.formatPercentage(percentageOfTotal),
+                            style = MaterialTheme.typography.bodySmall,
+                            fontWeight = FontWeight.SemiBold,
+                            color = LyndTheme.colors.textPrimary,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                    }
+
+                    // Right: Drag hint
+                    Text(
+                        text = "Drag to inspect",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = LyndTheme.colors.textSecondary,
+                        textAlign = TextAlign.End,
+                        maxLines = 1,
+                        modifier = Modifier.weight(1f),
                     )
                 }
             }
