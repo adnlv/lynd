@@ -8,7 +8,6 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class IsinValidatorTest {
-
     @Test
     fun validUkrainianBondIsins_passValidation() {
         assertTrue(IsinValidator.isValid("UA4000187348"))

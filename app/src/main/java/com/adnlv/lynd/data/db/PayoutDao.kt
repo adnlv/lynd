@@ -15,12 +15,13 @@ data class PayoutRow(
     val quantity: Int,
     val currency: String,
     val purchaseDate: LocalDate,
-    val holdingId: Int = 0
+    val holdingId: Int = 0,
 )
 
 @Dao
 interface PayoutDao {
-    @Query("""
+    @Query(
+        """
         SELECT 
             bp.bond_isin AS isin,
             COALESCE(b.name, '') AS bondName,
@@ -35,6 +36,7 @@ interface PayoutDao {
         INNER JOIN bond_payments bp ON h.isin = bp.bond_isin
         LEFT JOIN bonds b ON h.isin = b.isin
         ORDER BY bp.pay_date ASC
-    """)
+    """,
+    )
     fun getAllPayoutRows(): Flow<List<PayoutRow>>
 }

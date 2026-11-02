@@ -9,10 +9,12 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -25,6 +27,7 @@ import com.adnlv.lynd.ui.theme.LocalLyndHazeState
 import com.adnlv.lynd.ui.theme.LyndTheme
 import dev.chrisbanes.haze.hazeSource
 import dev.chrisbanes.haze.rememberHazeState
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,36 +52,56 @@ fun MainApp(appContainer: AppContainer) {
     val hazeState = rememberHazeState()
 
     val bottomTabs = Screen.defaultBottomTabs
-    val showBottomBar = Screen.shouldShowBottomBar(currentRoute, bottomTabs)
+    val tabPagerState = rememberPagerState(pageCount = { bottomTabs.size })
+    val coroutineScope = rememberCoroutineScope()
+
+    val activeTabScreen = bottomTabs.getOrElse(tabPagerState.currentPage) { Screen.Overview }
+    val isAtHoldings = currentRoute == Screen.Holdings.route
+    val activeRoute = if (isAtHoldings) Screen.Holdings.route else activeTabScreen.route
+    val showBottomBar = Screen.shouldShowBottomBar(activeRoute, bottomTabs)
 
     CompositionLocalProvider(LocalLyndHazeState provides hazeState) {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
-            contentWindowInsets = WindowInsets.statusBars
+            contentWindowInsets = WindowInsets.statusBars,
         ) { innerPadding ->
             Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(top = innerPadding.calculateTopPadding())
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .padding(top = innerPadding.calculateTopPadding()),
             ) {
                 LyndNavHost(
                     navController = navController,
                     appContainer = appContainer,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .hazeSource(hazeState),
-                    bottomBarActionState = bottomBarActionState
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .hazeSource(hazeState),
+                    bottomBarActionState = bottomBarActionState,
+                    tabPagerState = tabPagerState,
                 )
                 if (showBottomBar) {
                     LyndBottomBar(
                         navController = navController,
-                        currentRoute = currentRoute,
+                        currentRoute = activeRoute,
                         bottomTabs = bottomTabs,
-                        action = bottomBarActionState.actionForRoute(currentRoute),
+                        action = bottomBarActionState.actionForRoute(activeRoute),
+                        onTabSelected = { screen ->
+                            val targetIndex = bottomTabs.indexOf(screen)
+                            if (targetIndex >= 0) {
+                                if (isAtHoldings) {
+                                    navController.popBackStack()
+                                }
+                                coroutineScope.launch {
+                                    tabPagerState.scrollToPage(targetIndex)
+                                }
+                            }
+                        },
                         onTabReselected = { screen ->
                             bottomBarActionState.onReselect(screen.route)
                         },
-                        modifier = Modifier.align(Alignment.BottomCenter)
+                        modifier = Modifier.align(Alignment.BottomCenter),
                     )
                 }
             }

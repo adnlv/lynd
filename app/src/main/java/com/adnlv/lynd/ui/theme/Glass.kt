@@ -29,6 +29,9 @@ object LyndGlassDefaults {
     const val DarkTintAlpha = 0.90f
     const val FallbackAlpha = 0.95f
     const val BorderAlpha = 0.35f
+    const val SpotShadowAlpha = 0.20f
+    const val AmbientShadowAlpha = 0.08f
+    const val LuminanceThreshold = 0.5f
 }
 
 /**
@@ -36,21 +39,21 @@ object LyndGlassDefaults {
  * so the blur node does not update on each recomposition.
  */
 @Composable
-fun rememberLyndGlassStyle(
-    containerColor: Color = MaterialTheme.colorScheme.surface
-): HazeBlurStyle = remember(containerColor) {
-    val tintAlpha = if (containerColor.luminance() >= 0.5f) {
-        LyndGlassDefaults.LightTintAlpha
-    } else {
-        LyndGlassDefaults.DarkTintAlpha
+fun rememberLyndGlassStyle(containerColor: Color = MaterialTheme.colorScheme.surface): HazeBlurStyle =
+    remember(containerColor) {
+        val tintAlpha =
+            if (containerColor.luminance() >= LyndGlassDefaults.LuminanceThreshold) {
+                LyndGlassDefaults.LightTintAlpha
+            } else {
+                LyndGlassDefaults.DarkTintAlpha
+            }
+        HazeBlurStyle {
+            backgroundColor(containerColor)
+            blurRadius(LyndGlassDefaults.BlurRadius)
+            noiseFactor(LyndGlassDefaults.NoiseFactor)
+            colorEffects(listOf(HazeColorEffect.tint(containerColor.copy(alpha = tintAlpha))))
+            fallbackColorEffect(
+                HazeColorEffect.tint(containerColor.copy(alpha = LyndGlassDefaults.FallbackAlpha)),
+            )
+        }
     }
-    HazeBlurStyle {
-        backgroundColor(containerColor)
-        blurRadius(LyndGlassDefaults.BlurRadius)
-        noiseFactor(LyndGlassDefaults.NoiseFactor)
-        colorEffects(listOf(HazeColorEffect.tint(containerColor.copy(alpha = tintAlpha))))
-        fallbackColorEffect(
-            HazeColorEffect.tint(containerColor.copy(alpha = LyndGlassDefaults.FallbackAlpha))
-        )
-    }
-}

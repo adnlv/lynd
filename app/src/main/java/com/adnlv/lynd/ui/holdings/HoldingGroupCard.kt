@@ -20,6 +20,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.adnlv.lynd.domain.HoldingGroup
 import com.adnlv.lynd.domain.HoldingItem
+import com.adnlv.lynd.ui.theme.LyndLayoutDefaults
+import com.adnlv.lynd.ui.theme.LyndTheme
 
 @Composable
 fun HoldingGroupCard(
@@ -34,63 +36,67 @@ fun HoldingGroupCard(
     onDragCancelHolding: (Int) -> Unit,
     onEditHolding: (HoldingItem) -> Unit,
     onDeleteHolding: (HoldingItem) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .animateContentSize()
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .animateContentSize(),
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 4.dp, vertical = 8.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 4.dp, vertical = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 text = group.isin,
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onBackground
+                color = LyndTheme.colors.textPrimary,
             )
 
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(6.dp)
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
             ) {
                 Badge(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
-                    contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.border(
-                        width = 1.dp,
-                        color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.35f),
-                        shape = CircleShape
-                    )
+                    containerColor = LyndTheme.colors.badgeNeutralContainer,
+                    contentColor = LyndTheme.colors.onBadgeNeutralContainer,
+                    modifier =
+                        Modifier.border(
+                            width = 1.dp,
+                            color = LyndTheme.colors.borderSubtle,
+                            shape = CircleShape,
+                        ),
                 ) {
                     Text(
                         text = "${group.totalQuantity}",
                         style = MaterialTheme.typography.labelSmall,
                         fontWeight = FontWeight.SemiBold,
-                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
                     )
                 }
 
                 if (group.currency.isNotBlank()) {
                     Badge(
-                        containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
-                        contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.border(
-                            width = 1.dp,
-                            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.35f),
-                            shape = CircleShape
-                        )
+                        containerColor = LyndTheme.colors.badgeNeutralContainer,
+                        contentColor = LyndTheme.colors.onBadgeNeutralContainer,
+                        modifier =
+                            Modifier.border(
+                                width = 1.dp,
+                                color = LyndTheme.colors.borderSubtle,
+                                shape = CircleShape,
+                            ),
                     ) {
                         Text(
                             text = group.currency,
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = FontWeight.SemiBold,
-                            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
                         )
                     }
                 }
@@ -99,15 +105,28 @@ fun HoldingGroupCard(
 
         Column(
             modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(3.dp)
+            verticalArrangement = Arrangement.spacedBy(3.dp),
         ) {
             group.items.forEachIndexed { index, holding ->
-                val itemShape = when {
-                    group.items.size == 1 -> RoundedCornerShape(16.dp)
-                    index == 0 -> RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp, bottomStart = 4.dp, bottomEnd = 4.dp)
-                    index == group.items.lastIndex -> RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp, bottomStart = 16.dp, bottomEnd = 16.dp)
-                    else -> RoundedCornerShape(4.dp)
-                }
+                val itemShape =
+                    when {
+                        group.items.size == 1 -> RoundedCornerShape(LyndLayoutDefaults.CardCornerRadius)
+                        index == 0 ->
+                            RoundedCornerShape(
+                                topStart = LyndLayoutDefaults.CardCornerRadius,
+                                topEnd = LyndLayoutDefaults.CardCornerRadius,
+                                bottomStart = LyndLayoutDefaults.CardCornerRadiusSmall,
+                                bottomEnd = LyndLayoutDefaults.CardCornerRadiusSmall,
+                            )
+                        index == group.items.lastIndex ->
+                            RoundedCornerShape(
+                                topStart = LyndLayoutDefaults.CardCornerRadiusSmall,
+                                topEnd = LyndLayoutDefaults.CardCornerRadiusSmall,
+                                bottomStart = LyndLayoutDefaults.CardCornerRadius,
+                                bottomEnd = LyndLayoutDefaults.CardCornerRadius,
+                            )
+                        else -> RoundedCornerShape(LyndLayoutDefaults.CardCornerRadiusSmall)
+                    }
                 key(holding.id) {
                     HoldingCard(
                         holding = holding,
@@ -122,7 +141,7 @@ fun HoldingGroupCard(
                         onEdit = { onEditHolding(holding) },
                         onDelete = { onDeleteHolding(holding) },
                         shape = itemShape,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
                     )
                 }
             }

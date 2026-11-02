@@ -15,12 +15,13 @@ import com.adnlv.lynd.ui.navigation.BottomBarActionState
 import com.adnlv.lynd.ui.navigation.Screen
 import com.adnlv.lynd.ui.navigation.icon
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class ScreenNavigationTest {
-
     @Test
     fun overviewScreen_hasCorrectRouteAndTitle() {
         assertEquals("overview", Screen.Overview.route)
@@ -52,6 +53,24 @@ class ScreenNavigationTest {
     }
 
     @Test
+    fun defaultBottomTabs_indexesMatchScreenOrder() {
+        val tabs = Screen.defaultBottomTabs
+        assertEquals(0, tabs.indexOf(Screen.Overview))
+        assertEquals(1, tabs.indexOf(Screen.Planner))
+        assertEquals(2, tabs.indexOf(Screen.Payouts))
+        assertEquals(-1, tabs.indexOf(Screen.Holdings))
+    }
+
+    @Test
+    fun defaultBottomTabs_resolvesScreenFromIndexSafely() {
+        val tabs = Screen.defaultBottomTabs
+        assertEquals(Screen.Overview, tabs.getOrElse(0) { Screen.Overview })
+        assertEquals(Screen.Planner, tabs.getOrElse(1) { Screen.Overview })
+        assertEquals(Screen.Payouts, tabs.getOrElse(2) { Screen.Overview })
+        assertEquals(Screen.Overview, tabs.getOrElse(99) { Screen.Overview })
+    }
+
+    @Test
     fun screen_resolveBottomTabRoute_mapsChildToParentRoute() {
         assertEquals("overview", Screen.resolveBottomTabRoute(Screen.Overview.route))
         assertEquals("planner", Screen.resolveBottomTabRoute(Screen.Planner.route))
@@ -63,12 +82,12 @@ class ScreenNavigationTest {
 
     @Test
     fun screen_shouldShowBottomBar_returnsTrueForTabsAndChildren() {
-        org.junit.Assert.assertTrue(Screen.shouldShowBottomBar(Screen.Overview.route))
-        org.junit.Assert.assertTrue(Screen.shouldShowBottomBar(Screen.Planner.route))
-        org.junit.Assert.assertTrue(Screen.shouldShowBottomBar(Screen.Payouts.route))
-        org.junit.Assert.assertTrue(Screen.shouldShowBottomBar(Screen.Holdings.route))
-        org.junit.Assert.assertFalse(Screen.shouldShowBottomBar("unknown_route"))
-        org.junit.Assert.assertFalse(Screen.shouldShowBottomBar(null))
+        assertTrue(Screen.shouldShowBottomBar(Screen.Overview.route))
+        assertTrue(Screen.shouldShowBottomBar(Screen.Planner.route))
+        assertTrue(Screen.shouldShowBottomBar(Screen.Payouts.route))
+        assertTrue(Screen.shouldShowBottomBar(Screen.Holdings.route))
+        assertFalse(Screen.shouldShowBottomBar("unknown_route"))
+        assertFalse(Screen.shouldShowBottomBar(null))
     }
 
     @Test
@@ -115,12 +134,13 @@ class ScreenNavigationTest {
         assertEquals("Open filter menu", defaultPayouts.contentDescription)
         assertNull(defaultPayouts.menuContent)
 
-        val customAction = BottomBarAction(
-            icon = MaterialSymbols.FilterList,
-            label = "Filter",
-            contentDescription = "Custom payouts filter",
-            menuContent = {}
-        )
+        val customAction =
+            BottomBarAction(
+                icon = MaterialSymbols.FilterList,
+                label = "Filter",
+                contentDescription = "Custom payouts filter",
+                menuContent = {},
+            )
         state.setAction(Screen.Payouts.route, customAction)
         val resolved = state.actionForRoute(Screen.Payouts.route)
         assertEquals("Filter", resolved.label)
@@ -135,11 +155,12 @@ class ScreenNavigationTest {
 
     @Test
     fun bottomBarAction_resolvesCloseIconWhenContextualStateIsActive() {
-        val action = BottomBarAction(
-            icon = MaterialSymbols.FilterList,
-            contentDescription = "Open filter menu",
-            activeContentDescription = "Close filter menu"
-        )
+        val action =
+            BottomBarAction(
+                icon = MaterialSymbols.FilterList,
+                contentDescription = "Open filter menu",
+                activeContentDescription = "Close filter menu",
+            )
 
         assertEquals(MaterialSymbols.FilterList, action.resolveIcon(isMenuExpanded = false))
         assertEquals("Open filter menu", action.resolveContentDescription(isMenuExpanded = false))

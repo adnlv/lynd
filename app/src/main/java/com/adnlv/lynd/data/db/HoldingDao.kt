@@ -6,17 +6,19 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
+import java.math.BigDecimal
+import java.time.LocalDate
 
 data class HoldingWithBond(
     val id: Int,
     val isin: String,
     val bondName: String,
     val quantity: Int,
-    val pricePerBond: java.math.BigDecimal,
-    val totalPaidAmount: java.math.BigDecimal,
-    val purchaseDate: java.time.LocalDate,
+    val pricePerBond: BigDecimal,
+    val totalPaidAmount: BigDecimal,
+    val purchaseDate: LocalDate,
     val currency: String,
-    val couponRate: java.math.BigDecimal
+    val couponRate: BigDecimal,
 )
 
 @Dao
@@ -33,7 +35,8 @@ interface HoldingDao {
     @Query("SELECT * FROM holdings WHERE id = :id LIMIT 1")
     suspend fun getHoldingById(id: Int): HoldingEntity?
 
-    @Query("""
+    @Query(
+        """
         SELECT 
             h.id AS id,
             h.isin AS isin,
@@ -46,14 +49,17 @@ interface HoldingDao {
             COALESCE(b.coupon_rate, '0') AS couponRate
         FROM holdings h
         LEFT JOIN bonds b ON h.isin = b.isin
-        ORDER BY h.purchase_date DESC
-    """)
+        ORDER BY h.isin ASC, h.purchase_date DESC
+    """,
+    )
     fun getAllHoldings(): Flow<List<HoldingWithBond>>
 
-    @Query("""
+    @Query(
+        """
         SELECT * FROM bond_payments
         WHERE bond_isin IN (SELECT DISTINCT isin FROM holdings)
         ORDER BY pay_date ASC
-    """)
+    """,
+    )
     fun getPaymentsForHoldings(): Flow<List<BondPaymentEntity>>
 }

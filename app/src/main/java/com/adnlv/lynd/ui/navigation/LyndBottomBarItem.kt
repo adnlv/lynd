@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -38,16 +37,18 @@ import com.adnlv.lynd.ui.icons.Event
 import com.adnlv.lynd.ui.icons.Home
 import com.adnlv.lynd.ui.icons.MaterialSymbols
 import com.adnlv.lynd.ui.icons.PlannerReview
+import com.adnlv.lynd.ui.theme.LyndTheme
 
 private val IconSize = 20.dp
 private val ItemSpacing = 4.dp
 
-fun Screen.icon(): ImageVector = when (this) {
-    Screen.Overview -> MaterialSymbols.Home
-    Screen.Planner -> MaterialSymbols.PlannerReview
-    Screen.Payouts -> MaterialSymbols.Event
-    Screen.Holdings -> Icons.AutoMirrored.Filled.List
-}
+fun Screen.icon(): ImageVector =
+    when (this) {
+        Screen.Overview -> MaterialSymbols.Home
+        Screen.Planner -> MaterialSymbols.PlannerReview
+        Screen.Payouts -> MaterialSymbols.Event
+        Screen.Holdings -> Icons.AutoMirrored.Filled.List
+    }
 
 @Composable
 fun LyndBottomBarItem(
@@ -56,73 +57,76 @@ fun LyndBottomBarItem(
     onPressStart: () -> Unit,
     onRelease: () -> Unit,
     onCancel: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val currentOnPressStart by rememberUpdatedState(onPressStart)
     val currentOnRelease by rememberUpdatedState(onRelease)
     val currentOnCancel by rememberUpdatedState(onCancel)
 
     val itemColor by animateColorAsState(
-        targetValue = if (selected) {
-            MaterialTheme.colorScheme.onSurface
-        } else {
-            MaterialTheme.colorScheme.onSurfaceVariant
-        },
+        targetValue =
+            if (selected) {
+                LyndTheme.colors.textPrimary
+            } else {
+                LyndTheme.colors.textMuted
+            },
         animationSpec = tween(durationMillis = 200),
-        label = "tab_color"
+        label = "tab_color",
     )
 
     Column(
-        modifier = modifier
-            .fillMaxHeight()
-            .semantics {
-                this.selected = selected
-                this.role = Role.Tab
-                onClick {
-                    currentOnRelease()
-                    true
-                }
-            }
-            .pointerInput(screen) {
-                awaitEachGesture {
-                    awaitFirstDown(requireUnconsumed = false)
-                    currentOnPressStart()
-                    val up = waitForUpOrCancellation()
-                    if (up != null &&
-                        up.position.x in 0f..size.width.toFloat() &&
-                        up.position.y in 0f..size.height.toFloat()
-                    ) {
+        modifier =
+            modifier
+                .fillMaxHeight()
+                .semantics {
+                    this.selected = selected
+                    this.role = Role.Tab
+                    onClick {
                         currentOnRelease()
-                    } else {
-                        currentOnCancel()
+                        true
                     }
-                }
-            },
+                }.pointerInput(screen) {
+                    awaitEachGesture {
+                        awaitFirstDown(requireUnconsumed = false)
+                        currentOnPressStart()
+                        val up = waitForUpOrCancellation()
+                        if (up != null &&
+                            up.position.x in 0f..size.width.toFloat() &&
+                            up.position.y in 0f..size.height.toFloat()
+                        ) {
+                            currentOnRelease()
+                        } else {
+                            currentOnCancel()
+                        }
+                    }
+                },
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
     ) {
         Icon(
             imageVector = screen.icon(),
             contentDescription = screen.title,
             tint = itemColor,
-            modifier = Modifier.size(IconSize)
+            modifier = Modifier.size(IconSize),
         )
         Spacer(modifier = Modifier.height(ItemSpacing))
         Text(
             text = screen.title,
             color = itemColor,
-            style = TextStyle(
-                fontSize = 10.sp,
-                lineHeight = 10.sp,
-                fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal,
-                lineHeightStyle = LineHeightStyle(
-                    alignment = LineHeightStyle.Alignment.Center,
-                    trim = LineHeightStyle.Trim.Both
-                )
-            ),
+            style =
+                TextStyle(
+                    fontSize = 10.sp,
+                    lineHeight = 10.sp,
+                    fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal,
+                    lineHeightStyle =
+                        LineHeightStyle(
+                            alignment = LineHeightStyle.Alignment.Center,
+                            trim = LineHeightStyle.Trim.Both,
+                        ),
+                ),
             maxLines = 1,
             softWrap = false,
-            overflow = TextOverflow.Ellipsis
+            overflow = TextOverflow.Ellipsis,
         )
     }
 }

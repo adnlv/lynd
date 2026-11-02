@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -29,6 +28,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.adnlv.lynd.ui.components.LyndGlassSurface
+import com.adnlv.lynd.ui.theme.LyndLayoutDefaults
+import com.adnlv.lynd.ui.theme.LyndTheme
 
 private const val IndicatorPressedScale = 0.90f
 private val ContainerInnerPaddingHorizontal = 4.dp
@@ -42,24 +43,28 @@ fun LyndBottomBarPill(
     currentRoute: String?,
     onTabSelected: (Screen) -> Unit,
     modifier: Modifier = Modifier,
-    onTabReselected: (Screen) -> Unit = {}
+    onTabReselected: (Screen) -> Unit = {},
 ) {
     var isIndicatorPressed by remember { mutableStateOf(false) }
     LyndGlassSurface(
         shape = CircleShape,
-        modifier = modifier.height(FloatingBarHeight)
+        modifier = modifier.height(LyndLayoutDefaults.FloatingBarHeight),
     ) {
         BoxWithConstraints(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(
-                    horizontal = ContainerInnerPaddingHorizontal,
-                    vertical = ContainerInnerPaddingVertical
-                )
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(
+                        horizontal = ContainerInnerPaddingHorizontal,
+                        vertical = ContainerInnerPaddingVertical,
+                    ),
         ) {
             var pressedRoute by remember { mutableStateOf<String?>(null) }
             val activeTabRoute = Screen.resolveBottomTabRoute(currentRoute, bottomTabs)
             val displayedTabRoute = pressedRoute ?: activeTabRoute
+            if (currentRoute == pressedRoute) {
+                pressedRoute = null
+            }
             val tabCount = bottomTabs.size
             if (tabCount > 0) {
                 val tabWidth = maxWidth / tabCount
@@ -67,13 +72,13 @@ fun LyndBottomBarPill(
                 LyndBottomBarIndicator(
                     tabWidth = tabWidth,
                     selectedIndex = selectedIndex,
-                    isPressed = isIndicatorPressed
+                    isPressed = isIndicatorPressed,
                 )
             }
 
             Row(
                 modifier = Modifier.fillMaxSize(),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 bottomTabs.forEach { screen ->
                     val selected = displayedTabRoute == screen.route
@@ -85,9 +90,9 @@ fun LyndBottomBarPill(
                             isIndicatorPressed = true
                         },
                         onRelease = {
-                            pressedRoute = null
                             isIndicatorPressed = false
                             if (currentRoute == screen.route) {
+                                pressedRoute = null
                                 onTabReselected(screen)
                             } else {
                                 onTabSelected(screen)
@@ -97,7 +102,7 @@ fun LyndBottomBarPill(
                             pressedRoute = null
                             isIndicatorPressed = false
                         },
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
                     )
                 }
             }
@@ -109,53 +114,54 @@ fun LyndBottomBarPill(
 private fun LyndBottomBarIndicator(
     tabWidth: Dp,
     selectedIndex: Int,
-    isPressed: Boolean = false
+    isPressed: Boolean = false,
 ) {
     val isVisible = selectedIndex >= 0
 
     val pillOffset by animateDpAsState(
         targetValue = tabWidth * selectedIndex.coerceAtLeast(0),
-        animationSpec = spring(
-            dampingRatio = 0.82f,
-            stiffness = Spring.StiffnessMediumLow
-        ),
-        label = "pill_offset"
+        animationSpec =
+            spring(
+                dampingRatio = 0.82f,
+                stiffness = Spring.StiffnessMediumLow,
+            ),
+        label = "pill_offset",
     )
 
     val pillScale by animateFloatAsState(
         targetValue = if (isPressed) IndicatorPressedScale else 1f,
-        animationSpec = spring(
-            dampingRatio = 0.82f,
-            stiffness = Spring.StiffnessMediumLow
-        ),
-        label = "pill_scale"
+        animationSpec =
+            spring(
+                dampingRatio = 0.82f,
+                stiffness = Spring.StiffnessMediumLow,
+            ),
+        label = "pill_scale",
     )
 
     val pillAlpha by animateFloatAsState(
         targetValue = if (isVisible) 1f else 0f,
-        animationSpec = tween(durationMillis = 200),
-        label = "pill_alpha"
+        animationSpec = tween(durationMillis = LyndLayoutDefaults.DefaultAnimationDurationMs),
+        label = "pill_alpha",
     )
 
     if (pillAlpha > 0f) {
         Box(
-            modifier = Modifier
-                .offset { IntOffset(x = pillOffset.roundToPx(), y = 0) }
-                .width(tabWidth)
-                .fillMaxHeight()
-                .padding(
-                    horizontal = PillPaddingHorizontal,
-                    vertical = PillPaddingVertical
-                )
-                .graphicsLayer {
-                    scaleX = pillScale
-                    scaleY = pillScale
-                    alpha = pillAlpha
-                }
-                .background(
-                    color = MaterialTheme.colorScheme.surfaceContainer,
-                    shape = CircleShape
-                )
+            modifier =
+                Modifier
+                    .offset { IntOffset(x = pillOffset.roundToPx(), y = 0) }
+                    .width(tabWidth)
+                    .fillMaxHeight()
+                    .padding(
+                        horizontal = PillPaddingHorizontal,
+                        vertical = PillPaddingVertical,
+                    ).graphicsLayer {
+                        scaleX = pillScale
+                        scaleY = pillScale
+                        alpha = pillAlpha
+                    }.background(
+                        color = LyndTheme.colors.surfaceContainer,
+                        shape = CircleShape,
+                    ),
         )
     }
 }

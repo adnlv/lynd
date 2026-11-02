@@ -15,7 +15,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -47,7 +46,7 @@ import java.time.LocalDate
 fun AddHoldingDialog(
     viewModel: HoldingsViewModel,
     onDismissRequest: () -> Unit,
-    holdingToEdit: HoldingItem? = null
+    holdingToEdit: HoldingItem? = null,
 ) {
     val prefixes by viewModel.isinPrefixes.collectAsState()
     var selectedPrefix by remember {
@@ -73,11 +72,12 @@ fun AddHoldingDialog(
         if (isCodeFocused || codeInput.text.isNotEmpty()) {
             val results = viewModel.searchBonds(selectedPrefix, codeInput.text)
             matchingBonds = results
-            codeError = IsinValidator.validateCodeInput(
-                code = codeInput.text,
-                prefix = selectedPrefix,
-                hasMatchingRecord = results.isNotEmpty()
-            )
+            codeError =
+                IsinValidator.validateCodeInput(
+                    code = codeInput.text,
+                    prefix = selectedPrefix,
+                    hasMatchingRecord = results.isNotEmpty(),
+                )
         } else {
             matchingBonds = emptyList()
             codeError = null
@@ -109,23 +109,26 @@ fun AddHoldingDialog(
         }
     }
 
-    val isFormValid = fullIsin.length == 12 &&
-        codeError == null &&
-        IsinValidator.isValid(fullIsin) &&
-        quantity >= 1 &&
-        (totalPriceInput.toBigDecimalOrNull()?.let { it > BigDecimal.ZERO } ?: false) &&
-        (pricePerBondInput.toBigDecimalOrNull()?.let { it > BigDecimal.ZERO } ?: false)
+    val isFormValid =
+        fullIsin.length == 12 &&
+            codeError == null &&
+            IsinValidator.isValid(fullIsin) &&
+            quantity >= 1 &&
+            (totalPriceInput.toBigDecimalOrNull()?.let { it > BigDecimal.ZERO } ?: false) &&
+            (pricePerBondInput.toBigDecimalOrNull()?.let { it > BigDecimal.ZERO } ?: false)
 
     Dialog(
         onDismissRequest = onDismissRequest,
-        properties = DialogProperties(
-            usePlatformDefaultWidth = false
-        )
+        properties =
+            DialogProperties(
+                usePlatformDefaultWidth = false,
+            ),
     ) {
         Scaffold(
-            modifier = Modifier
-                .fillMaxSize()
-                .statusBarsPadding(),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .statusBarsPadding(),
             contentWindowInsets = WindowInsets.navigationBars,
             topBar = {
                 AddHoldingHeader(
@@ -136,14 +139,15 @@ fun AddHoldingDialog(
                         val perBond = pricePerBondInput.toBigDecimalOrNull()?.setScale(2, RoundingMode.HALF_UP) ?: return@AddHoldingHeader
                         val totalPaid = totalPriceInput.toBigDecimalOrNull()?.setScale(2, RoundingMode.HALF_UP) ?: return@AddHoldingHeader
 
-                        val holding = HoldingEntity(
-                            id = holdingToEdit?.id ?: 0,
-                            isin = fullIsin,
-                            quantity = quantity,
-                            pricePerBond = perBond,
-                            totalPaidAmount = totalPaid,
-                            purchaseDate = purchaseDate
-                        )
+                        val holding =
+                            HoldingEntity(
+                                id = holdingToEdit?.id ?: 0,
+                                isin = fullIsin,
+                                quantity = quantity,
+                                pricePerBond = perBond,
+                                totalPaidAmount = totalPaid,
+                                purchaseDate = purchaseDate,
+                            )
                         if (holdingToEdit != null) {
                             viewModel.updateHolding(holding) {
                                 onDismissRequest()
@@ -153,29 +157,32 @@ fun AddHoldingDialog(
                                 onDismissRequest()
                             }
                         }
-                    }
+                    },
                 )
-            }
+            },
         ) { innerPadding ->
             Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-                    .padding(16.dp)
-                    .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding)
+                        .padding(16.dp)
+                        .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 // Card 1: ISIN Data Fields
                 Card(
                     modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceContainerLow
-                    )
+                    colors =
+                        CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+                        ),
                 ) {
                     Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp)
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
                     ) {
                         IsinSelectionSection(
                             selectedPrefix = selectedPrefix,
@@ -185,16 +192,17 @@ fun AddHoldingDialog(
                             onCodeInputChange = { codeInput = it },
                             matchingBonds = matchingBonds,
                             onBondSelected = { isin ->
-                                val code = if (isin.startsWith(selectedPrefix)) {
-                                    isin.removePrefix(selectedPrefix)
-                                } else {
-                                    isin.takeLast(6)
-                                }
+                                val code =
+                                    if (isin.startsWith(selectedPrefix)) {
+                                        isin.removePrefix(selectedPrefix)
+                                    } else {
+                                        isin.takeLast(6)
+                                    }
                                 codeInput = TextFieldValue(text = code, selection = TextRange(code.length))
                                 codeError = IsinValidator.validateCodeInput(code, selectedPrefix)
                             },
                             codeError = codeError,
-                            onFocusChanged = { isCodeFocused = it }
+                            onFocusChanged = { isCodeFocused = it },
                         )
                     }
                 }
@@ -202,15 +210,17 @@ fun AddHoldingDialog(
                 // Card 2: Quantity & Price Data Fields
                 Card(
                     modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceContainerLow
-                    )
+                    colors =
+                        CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+                        ),
                 ) {
                     Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
                     ) {
                         QuantitySelector(
                             quantity = quantity,
@@ -221,7 +231,7 @@ fun AddHoldingDialog(
                                     val computedTotal = BondPriceCalculator.calculateTotalPrice(parsedPricePerBond, newQuantity)
                                     totalPriceInput = computedTotal.toPlainString()
                                 }
-                            }
+                            },
                         )
 
                         HorizontalDivider()
@@ -244,7 +254,7 @@ fun AddHoldingDialog(
                                     val computedTotal = BondPriceCalculator.calculateTotalPrice(parsed, quantity)
                                     totalPriceInput = computedTotal.toPlainString()
                                 }
-                            }
+                            },
                         )
                     }
                 }
@@ -252,18 +262,20 @@ fun AddHoldingDialog(
                 // Card 3: Date Data Field
                 Card(
                     modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceContainerLow
-                    )
+                    colors =
+                        CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+                        ),
                 ) {
                     Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp)
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
                     ) {
                         PurchaseDatePickerField(
                             purchaseDate = purchaseDate,
-                            onDateChange = { purchaseDate = it }
+                            onDateChange = { purchaseDate = it },
                         )
                     }
                 }

@@ -37,6 +37,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import com.adnlv.lynd.ui.theme.LyndTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.abs
@@ -45,7 +46,7 @@ import kotlin.math.roundToInt
 @Composable
 fun HoldingsUndoSnackbar(
     data: SnackbarData,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val coroutineScope = rememberCoroutineScope()
     val totalSeconds = 3
@@ -62,10 +63,11 @@ fun HoldingsUndoSnackbar(
         }
         progress.animateTo(
             targetValue = 0f,
-            animationSpec = tween(
-                durationMillis = totalSeconds * 1000,
-                easing = LinearEasing
-            )
+            animationSpec =
+                tween(
+                    durationMillis = totalSeconds * 1000,
+                    easing = LinearEasing,
+                ),
         )
         data.dismiss()
     }
@@ -73,83 +75,86 @@ fun HoldingsUndoSnackbar(
     val dismissThresholdPx = with(LocalDensity.current) { 96.dp.toPx() }
 
     Surface(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(top = 12.dp)
-            .height(56.dp)
-            .offset { IntOffset(swipeOffsetX.value.roundToInt(), 0) }
-            .alpha(1f - (abs(swipeOffsetX.value) / (dismissThresholdPx * 2f)).coerceIn(0f, 1f))
-            .clip(RoundedCornerShape(16.dp))
-            .pointerInput(data) {
-                detectHorizontalDragGestures(
-                    onHorizontalDrag = { _, dragAmount ->
-                        coroutineScope.launch {
-                            swipeOffsetX.snapTo(swipeOffsetX.value + dragAmount)
-                        }
-                    },
-                    onDragEnd = {
-                        coroutineScope.launch {
-                            if (abs(swipeOffsetX.value) > dismissThresholdPx) {
-                                val target = if (swipeOffsetX.value > 0) dismissThresholdPx * 3 else -dismissThresholdPx * 3
-                                swipeOffsetX.animateTo(target)
-                                data.dismiss()
-                            } else {
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .padding(top = 12.dp)
+                .height(56.dp)
+                .offset { IntOffset(swipeOffsetX.value.roundToInt(), 0) }
+                .alpha(1f - (abs(swipeOffsetX.value) / (dismissThresholdPx * 2f)).coerceIn(0f, 1f))
+                .clip(RoundedCornerShape(16.dp))
+                .pointerInput(data) {
+                    detectHorizontalDragGestures(
+                        onHorizontalDrag = { _, dragAmount ->
+                            coroutineScope.launch {
+                                swipeOffsetX.snapTo(swipeOffsetX.value + dragAmount)
+                            }
+                        },
+                        onDragEnd = {
+                            coroutineScope.launch {
+                                if (abs(swipeOffsetX.value) > dismissThresholdPx) {
+                                    val target = if (swipeOffsetX.value > 0) dismissThresholdPx * 3 else -dismissThresholdPx * 3
+                                    swipeOffsetX.animateTo(target)
+                                    data.dismiss()
+                                } else {
+                                    swipeOffsetX.animateTo(0f)
+                                }
+                            }
+                        },
+                        onDragCancel = {
+                            coroutineScope.launch {
                                 swipeOffsetX.animateTo(0f)
                             }
-                        }
-                    },
-                    onDragCancel = {
-                        coroutineScope.launch {
-                            swipeOffsetX.animateTo(0f)
-                        }
-                    }
-                )
-            },
+                        },
+                    )
+                },
         shape = RoundedCornerShape(16.dp),
         color = MaterialTheme.colorScheme.surfaceContainerHighest,
-        contentColor = MaterialTheme.colorScheme.onSurface,
-        border = BorderStroke(
-            width = 1.dp,
-            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
-        ),
-        shadowElevation = 6.dp
+        contentColor = LyndTheme.colors.textPrimary,
+        border =
+            BorderStroke(
+                width = 1.dp,
+                color = LyndTheme.colors.borderSubtle.copy(alpha = 0.5f),
+            ),
+        shadowElevation = 6.dp,
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             Row(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(start = 16.dp, end = 8.dp),
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .padding(start = 16.dp, end = 8.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Row(
                     modifier = Modifier.weight(1f),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     Text(
                         text = data.visuals.message,
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        maxLines = 1
+                        color = LyndTheme.colors.textPrimary,
+                        maxLines = 1,
                     )
                     Text(
                         text = "${remainingSeconds}s",
                         style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = LyndTheme.colors.textSecondary,
                     )
                 }
 
                 data.visuals.actionLabel?.let { label ->
                     TextButton(
                         onClick = { data.performAction() },
-                        contentPadding = PaddingValues(horizontal = 8.dp)
+                        contentPadding = PaddingValues(horizontal = 8.dp),
                     ) {
                         Text(
                             text = label,
                             style = MaterialTheme.typography.labelLarge,
                             fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.primary
+                            color = LyndTheme.colors.actionPrimary,
                         )
                     }
                 }
@@ -157,12 +162,13 @@ fun HoldingsUndoSnackbar(
 
             LinearProgressIndicator(
                 progress = { progress.value },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(3.dp)
-                    .align(Alignment.BottomCenter),
-                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
-                trackColor = MaterialTheme.colorScheme.surfaceContainerHighest
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(3.dp)
+                        .align(Alignment.BottomCenter),
+                color = LyndTheme.colors.chartPrimary,
+                trackColor = MaterialTheme.colorScheme.surfaceContainerHighest,
             )
         }
     }

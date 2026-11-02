@@ -4,20 +4,25 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
+const val DATABASE_VERSION = 5
+
 @Database(
     entities = [
         BondEntity::class,
         BondPaymentEntity::class,
         HoldingEntity::class,
-        SyncMetadataEntity::class
+        SyncMetadataEntity::class,
     ],
-    version = 4,
-    exportSchema = false
+    version = DATABASE_VERSION,
+    exportSchema = false,
 )
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun bondDao(): BondDao
+
     abstract fun holdingDao(): HoldingDao
+
     abstract fun payoutDao(): PayoutDao
+
     abstract fun syncMetadataDao(): SyncMetadataDao
 }

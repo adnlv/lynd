@@ -13,7 +13,6 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
@@ -21,26 +20,16 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Badge
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -54,9 +43,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
@@ -65,13 +52,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.adnlv.lynd.domain.HoldingItem
-import com.adnlv.lynd.ui.components.MetricItem
 import com.adnlv.lynd.ui.holdings.components.HoldingCardActionButtons
 import com.adnlv.lynd.ui.holdings.components.HoldingCardExpandedDetails
+import com.adnlv.lynd.ui.theme.LyndLayoutDefaults
+import com.adnlv.lynd.ui.theme.LyndTheme
 import com.adnlv.lynd.util.Formatters
 import com.adnlv.lynd.util.HapticFeedbackHelper
 import kotlinx.coroutines.launch
-import java.math.BigDecimal
 import kotlin.math.roundToInt
 
 @Composable
@@ -87,8 +74,8 @@ fun HoldingCard(
     canSwipe: Boolean = true,
     onEdit: () -> Unit,
     onDelete: () -> Unit,
-    shape: Shape = RoundedCornerShape(16.dp),
-    modifier: Modifier = Modifier
+    shape: Shape = RoundedCornerShape(LyndLayoutDefaults.CardCornerRadius),
+    modifier: Modifier = Modifier,
 ) {
     val density = LocalDensity.current
     val view = LocalView.current
@@ -104,10 +91,11 @@ fun HoldingCard(
     var isExpanded by rememberSaveable { mutableStateOf(false) }
     var hasTriggeredRevealHaptic by remember { mutableStateOf(false) }
 
-    val swipeSpringSpec = spring<Float>(
-        dampingRatio = 0.6f,
-        stiffness = Spring.StiffnessMediumLow
-    )
+    val swipeSpringSpec =
+        spring<Float>(
+            dampingRatio = 0.6f,
+            stiffness = Spring.StiffnessMediumLow,
+        )
 
     LaunchedEffect(isPeeking) {
         if (isDeleting || isRevealed) return@LaunchedEffect
@@ -115,12 +103,12 @@ fun HoldingCard(
             val peekDistance = -actionButtonsWidthPx * 0.6f
             offsetX.animateTo(
                 targetValue = peekDistance,
-                animationSpec = tween(durationMillis = 350, easing = FastOutSlowInEasing)
+                animationSpec = tween(durationMillis = LyndLayoutDefaults.LongAnimationDurationMs, easing = FastOutSlowInEasing),
             )
         } else if (offsetX.value != 0f) {
             offsetX.animateTo(
                 targetValue = 0f,
-                animationSpec = swipeSpringSpec
+                animationSpec = swipeSpringSpec,
             )
         }
     }
@@ -134,49 +122,53 @@ fun HoldingCard(
     }
 
     val dragDistance = (-offsetX.value).coerceAtLeast(0f)
-    val fullSwipeThresholdPx = if (itemWidthPx > 0f) {
-        (itemWidthPx * 0.45f).coerceAtLeast(actionButtonsWidthPx * 1.5f)
-    } else {
-        with(density) { 220.dp.toPx() }
-    }
+    val fullSwipeThresholdPx =
+        if (itemWidthPx > 0f) {
+            (itemWidthPx * 0.45f).coerceAtLeast(actionButtonsWidthPx * 1.5f)
+        } else {
+            with(density) { 220.dp.toPx() }
+        }
     val maxDragLeftPx = if (itemWidthPx > 0f) itemWidthPx else with(density) { 360.dp.toPx() }
 
-    val (deleteWidthDp, editWidthDp, deleteAlpha) = run {
-        if (dragDistance <= actionButtonsWidthPx) {
-            val progress = (dragDistance / actionButtonsWidthPx).coerceIn(0f, 1f)
-            Triple(
-                baseButtonWidthDp * progress,
-                baseButtonWidthDp * progress,
-                progress
-            )
-        } else {
-            val deepDenominator = (fullSwipeThresholdPx - actionButtonsWidthPx).coerceAtLeast(1f)
-            val deepProgress = ((dragDistance - actionButtonsWidthPx) / deepDenominator).coerceIn(0f, 1f)
-            val delWidth = if (deepProgress >= 1f) 0.dp else (baseButtonWidthDp * (1f - deepProgress)).coerceAtLeast(0.dp)
-            val delAlpha = (1f - deepProgress).coerceIn(0f, 1f)
-            val totalRevealedWidthDp = with(density) {
-                (dragDistance - with(density) { (buttonGapDp * 2).toPx() }).toDp()
-            }.coerceAtLeast(baseButtonWidthDp)
-            val spacingDp = if (delWidth > 0.dp) buttonGapDp else 0.dp
-            val edWidth = (totalRevealedWidthDp - delWidth - spacingDp).coerceAtLeast(baseButtonWidthDp)
-            Triple(delWidth, edWidth, delAlpha)
+    val (deleteWidthDp, editWidthDp, deleteAlpha) =
+        run {
+            if (dragDistance <= actionButtonsWidthPx) {
+                val progress = (dragDistance / actionButtonsWidthPx).coerceIn(0f, 1f)
+                Triple(
+                    baseButtonWidthDp * progress,
+                    baseButtonWidthDp * progress,
+                    progress,
+                )
+            } else {
+                val deepDenominator = (fullSwipeThresholdPx - actionButtonsWidthPx).coerceAtLeast(1f)
+                val deepProgress = ((dragDistance - actionButtonsWidthPx) / deepDenominator).coerceIn(0f, 1f)
+                val delWidth = if (deepProgress >= 1f) 0.dp else (baseButtonWidthDp * (1f - deepProgress)).coerceAtLeast(0.dp)
+                val delAlpha = (1f - deepProgress).coerceIn(0f, 1f)
+                val totalRevealedWidthDp =
+                    with(density) {
+                        (dragDistance - with(density) { (buttonGapDp * 2).toPx() }).toDp()
+                    }.coerceAtLeast(baseButtonWidthDp)
+                val spacingDp = if (delWidth > 0.dp) buttonGapDp else 0.dp
+                val edWidth = (totalRevealedWidthDp - delWidth - spacingDp).coerceAtLeast(baseButtonWidthDp)
+                Triple(delWidth, edWidth, delAlpha)
+            }
         }
-    }
 
     val buttonSpacingDp = if (deleteWidthDp > 0.dp) buttonGapDp else 0.dp
 
     Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .animateContentSize(
-                animationSpec = tween(
-                    durationMillis = 200,
-                    easing = LinearOutSlowInEasing
-                )
-            )
-            .onSizeChanged { itemWidthPx = it.width.toFloat() }
-            .offset { IntOffset(slideAwayOffsetX.value.roundToInt(), 0) }
-            .clip(shape)
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .animateContentSize(
+                    animationSpec =
+                        tween(
+                            durationMillis = 200,
+                            easing = LinearOutSlowInEasing,
+                        ),
+                ).onSizeChanged { itemWidthPx = it.width.toFloat() }
+                .offset { IntOffset(slideAwayOffsetX.value.roundToInt(), 0) }
+                .clip(shape),
     ) {
         HoldingCardActionButtons(
             deleteWidthDp = deleteWidthDp,
@@ -191,139 +183,140 @@ fun HoldingCard(
                         val targetOffset = if (itemWidthPx > 0f) -itemWidthPx - with(density) { 32.dp.toPx() } else -1500f
                         slideAwayOffsetX.animateTo(
                             targetValue = targetOffset,
-                            animationSpec = tween(durationMillis = 250, easing = FastOutLinearInEasing)
+                            animationSpec = tween(durationMillis = 250, easing = FastOutLinearInEasing),
                         )
                         onDelete()
                     }
                 }
             },
             onEditClick = onEdit,
-            modifier = Modifier
-                .matchParentSize()
-                .padding(horizontal = buttonGapDp)
+            modifier =
+                Modifier
+                    .matchParentSize()
+                    .padding(horizontal = buttonGapDp),
         )
 
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .offset { IntOffset(offsetX.value.roundToInt(), 0) }
-                .clip(shape)
-                .border(
-                    width = 1.dp,
-                    color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f),
-                    shape = shape
-                )
-                .animateContentSize(
-                    animationSpec = tween(
-                        durationMillis = 200,
-                        easing = LinearOutSlowInEasing
-                    )
-                )
-                .pointerInput(actionButtonsWidthPx, isDeleting, canSwipe, fullSwipeThresholdPx, maxDragLeftPx) {
-                    if (isDeleting) return@pointerInput
-                    detectHorizontalDragGestures(
-                        onDragStart = {
-                            if (canSwipe) {
-                                hasTriggeredRevealHaptic = isRevealed
-                                onDragStart?.invoke()
-                            }
-                        },
-                        onHorizontalDrag = { _, dragAmount ->
-                            if (!canSwipe) return@detectHorizontalDragGestures
-                            coroutineScope.launch {
-                                val current = offsetX.value
-                                val minOffset = -maxDragLeftPx
-                                val maxOffset = with(density) { 40.dp.toPx() }
-                                val target = (current + dragAmount).coerceIn(minOffset, maxOffset)
-                                offsetX.snapTo(target)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .offset { IntOffset(offsetX.value.roundToInt(), 0) }
+                    .clip(shape)
+                    .border(
+                        width = 1.dp,
+                        color = LyndTheme.colors.borderSubtle.copy(alpha = 0.5f),
+                        shape = shape,
+                    ).animateContentSize(
+                        animationSpec =
+                            tween(
+                                durationMillis = 200,
+                                easing = LinearOutSlowInEasing,
+                            ),
+                    ).pointerInput(actionButtonsWidthPx, isDeleting, canSwipe, fullSwipeThresholdPx, maxDragLeftPx) {
+                        if (isDeleting) return@pointerInput
+                        detectHorizontalDragGestures(
+                            onDragStart = {
+                                if (canSwipe) {
+                                    hasTriggeredRevealHaptic = isRevealed
+                                    onDragStart?.invoke()
+                                }
+                            },
+                            onHorizontalDrag = { _, dragAmount ->
+                                if (!canSwipe) return@detectHorizontalDragGestures
+                                coroutineScope.launch {
+                                    val current = offsetX.value
+                                    val minOffset = -maxDragLeftPx
+                                    val maxOffset = with(density) { 40.dp.toPx() }
+                                    val target = (current + dragAmount).coerceIn(minOffset, maxOffset)
+                                    offsetX.snapTo(target)
 
-                                val currentDragDistance = -target
-                                val revealThresholdPx = actionButtonsWidthPx / 3f
+                                    val currentDragDistance = -target
+                                    val revealThresholdPx = actionButtonsWidthPx / 3f
 
-                                if (currentDragDistance >= revealThresholdPx) {
-                                    if (!hasTriggeredRevealHaptic) {
-                                        hasTriggeredRevealHaptic = true
-                                        HapticFeedbackHelper.vibrateRevealThreshold(view)
+                                    if (currentDragDistance >= revealThresholdPx) {
+                                        if (!hasTriggeredRevealHaptic) {
+                                            hasTriggeredRevealHaptic = true
+                                            HapticFeedbackHelper.vibrateRevealThreshold(view)
+                                        }
+                                    } else {
+                                        if (hasTriggeredRevealHaptic) {
+                                            hasTriggeredRevealHaptic = false
+                                        }
                                     }
-                                } else {
-                                    if (hasTriggeredRevealHaptic) {
-                                        hasTriggeredRevealHaptic = false
+                                }
+                            },
+                            onDragEnd = {
+                                onDragEnd?.invoke()
+                                coroutineScope.launch {
+                                    val currentDragDistance = -offsetX.value
+                                    if (currentDragDistance >= fullSwipeThresholdPx) {
+                                        HapticFeedbackHelper.vibratePrimaryAction(view)
+                                        onEdit()
+                                        offsetX.animateTo(0f, animationSpec = swipeSpringSpec)
+                                        onCollapse()
+                                    } else if (currentDragDistance >= actionButtonsWidthPx / 3) {
+                                        onExpand()
+                                        offsetX.animateTo(-actionButtonsWidthPx, animationSpec = swipeSpringSpec)
+                                    } else {
+                                        onCollapse()
+                                        offsetX.animateTo(0f, animationSpec = swipeSpringSpec)
                                     }
+                                    hasTriggeredRevealHaptic = false
                                 }
-                            }
-                        },
-                        onDragEnd = {
-                            onDragEnd?.invoke()
-                            coroutineScope.launch {
-                                val currentDragDistance = -offsetX.value
-                                if (currentDragDistance >= fullSwipeThresholdPx) {
-                                    HapticFeedbackHelper.vibratePrimaryAction(view)
-                                    onEdit()
-                                    offsetX.animateTo(0f, animationSpec = swipeSpringSpec)
-                                    onCollapse()
-                                } else if (currentDragDistance >= actionButtonsWidthPx / 3) {
-                                    onExpand()
-                                    offsetX.animateTo(-actionButtonsWidthPx, animationSpec = swipeSpringSpec)
-                                } else {
-                                    onCollapse()
-                                    offsetX.animateTo(0f, animationSpec = swipeSpringSpec)
+                            },
+                            onDragCancel = {
+                                onDragCancel?.invoke()
+                                coroutineScope.launch {
+                                    val currentDragDistance = -offsetX.value
+                                    if (currentDragDistance >= fullSwipeThresholdPx) {
+                                        HapticFeedbackHelper.vibratePrimaryAction(view)
+                                        onEdit()
+                                        offsetX.animateTo(0f, animationSpec = swipeSpringSpec)
+                                        onCollapse()
+                                    } else if (currentDragDistance >= actionButtonsWidthPx / 3) {
+                                        onExpand()
+                                        offsetX.animateTo(-actionButtonsWidthPx, animationSpec = swipeSpringSpec)
+                                    } else {
+                                        onCollapse()
+                                        offsetX.animateTo(0f, animationSpec = swipeSpringSpec)
+                                    }
+                                    hasTriggeredRevealHaptic = false
                                 }
-                                hasTriggeredRevealHaptic = false
-                            }
-                        },
-                        onDragCancel = {
-                            onDragCancel?.invoke()
-                            coroutineScope.launch {
-                                val currentDragDistance = -offsetX.value
-                                if (currentDragDistance >= fullSwipeThresholdPx) {
-                                    HapticFeedbackHelper.vibratePrimaryAction(view)
-                                    onEdit()
-                                    offsetX.animateTo(0f, animationSpec = swipeSpringSpec)
-                                    onCollapse()
-                                } else if (currentDragDistance >= actionButtonsWidthPx / 3) {
-                                    onExpand()
-                                    offsetX.animateTo(-actionButtonsWidthPx, animationSpec = swipeSpringSpec)
-                                } else {
-                                    onCollapse()
-                                    offsetX.animateTo(0f, animationSpec = swipeSpringSpec)
-                                }
-                                hasTriggeredRevealHaptic = false
-                            }
+                            },
+                        )
+                    }.clickable {
+                        if (isRevealed) {
+                            onCollapse()
+                        } else {
+                            isExpanded = !isExpanded
                         }
-                    )
-                }
-                .clickable {
-                    if (isRevealed) {
-                        onCollapse()
-                    } else {
-                        isExpanded = !isExpanded
-                    }
-                }
+                    },
         ) {
             ListItem(
                 headlineContent = {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         Text(
                             text = Formatters.formatDate(holding.purchaseDate),
                             style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                            color = LyndTheme.colors.textSecondary,
                         )
                         Badge(
-                            containerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.14f),
-                            contentColor = MaterialTheme.colorScheme.onSurface,
-                            modifier = Modifier.border(
-                                width = 1.dp,
-                                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.35f),
-                                shape = CircleShape
-                            )
+                            containerColor = LyndTheme.colors.badgeNeutralContainer,
+                            contentColor = LyndTheme.colors.onBadgeNeutralContainer,
+                            modifier =
+                                Modifier.border(
+                                    width = 1.dp,
+                                    color = LyndTheme.colors.borderSubtle,
+                                    shape = CircleShape,
+                                ),
                         ) {
                             Text(
                                 text = "${holding.quantity}",
                                 style = MaterialTheme.typography.labelSmall,
-                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
                             )
                         }
                     }
@@ -333,37 +326,46 @@ fun HoldingCard(
                         text = Formatters.formatAmount(holding.totalPaidAmount),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary
+                        color = LyndTheme.colors.coupon,
                     )
                 },
-                colors = ListItemDefaults.colors(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainer
-                )
+                colors =
+                    ListItemDefaults.colors(
+                        containerColor = LyndTheme.colors.surfaceContainer,
+                    ),
             )
 
             AnimatedVisibility(
                 visible = isExpanded,
-                enter = expandVertically(
-                    animationSpec = tween(
-                        durationMillis = 200,
-                        easing = LinearOutSlowInEasing
-                    )
-                ) + fadeIn(
-                    animationSpec = tween(
-                        durationMillis = 120,
-                        delayMillis = 60
-                    )
-                ),
-                exit = shrinkVertically(
-                    animationSpec = tween(
-                        durationMillis = 180,
-                        easing = FastOutLinearInEasing
-                    )
-                ) + fadeOut(
-                    animationSpec = tween(
-                        durationMillis = 120
-                    )
-                )
+                enter =
+                    expandVertically(
+                        animationSpec =
+                            tween(
+                                durationMillis = 200,
+                                easing = LinearOutSlowInEasing,
+                            ),
+                    ) +
+                        fadeIn(
+                            animationSpec =
+                                tween(
+                                    durationMillis = 120,
+                                    delayMillis = 60,
+                                ),
+                        ),
+                exit =
+                    shrinkVertically(
+                        animationSpec =
+                            tween(
+                                durationMillis = 180,
+                                easing = FastOutLinearInEasing,
+                            ),
+                    ) +
+                        fadeOut(
+                            animationSpec =
+                                tween(
+                                    durationMillis = 120,
+                                ),
+                        ),
             ) {
                 HoldingCardExpandedDetails(holding = holding)
             }

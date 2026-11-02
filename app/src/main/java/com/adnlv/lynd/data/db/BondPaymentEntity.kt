@@ -15,28 +15,24 @@ import java.time.LocalDate
             entity = BondEntity::class,
             parentColumns = ["isin"],
             childColumns = ["bond_isin"],
-            onDelete = ForeignKey.CASCADE
-        )
+            onDelete = ForeignKey.CASCADE,
+        ),
     ],
     indices = [
         Index(value = ["bond_isin"]),
-        Index(value = ["bond_isin", "pay_date", "pay_type"], unique = true)
-    ]
+        Index(value = ["bond_isin", "pay_date", "pay_type"], unique = true),
+    ],
 )
 data class BondPaymentEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     val id: Int = 0,
-
     @ColumnInfo(name = "bond_isin")
     val bondIsin: String,
-
     @ColumnInfo(name = "pay_date")
     val payDate: LocalDate,
-
     @ColumnInfo(name = "pay_type")
     val payType: String,
-
     @ColumnInfo(name = "pay_val")
-    val payVal: BigDecimal
+    val payVal: BigDecimal,
 )

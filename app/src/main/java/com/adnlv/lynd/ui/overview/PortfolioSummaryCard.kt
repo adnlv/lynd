@@ -31,6 +31,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.adnlv.lynd.domain.PortfolioSummary
 import com.adnlv.lynd.ui.components.MetricItem
+import com.adnlv.lynd.ui.theme.LyndTheme
 import com.adnlv.lynd.util.Formatters
 import java.math.BigDecimal
 
@@ -38,24 +39,24 @@ import java.math.BigDecimal
 fun PortfolioSummaryCarousel(
     summaries: List<PortfolioSummary>,
     modifier: Modifier = Modifier,
-    pagerState: PagerState = rememberPagerState(pageCount = { summaries.size })
+    pagerState: PagerState = rememberPagerState(pageCount = { summaries.size }),
 ) {
     if (summaries.isEmpty()) return
 
     Column(
         modifier = modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         HorizontalPager(
             state = pagerState,
             contentPadding = PaddingValues(horizontal = 20.dp),
             pageSpacing = 12.dp,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         ) { page ->
             val summary = summaries[page]
             PortfolioSummaryCard(
                 summary = summary,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
         }
 
@@ -63,21 +64,22 @@ fun PortfolioSummaryCarousel(
             Spacer(modifier = Modifier.height(12.dp))
             Row(
                 horizontalArrangement = Arrangement.spacedBy(6.dp),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 repeat(summaries.size) { index ->
                     val isSelected = pagerState.currentPage == index
                     Box(
-                        modifier = Modifier
-                            .size(if (isSelected) 8.dp else 6.dp)
-                            .clip(CircleShape)
-                            .background(
-                                if (isSelected) {
-                                    MaterialTheme.colorScheme.primary
-                                } else {
-                                    MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f)
-                                }
-                            )
+                        modifier =
+                            Modifier
+                                .size(if (isSelected) 8.dp else 6.dp)
+                                .clip(CircleShape)
+                                .background(
+                                    if (isSelected) {
+                                        LyndTheme.colors.actionPrimary
+                                    } else {
+                                        LyndTheme.colors.borderSubtle
+                                    },
+                                ),
                     )
                 }
             }
@@ -88,101 +90,106 @@ fun PortfolioSummaryCarousel(
 @Composable
 fun PortfolioSummaryCard(
     summary: PortfolioSummary,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier,
         shape = RoundedCornerShape(24.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainer
-        ),
-        border = BorderStroke(
-            width = 1.dp,
-            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = LyndTheme.colors.surfaceContainer,
+            ),
+        border =
+            BorderStroke(
+                width = 1.dp,
+                color = LyndTheme.colors.borderSubtle.copy(alpha = 0.5f),
+            ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(20.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     text = "Portfolio Summary",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = LyndTheme.colors.textPrimary,
                 )
                 Surface(
                     shape = CircleShape,
-                    color = MaterialTheme.colorScheme.primaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                    border = BorderStroke(
-                        width = 1.dp,
-                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.25f)
-                    )
+                    color = LyndTheme.colors.badgeNeutralContainer,
+                    contentColor = LyndTheme.colors.onBadgeNeutralContainer,
+                    border =
+                        BorderStroke(
+                            width = 1.dp,
+                            color = LyndTheme.colors.borderSubtle,
+                        ),
                 ) {
                     Text(
                         text = summary.currency,
                         style = MaterialTheme.typography.labelMedium,
                         fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                     )
                 }
             }
 
             HorizontalDivider(
-                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+                color = LyndTheme.colors.borderSubtle.copy(alpha = 0.5f),
             )
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 MetricItem(
                     label = "Invested Capital",
                     value = "${Formatters.formatAmount(summary.investedCapital)} ${summary.currency}",
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 )
                 MetricItem(
                     label = "Expected Payout",
                     value = "${Formatters.formatAmount(summary.expectedPayout)} ${summary.currency}",
-                    valueColor = MaterialTheme.colorScheme.primary,
+                    valueColor = LyndTheme.colors.coupon,
                     modifier = Modifier.weight(1f),
-                    horizontalAlignment = Alignment.End
+                    horizontalAlignment = Alignment.End,
                 )
             }
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 val isProfitPositive = summary.totalProfit >= BigDecimal.ZERO
                 val profitPrefix = if (isProfitPositive && summary.totalProfit > BigDecimal.ZERO) "+" else ""
-                val profitColor = if (isProfitPositive) {
-                    MaterialTheme.colorScheme.tertiary
-                } else {
-                    MaterialTheme.colorScheme.error
-                }
+                val profitColor =
+                    if (isProfitPositive) {
+                        LyndTheme.colors.profit
+                    } else {
+                        LyndTheme.colors.loss
+                    }
 
                 MetricItem(
                     label = "Total Profit",
                     value = "$profitPrefix${Formatters.formatAmount(summary.totalProfit)} ${summary.currency}",
                     valueColor = profitColor,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 )
                 MetricItem(
                     label = "Avg Interest Rate",
                     value = Formatters.formatPercentage(summary.averageInterestRate),
-                    valueColor = MaterialTheme.colorScheme.secondary,
+                    valueColor = LyndTheme.colors.coupon,
                     modifier = Modifier.weight(1f),
-                    horizontalAlignment = Alignment.End
+                    horizontalAlignment = Alignment.End,
                 )
             }
         }

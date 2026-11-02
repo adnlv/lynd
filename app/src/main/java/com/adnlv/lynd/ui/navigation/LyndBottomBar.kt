@@ -29,41 +29,47 @@ fun LyndBottomBar(
     modifier: Modifier = Modifier,
     bottomTabs: List<Screen> = Screen.defaultBottomTabs,
     action: BottomBarAction = BottomBarAction.defaultForRoute(currentRoute),
-    onTabReselected: (Screen) -> Unit = {}
+    onTabSelected: ((Screen) -> Unit)? = null,
+    onTabReselected: (Screen) -> Unit = {},
 ) {
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .navigationBarsPadding()
-            .padding(
-                start = ContainerHorizontalMargin,
-                end = ContainerHorizontalMargin,
-                bottom = ContainerBottomMargin
-            ),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .navigationBarsPadding()
+                .padding(
+                    start = ContainerHorizontalMargin,
+                    end = ContainerHorizontalMargin,
+                    bottom = ContainerBottomMargin,
+                ),
         horizontalArrangement = Arrangement.spacedBy(ActionButtonSpacing),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         LyndBottomBarPill(
             bottomTabs = bottomTabs,
             currentRoute = currentRoute,
             onTabSelected = { screen ->
-                val activeTabRoute = Screen.resolveBottomTabRoute(currentRoute, bottomTabs)
-                if (activeTabRoute == screen.route && currentRoute != screen.route) {
-                    navController.popBackStack(screen.route, inclusive = false)
+                if (onTabSelected != null) {
+                    onTabSelected(screen)
                 } else {
-                    navController.navigate(screen.route) {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
+                    val activeTabRoute = Screen.resolveBottomTabRoute(currentRoute, bottomTabs)
+                    if (activeTabRoute == screen.route && currentRoute != screen.route) {
+                        navController.popBackStack(screen.route, inclusive = false)
+                    } else {
+                        navController.navigate(screen.route) {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
                         }
-                        launchSingleTop = true
-                        restoreState = true
                     }
                 }
             },
             onTabReselected = { screen ->
                 onTabReselected(screen)
             },
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         )
 
         LyndContextualActionButton(action = action)
@@ -75,13 +81,14 @@ fun LyndBottomBar(
 private fun LyndBottomBarPreview() {
     LyndTheme {
         Box(
-            modifier = Modifier
-                .background(MaterialTheme.colorScheme.background)
-                .padding(16.dp)
+            modifier =
+                Modifier
+                    .background(MaterialTheme.colorScheme.background)
+                    .padding(16.dp),
         ) {
             LyndBottomBar(
                 navController = rememberNavController(),
-                currentRoute = Screen.Overview.route
+                currentRoute = Screen.Overview.route,
             )
         }
     }

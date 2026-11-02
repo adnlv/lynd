@@ -7,7 +7,6 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class ApproximateStringMatcherTest {
-
     @Test
     fun match_emptyQuery_returnsMatchWithZeroScore() {
         val result = ApproximateStringMatcher.match("", "187348")
@@ -69,12 +68,13 @@ class ApproximateStringMatcherTest {
 
     @Test
     fun filterAndSort_ordersExactOverFuzzy() {
-        val candidates = listOf(
-            "UA4000999999",
-            "UA4000187348",
-            "UA4000187000",
-            "UA4000108070"
-        )
+        val candidates =
+            listOf(
+                "UA4000999999",
+                "UA4000187348",
+                "UA4000187000",
+                "UA4000108070",
+            )
         val sorted = ApproximateStringMatcher.filterAndSort(candidates, "UA4000", "187")
         assertEquals("UA4000187000", sorted[0])
         assertEquals("UA4000187348", sorted[1])

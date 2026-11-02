@@ -1,13 +1,11 @@
 package com.adnlv.lynd
 
 import com.adnlv.lynd.data.TestPortfolioData
-import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.math.BigDecimal
 
 class TestPortfolioDataTest {
-
     @Test
     fun testPortfolioData_containsAllCurrencies() {
         val currencies = TestPortfolioData.bonds.map { it.currency }.toSet()

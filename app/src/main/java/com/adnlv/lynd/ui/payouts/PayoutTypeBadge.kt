@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Badge
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -16,45 +15,50 @@ import com.adnlv.lynd.domain.PayoutType
 import com.adnlv.lynd.ui.icons.ConfirmationNumber
 import com.adnlv.lynd.ui.icons.MaterialSymbols
 import com.adnlv.lynd.ui.icons.ModeHeat
+import com.adnlv.lynd.ui.theme.LyndTheme
 
 private data class BadgeConfig(
     val containerColor: Color,
     val contentColor: Color,
     val icon: ImageVector,
-    val contentDescription: String
+    val contentDescription: String,
 )
 
 @Composable
 fun PayoutTypeBadge(
     type: PayoutType,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-    val config = when (type) {
-        PayoutType.COUPON -> BadgeConfig(
-            containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.8f),
-            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-            icon = MaterialSymbols.ConfirmationNumber,
-            contentDescription = "Coupon"
-        )
-        PayoutType.REDEMPTION -> BadgeConfig(
-            containerColor = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.8f),
-            contentColor = MaterialTheme.colorScheme.onErrorContainer,
-            icon = MaterialSymbols.ModeHeat,
-            contentDescription = "Redemption"
-        )
-    }
+    val config =
+        when (type) {
+            PayoutType.COUPON ->
+                BadgeConfig(
+                    containerColor = LyndTheme.colors.badgeCouponContainer,
+                    contentColor = LyndTheme.colors.onBadgeCouponContainer,
+                    icon = MaterialSymbols.ConfirmationNumber,
+                    contentDescription = "Coupon",
+                )
+            PayoutType.REDEMPTION ->
+                BadgeConfig(
+                    containerColor = LyndTheme.colors.badgeRedemptionContainer,
+                    contentColor = LyndTheme.colors.onBadgeRedemptionContainer,
+                    icon = MaterialSymbols.ModeHeat,
+                    contentDescription = "Redemption",
+                )
+        }
 
     Badge(
         containerColor = config.containerColor,
         contentColor = config.contentColor,
-        modifier = modifier.clip(RoundedCornerShape(6.dp))
+        modifier = modifier.clip(RoundedCornerShape(6.dp)),
     ) {
         Icon(
             imageVector = config.icon,
             contentDescription = config.contentDescription,
-            modifier = Modifier
-                .padding(horizontal = 4.dp, vertical = 2.dp)
-                .size(14.dp)
+            modifier =
+                Modifier
+                    .padding(horizontal = 4.dp, vertical = 2.dp)
+                    .size(14.dp),
         )
     }
 }

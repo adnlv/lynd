@@ -10,7 +10,6 @@ import java.time.LocalDate
 import java.time.YearMonth
 
 class IncomeGapDetectorTest {
-
     private val startDate = LocalDate.of(2026, 1, 15)
 
     private fun createPayoutRow(
@@ -19,9 +18,9 @@ class IncomeGapDetectorTest {
         payVal: BigDecimal = BigDecimal("50.00"),
         quantity: Int = 10,
         payType: String = "coupon",
-        purchaseDate: LocalDate = LocalDate.of(2025, 1, 1)
-    ): PayoutRow {
-        return PayoutRow(
+        purchaseDate: LocalDate = LocalDate.of(2025, 1, 1),
+    ): PayoutRow =
+        PayoutRow(
             isin = "UA4000123456",
             bondName = "Test Bond",
             payDate = payDate,
@@ -29,25 +28,26 @@ class IncomeGapDetectorTest {
             payVal = payVal,
             quantity = quantity,
             currency = currency,
-            purchaseDate = purchaseDate
+            purchaseDate = purchaseDate,
         )
-    }
 
     @Test
     fun detectGaps_identifiesDryMonthsIn12MonthHorizon() {
         // Payouts only in Jan 2026, Mar 2026, and Nov 2026
-        val rows = listOf(
-            createPayoutRow(payDate = LocalDate.of(2026, 1, 20)),
-            createPayoutRow(payDate = LocalDate.of(2026, 3, 10)),
-            createPayoutRow(payDate = LocalDate.of(2026, 11, 5))
-        )
+        val rows =
+            listOf(
+                createPayoutRow(payDate = LocalDate.of(2026, 1, 20)),
+                createPayoutRow(payDate = LocalDate.of(2026, 3, 10)),
+                createPayoutRow(payDate = LocalDate.of(2026, 11, 5)),
+            )
 
-        val gaps = IncomeGapDetector.detectGaps(
-            payoutRows = rows,
-            currency = "UAH",
-            startDate = startDate,
-            monthCount = 12
-        )
+        val gaps =
+            IncomeGapDetector.detectGaps(
+                payoutRows = rows,
+                currency = "UAH",
+                startDate = startDate,
+                monthCount = 12,
+            )
 
         // 12 months total: Jan to Dec 2026.
         // Payout months: Jan, Mar, Nov (3 months).
@@ -71,16 +71,18 @@ class IncomeGapDetectorTest {
 
     @Test
     fun detectGaps_identifiesDryMonthsIn24MonthHorizon() {
-        val rows = listOf(
-            createPayoutRow(payDate = LocalDate.of(2026, 1, 20))
-        )
+        val rows =
+            listOf(
+                createPayoutRow(payDate = LocalDate.of(2026, 1, 20)),
+            )
 
-        val gaps = IncomeGapDetector.detectGaps(
-            payoutRows = rows,
-            currency = "UAH",
-            startDate = startDate,
-            monthCount = 24
-        )
+        val gaps =
+            IncomeGapDetector.detectGaps(
+                payoutRows = rows,
+                currency = "UAH",
+                startDate = startDate,
+                monthCount = 24,
+            )
 
         // 24 months total, 1 with payout, 23 dry months
         assertEquals(23, gaps.size)
@@ -98,16 +100,18 @@ class IncomeGapDetectorTest {
 
     @Test
     fun detectGaps_returnsEmptyListWhenAllMonthsHavePayouts() {
-        val rows = (0 until 12).map { offset ->
-            createPayoutRow(payDate = startDate.plusMonths(offset.toLong()))
-        }
+        val rows =
+            (0 until 12).map { offset ->
+                createPayoutRow(payDate = startDate.plusMonths(offset.toLong()))
+            }
 
-        val gaps = IncomeGapDetector.detectGaps(
-            payoutRows = rows,
-            currency = "UAH",
-            startDate = startDate,
-            monthCount = 12
-        )
+        val gaps =
+            IncomeGapDetector.detectGaps(
+                payoutRows = rows,
+                currency = "UAH",
+                startDate = startDate,
+                monthCount = 12,
+            )
 
         assertTrue(gaps.isEmpty())
     }
@@ -117,17 +121,19 @@ class IncomeGapDetectorTest {
         // Payouts in Jan (month 0), Apr (month 3)
         // Dry months: Feb (month 1), Mar (month 2) -> streak of 2
         // Dry months: May-Dec -> streak of 8
-        val rows = listOf(
-            createPayoutRow(payDate = LocalDate.of(2026, 1, 20)),
-            createPayoutRow(payDate = LocalDate.of(2026, 4, 10))
-        )
+        val rows =
+            listOf(
+                createPayoutRow(payDate = LocalDate.of(2026, 1, 20)),
+                createPayoutRow(payDate = LocalDate.of(2026, 4, 10)),
+            )
 
-        val gaps = IncomeGapDetector.detectGaps(
-            payoutRows = rows,
-            currency = "UAH",
-            startDate = startDate,
-            monthCount = 12
-        )
+        val gaps =
+            IncomeGapDetector.detectGaps(
+                payoutRows = rows,
+                currency = "UAH",
+                startDate = startDate,
+                monthCount = 12,
+            )
 
         assertEquals(10, gaps.size)
 
@@ -149,25 +155,28 @@ class IncomeGapDetectorTest {
 
     @Test
     fun detectGaps_populatesCrossCurrencyCoverageCorrectly() {
-        val uahRow = createPayoutRow(
-            payDate = LocalDate.of(2026, 1, 15),
-            currency = "UAH",
-            payVal = BigDecimal("100.00"),
-            quantity = 1
-        )
-        val usdRow = createPayoutRow(
-            payDate = LocalDate.of(2026, 2, 20),
-            currency = "USD",
-            payVal = BigDecimal("50.00"),
-            quantity = 3
-        )
+        val uahRow =
+            createPayoutRow(
+                payDate = LocalDate.of(2026, 1, 15),
+                currency = "UAH",
+                payVal = BigDecimal("100.00"),
+                quantity = 1,
+            )
+        val usdRow =
+            createPayoutRow(
+                payDate = LocalDate.of(2026, 2, 20),
+                currency = "USD",
+                payVal = BigDecimal("50.00"),
+                quantity = 3,
+            )
 
-        val gaps = IncomeGapDetector.detectGaps(
-            payoutRows = listOf(uahRow, usdRow),
-            currency = "UAH",
-            startDate = startDate,
-            monthCount = 12
-        )
+        val gaps =
+            IncomeGapDetector.detectGaps(
+                payoutRows = listOf(uahRow, usdRow),
+                currency = "UAH",
+                startDate = startDate,
+                monthCount = 12,
+            )
 
         val febGap = gaps.find { it.yearMonth == YearMonth.of(2026, 2) }
         org.junit.Assert.assertNotNull(febGap)

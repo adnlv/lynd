@@ -13,33 +13,34 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.adnlv.lynd.ui.theme.LyndTheme
 
 @Composable
 fun MetricItem(
     label: String,
     value: String,
     modifier: Modifier = Modifier,
-    valueColor: Color = MaterialTheme.colorScheme.onSurface,
+    valueColor: Color = LyndTheme.colors.textPrimary,
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
     labelStyle: TextStyle = MaterialTheme.typography.labelMedium,
     valueStyle: TextStyle = MaterialTheme.typography.titleMedium,
-    spacing: Dp = 4.dp
+    spacing: Dp = 4.dp,
 ) {
     Column(
         modifier = modifier,
-        horizontalAlignment = horizontalAlignment
+        horizontalAlignment = horizontalAlignment,
     ) {
         Text(
             text = label,
             style = labelStyle,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = LyndTheme.colors.textSecondary,
         )
         Spacer(modifier = Modifier.height(spacing))
         Text(
             text = value,
             style = valueStyle,
             fontWeight = FontWeight.Bold,
-            color = valueColor
+            color = valueColor,
         )
     }
 }

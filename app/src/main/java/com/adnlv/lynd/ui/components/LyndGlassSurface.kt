@@ -13,6 +13,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Shape
 import com.adnlv.lynd.ui.theme.LocalLyndHazeState
 import com.adnlv.lynd.ui.theme.LyndGlassDefaults
+import com.adnlv.lynd.ui.theme.LyndTheme
 import com.adnlv.lynd.ui.theme.rememberLyndGlassStyle
 import dev.chrisbanes.haze.HazeInput
 import dev.chrisbanes.haze.blur.HazeBlurStyle
@@ -28,36 +29,37 @@ fun LyndGlassSurface(
     modifier: Modifier = Modifier,
     style: HazeBlurStyle = rememberLyndGlassStyle(),
     contentAlignment: Alignment = Alignment.TopStart,
-    content: @Composable BoxScope.() -> Unit
+    content: @Composable BoxScope.() -> Unit,
 ) {
     val hazeState = LocalLyndHazeState.current
     val colorScheme = MaterialTheme.colorScheme
-    val backdropModifier = if (hazeState != null) {
-        Modifier.hazeBlur(
-            input = HazeInput.Sources(hazeState),
-            style = style,
-            performanceMode = LyndGlassDefaults.PerformanceMode
-        )
-    } else {
-        Modifier.background(colorScheme.surface.copy(alpha = LyndGlassDefaults.FallbackAlpha))
-    }
+    val backdropModifier =
+        if (hazeState != null) {
+            Modifier.hazeBlur(
+                input = HazeInput.Sources(hazeState),
+                style = style,
+                performanceMode = LyndGlassDefaults.PerformanceMode,
+            )
+        } else {
+            Modifier.background(colorScheme.surface.copy(alpha = LyndGlassDefaults.FallbackAlpha))
+        }
 
     Box(
-        modifier = modifier
-            .shadow(
-                elevation = LyndGlassDefaults.ShadowElevation,
-                shape = shape,
-                spotColor = colorScheme.onSurface.copy(alpha = 0.20f),
-                ambientColor = colorScheme.onSurface.copy(alpha = 0.08f)
-            )
-            .clip(shape)
-            .then(backdropModifier)
-            .border(
-                width = LyndGlassDefaults.BorderWidth,
-                color = colorScheme.outlineVariant.copy(alpha = LyndGlassDefaults.BorderAlpha),
-                shape = shape
-            ),
+        modifier =
+            modifier
+                .shadow(
+                    elevation = LyndGlassDefaults.ShadowElevation,
+                    shape = shape,
+                    spotColor = colorScheme.onSurface.copy(alpha = LyndGlassDefaults.SpotShadowAlpha),
+                    ambientColor = colorScheme.onSurface.copy(alpha = LyndGlassDefaults.AmbientShadowAlpha),
+                ).clip(shape)
+                .then(backdropModifier)
+                .border(
+                    width = LyndGlassDefaults.BorderWidth,
+                    color = LyndTheme.colors.borderSubtle.copy(alpha = LyndGlassDefaults.BorderAlpha),
+                    shape = shape,
+                ),
         contentAlignment = contentAlignment,
-        content = content
+        content = content,
     )
 }

@@ -25,66 +25,70 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.adnlv.lynd.ui.theme.LyndTheme
 
 @Composable
 fun HoldingsSyncBanner(
     syncError: String?,
     onRetry: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     AnimatedVisibility(
         visible = syncError != null,
         enter = expandVertically() + fadeIn(),
         exit = shrinkVertically() + fadeOut(),
-        modifier = modifier
+        modifier = modifier,
     ) {
         syncError?.let { error ->
             Surface(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp),
                 shape = RoundedCornerShape(12.dp),
-                color = MaterialTheme.colorScheme.errorContainer,
-                contentColor = MaterialTheme.colorScheme.onErrorContainer,
-                border = BorderStroke(
-                    width = 1.dp,
-                    color = MaterialTheme.colorScheme.error.copy(alpha = 0.25f)
-                )
+                color = LyndTheme.colors.feedbackContainer,
+                contentColor = LyndTheme.colors.onFeedbackContainer,
+                border =
+                    BorderStroke(
+                        width = 1.dp,
+                        color = LyndTheme.colors.borderSubtle,
+                    ),
             ) {
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 12.dp),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 12.dp),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
                     Icon(
                         imageVector = Icons.Default.Warning,
                         contentDescription = "Sync Error",
-                        tint = MaterialTheme.colorScheme.error
+                        tint = LyndTheme.colors.onFeedbackContainer,
                     )
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
                             text = "Sync error",
                             style = MaterialTheme.typography.titleSmall,
                             fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onErrorContainer
+                            color = LyndTheme.colors.onFeedbackContainer,
                         )
                         Text(
                             text = error,
                             style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onErrorContainer.copy(alpha = 0.8f),
-                            maxLines = 2
+                            color = LyndTheme.colors.onFeedbackContainer,
+                            maxLines = 2,
                         )
                     }
                     TextButton(
                         onClick = onRetry,
-                        contentPadding = PaddingValues(horizontal = 8.dp)
+                        contentPadding = PaddingValues(horizontal = 8.dp),
                     ) {
                         Text(
                             text = "Retry",
                             fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.error
+                            color = LyndTheme.colors.onFeedbackContainer,
                         )
                     }
                 }

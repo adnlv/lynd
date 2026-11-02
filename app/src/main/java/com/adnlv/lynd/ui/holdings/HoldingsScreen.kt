@@ -14,9 +14,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
@@ -24,7 +26,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -33,18 +34,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.adnlv.lynd.domain.HoldingItem
+import com.adnlv.lynd.ui.components.LyndNoHoldingsPlate
+import com.adnlv.lynd.ui.components.LyndScreenHeader
 import com.adnlv.lynd.ui.icons.Add
 import com.adnlv.lynd.ui.icons.MaterialSymbols
 import com.adnlv.lynd.ui.navigation.BottomBarAction
@@ -60,7 +54,7 @@ fun HoldingsScreen(
     onActionChange: ((BottomBarAction) -> Unit)? = null,
     onNavigateBack: (() -> Unit)? = null,
     onNavigateToAdd: (() -> Unit)? = null,
-    onNavigateToEdit: ((HoldingItem) -> Unit)? = null
+    onNavigateToEdit: ((HoldingItem) -> Unit)? = null,
 ) {
     val holdings by viewModel.holdings.collectAsState()
     val groupedHoldings by viewModel.groupedHoldings.collectAsState()
@@ -74,15 +68,16 @@ fun HoldingsScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
-    val sharedPrefs = remember(context) {
-        context.getSharedPreferences("lynd_prefs", Context.MODE_PRIVATE)
-    }
+    val sharedPrefs =
+        remember(context) {
+            context.getSharedPreferences("lynd_prefs", Context.MODE_PRIVATE)
+        }
     var hasSeenSwipePeek by remember {
         mutableStateOf(sharedPrefs.getBoolean("has_seen_swipe_peek", false))
     }
 
-    SideEffect {
-        val isHoldingContextualActive = showAddDialog || editingHolding != null || revealedHoldingId != null
+    val isHoldingContextualActive = showAddDialog || editingHolding != null || revealedHoldingId != null
+    LaunchedEffect(isHoldingContextualActive) {
         onActionChange?.invoke(
             BottomBarAction(
                 icon = MaterialSymbols.Add,
@@ -101,14 +96,14 @@ fun HoldingsScreen(
                     showAddDialog = false
                     editingHolding = null
                     revealedHoldingId = null
-                }
-            )
+                },
+            ),
         )
     }
 
-    LaunchedEffect(holdings, hasSeenSwipePeek) {
-        if (!hasSeenSwipePeek && holdings.isNotEmpty()) {
-            val firstHolding = holdings.first()
+    LaunchedEffect(groupedHoldings, hasSeenSwipePeek) {
+        if (!hasSeenSwipePeek && groupedHoldings.isNotEmpty()) {
+            val firstHolding = groupedHoldings.first().items.firstOrNull() ?: return@LaunchedEffect
             delay(500)
             peekingHoldingId = firstHolding.id
             delay(1400)
@@ -136,74 +131,95 @@ fun HoldingsScreen(
         snackbarHost = {
             SnackbarHost(
                 hostState = snackbarHostState,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .navigationBarsPadding()
-                    .padding(start = 16.dp, end = 16.dp, bottom = 80.dp)
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .navigationBarsPadding()
+                        .padding(start = 16.dp, end = 16.dp, bottom = 80.dp),
             ) { data ->
                 HoldingsUndoSnackbar(data = data)
             }
-        }
+        },
     ) { innerPadding ->
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .pointerInput(Unit) {
-                    detectTapGestures {
-                        if (revealedHoldingId != null) {
-                            revealedHoldingId = null
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+                    .pointerInput(Unit) {
+                        detectTapGestures {
+                            if (revealedHoldingId != null) {
+                                revealedHoldingId = null
+                            }
                         }
-                    }
-                }
+                    },
         ) {
-            if (onNavigateBack != null) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp, vertical = 4.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    TextButton(onClick = onNavigateBack) {
-                        Icon(
-                            imageVector = androidx.compose.material.icons.Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back to Payouts"
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = "Payouts",
-                            style = MaterialTheme.typography.labelLarge,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                    }
-                }
-            }
-
             if (isSyncing) {
                 LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
             }
 
             HoldingsSyncBanner(
                 syncError = syncError,
-                onRetry = { viewModel.retrySync() }
+                onRetry = { viewModel.retrySync() },
             )
 
+            val navigationIcon: (@Composable () -> Unit)? =
+                if (onNavigateBack != null) {
+                    {
+                        IconButton(onClick = onNavigateBack) {
+                            Icon(
+                                imageVector = androidx.compose.material.icons.Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = "Navigate back",
+                            )
+                        }
+                    }
+                } else {
+                    null
+                }
+
             if (holdings.isEmpty()) {
-                HoldingsEmptyState(
-                    onLoadTestPortfolio = { viewModel.loadTestPortfolio() }
+                LyndScreenHeader(
+                    title = "Holdings",
+                    navigationIcon = navigationIcon,
+                    modifier = Modifier.padding(top = 8.dp, start = if (navigationIcon != null) 4.dp else 20.dp, end = 20.dp),
+                )
+                LyndNoHoldingsPlate(
+                    title = "No holdings yet",
+                    description = "Add your first bond holding to start tracking your investment portfolio.",
+                    onAddHolding = {
+                        if (onNavigateToAdd != null) {
+                            onNavigateToAdd.invoke()
+                        } else {
+                            showAddDialog = true
+                        }
+                    },
+                    onLoadTestPortfolio = { viewModel.loadTestPortfolio() },
+                    modifier =
+                        Modifier
+                            .weight(1f)
+                            .fillMaxWidth(),
                 )
             } else {
                 LazyColumn(
                     state = listState,
                     modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(
-                        start = 16.dp,
-                        top = 16.dp,
-                        end = 16.dp,
-                        bottom = 100.dp
-                    ),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                    contentPadding =
+                        PaddingValues(
+                            start = 16.dp,
+                            top = 8.dp,
+                            end = 16.dp,
+                            bottom = 100.dp,
+                        ),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
+                    item(key = "holdings_header") {
+                        LyndScreenHeader(
+                            title = "Holdings",
+                            navigationIcon = navigationIcon,
+                            modifier = Modifier.padding(start = if (navigationIcon != null) 0.dp else 4.dp),
+                        )
+                    }
+
                     items(items = groupedHoldings, key = { it.isin }) { group ->
                         HoldingGroupCard(
                             modifier = Modifier.animateItem(),
@@ -253,16 +269,17 @@ fun HoldingsScreen(
                                 viewModel.deleteHolding(holding.id)
                                 coroutineScope.launch {
                                     snackbarHostState.currentSnackbarData?.dismiss()
-                                    val result = snackbarHostState.showSnackbar(
-                                        message = "Holding deleted",
-                                        actionLabel = "Undo",
-                                        duration = SnackbarDuration.Indefinite
-                                    )
+                                    val result =
+                                        snackbarHostState.showSnackbar(
+                                            message = "Holding deleted",
+                                            actionLabel = "Undo",
+                                            duration = SnackbarDuration.Indefinite,
+                                        )
                                     if (result == SnackbarResult.ActionPerformed) {
                                         viewModel.restoreHolding()
                                     }
                                 }
-                            }
+                            },
                         )
                     }
                 }
@@ -276,7 +293,7 @@ fun HoldingsScreen(
                     showAddDialog = false
                     editingHolding = null
                 },
-                holdingToEdit = editingHolding
+                holdingToEdit = editingHolding,
             )
         }
     }
