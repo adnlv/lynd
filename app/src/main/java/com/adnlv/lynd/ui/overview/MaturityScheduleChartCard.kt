@@ -102,7 +102,7 @@ fun MaturityScheduleChartCard(
                         color = LyndTheme.colors.textSecondary,
                     )
                     Text(
-                        text = "${Formatters.formatAmount(totalPrincipal)} $currency",
+                        text = "${Formatters.formatAmount(totalPrincipal)} $currencySymbol",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = LyndTheme.colors.chartSecondary,

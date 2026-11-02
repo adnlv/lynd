@@ -103,7 +103,7 @@ fun CashFlowChartCard(
                         color = LyndTheme.colors.textSecondary,
                     )
                     Text(
-                        text = "${Formatters.formatAmount(total12MonthsIncome)} $currency",
+                        text = "${Formatters.formatAmount(total12MonthsIncome)} $currencySymbol",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = LyndTheme.colors.chartPrimary,
