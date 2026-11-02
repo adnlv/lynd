@@ -24,6 +24,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -92,6 +93,8 @@ fun PortfolioSummaryCard(
     summary: PortfolioSummary,
     modifier: Modifier = Modifier,
 ) {
+    val currencySymbol = remember(summary.currency) { Formatters.getCurrencySymbol(summary.currency) }
+
     Card(
         modifier = modifier,
         shape = RoundedCornerShape(24.dp),
@@ -153,12 +156,12 @@ fun PortfolioSummaryCard(
             ) {
                 MetricItem(
                     label = "Invested Capital",
-                    value = "${Formatters.formatAmount(summary.investedCapital)} ${summary.currency}",
+                    value = "${Formatters.formatAmount(summary.investedCapital)} $currencySymbol",
                     modifier = Modifier.weight(1f),
                 )
                 MetricItem(
                     label = "Expected Payout",
-                    value = "${Formatters.formatAmount(summary.expectedPayout)} ${summary.currency}",
+                    value = "${Formatters.formatAmount(summary.expectedPayout)} $currencySymbol",
                     valueColor = LyndTheme.colors.coupon,
                     modifier = Modifier.weight(1f),
                     horizontalAlignment = Alignment.End,
@@ -180,7 +183,7 @@ fun PortfolioSummaryCard(
 
                 MetricItem(
                     label = "Total Profit",
-                    value = "$profitPrefix${Formatters.formatAmount(summary.totalProfit)} ${summary.currency}",
+                    value = "$profitPrefix${Formatters.formatAmount(summary.totalProfit)} $currencySymbol",
                     valueColor = profitColor,
                     modifier = Modifier.weight(1f),
                 )
