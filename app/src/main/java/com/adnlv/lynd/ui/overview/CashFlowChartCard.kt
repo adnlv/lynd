@@ -1,17 +1,21 @@
 package com.adnlv.lynd.ui.overview
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,10 +25,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.adnlv.lynd.domain.MonthlyCashFlow
-import com.adnlv.lynd.ui.components.SnapBarChart
+import com.adnlv.lynd.ui.components.SmoothAreaChart
 import com.adnlv.lynd.ui.theme.LyndTheme
 import com.adnlv.lynd.util.Formatters
 import java.math.BigDecimal
@@ -67,6 +74,8 @@ fun CashFlowChartCard(
                 val firstNonZeroIndex = cashFlows.indexOfFirst { it.totalAmount > BigDecimal.ZERO }
                 mutableStateOf(if (firstNonZeroIndex >= 0) firstNonZeroIndex else 0)
             }
+
+            val currencySymbol = remember(currency) { Formatters.getCurrencySymbol(currency) }
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -117,40 +126,108 @@ fun CashFlowChartCard(
                     )
                 }
             } else {
-                val maxMonthlyAmount =
-                    remember(cashFlows) {
-                        val max = cashFlows.maxOfOrNull { it.totalAmount } ?: BigDecimal.ZERO
-                        if (max > BigDecimal.ZERO) max else BigDecimal.ONE
-                    }
-
-                SnapBarChart(
+                SmoothAreaChart(
                     items = cashFlows,
                     selectedIndex = selectedIndex,
                     onSelectedIndexChange = { selectedIndex = it },
-                ) { monthFlow, index, isSelected ->
-                    val monthLabel =
-                        remember(monthFlow.yearMonth) {
-                            monthFlow.yearMonth.month
-                                .getDisplayName(TextStyle.SHORT, Locale.getDefault())
-                                .filter { it.isLetter() }
-                                .take(3)
-                        }
-                    CashFlowBar(
-                        monthFlow = monthFlow,
-                        monthLabel = monthLabel,
-                        maxAmount = maxMonthlyAmount,
-                        isSelected = isSelected,
-                        couponColor = LyndTheme.colors.chartPrimary,
-                        principalColor = LyndTheme.colors.chartSecondary,
-                        modifier = Modifier.fillMaxSize(),
-                    )
-                }
+                    valueSelector = { it.totalAmount.toFloat() },
+                    xLabelSelector = { flow ->
+                        flow.yearMonth.month
+                            .getDisplayName(TextStyle.SHORT, Locale.getDefault())
+                            .filter { it.isLetter() }
+                            .take(3)
+                    },
+                    tooltipTitleSelector = { flow ->
+                        val monthName = flow.yearMonth.month.getDisplayName(TextStyle.SHORT, Locale.getDefault())
+                        "$monthName ${flow.yearMonth.year}"
+                    },
+                    tooltipValueSelector = { flow ->
+                        "$currencySymbol${Formatters.formatAmount(flow.totalAmount)}"
+                    },
+                    currencySymbol = currencySymbol,
+                    modifier = Modifier.fillMaxWidth(),
+                )
 
-                val selectedFlow = cashFlows.getOrNull(selectedIndex)
-                if (selectedFlow != null) {
-                    CashFlowDetailCard(
-                        selectedFlow = selectedFlow,
-                        currency = currency,
+                val selectedFlow = cashFlows.getOrNull(selectedIndex) ?: cashFlows.firstOrNull()
+
+                HorizontalDivider(
+                    color = LyndTheme.colors.borderSubtle.copy(alpha = 0.5f),
+                    thickness = 1.dp,
+                )
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    // Left: Coupon badge
+                    Row(
+                        modifier = Modifier.weight(1f),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start,
+                    ) {
+                        Box(
+                            modifier =
+                                Modifier
+                                    .size(10.dp)
+                                    .clip(RoundedCornerShape(2.dp))
+                                    .background(LyndTheme.colors.chartPrimary),
+                        )
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text(
+                            text = "Coupons: ",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = LyndTheme.colors.textSecondary,
+                            maxLines = 1,
+                        )
+                        Text(
+                            text = "$currencySymbol${Formatters.formatAmount(selectedFlow?.couponAmount ?: BigDecimal.ZERO)}",
+                            style = MaterialTheme.typography.bodySmall,
+                            fontWeight = FontWeight.SemiBold,
+                            color = LyndTheme.colors.textPrimary,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                    }
+
+                    // Center: Principal badge (fixed position anchor)
+                    Row(
+                        modifier = Modifier.weight(1f),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start,
+                    ) {
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Box(
+                            modifier =
+                                Modifier
+                                    .size(10.dp)
+                                    .clip(RoundedCornerShape(2.dp))
+                                    .background(LyndTheme.colors.chartSecondary),
+                        )
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text(
+                            text = "Principal: ",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = LyndTheme.colors.textSecondary,
+                            maxLines = 1,
+                        )
+                        Text(
+                            text = "$currencySymbol${Formatters.formatAmount(selectedFlow?.principalAmount ?: BigDecimal.ZERO)}",
+                            style = MaterialTheme.typography.bodySmall,
+                            fontWeight = FontWeight.SemiBold,
+                            color = LyndTheme.colors.textPrimary,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                    }
+
+                    // Right: Drag hint
+                    Text(
+                        text = "Drag to inspect",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = LyndTheme.colors.textSecondary,
+                        textAlign = TextAlign.End,
+                        maxLines = 1,
+                        modifier = Modifier.weight(1f),
                     )
                 }
             }
